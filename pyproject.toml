@@ -1,5 +1,5 @@
 [project]
-name = "growsurf"
+name = "growsurf-python"
 version = "0.0.1"
 description = "The official Python library for the growsurf API"
 dynamic = ["readme"]
