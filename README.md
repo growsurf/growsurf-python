@@ -1,7 +1,7 @@
 # Growsurf Python API library
 
 <!-- prettier-ignore -->
-[![PyPI version](https://img.shields.io/pypi/v/growsurf.svg?label=pypi%20(stable))](https://pypi.org/project/growsurf/)
+[![PyPI version](https://img.shields.io/pypi/v/growsurf-python.svg?label=pypi%20(stable))](https://pypi.org/project/growsurf-python/)
 
 The Growsurf Python library provides convenient access to the Growsurf REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
@@ -16,12 +16,9 @@ The REST API documentation can be found on [growsurf.com](https://growsurf.com/s
 ## Installation
 
 ```sh
-# install from the production repo
-pip install git+ssh://git@github.com/growsurf/growsurf-python.git
+# install from PyPI
+pip install growsurf-python
 ```
-
-> [!NOTE]
-> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install growsurf`
 
 ## Usage
 
@@ -75,8 +72,8 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from the production repo
-pip install 'growsurf[aiohttp] @ git+ssh://git@github.com/growsurf/growsurf-python.git'
+# install from PyPI
+pip install growsurf-python[aiohttp]
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
