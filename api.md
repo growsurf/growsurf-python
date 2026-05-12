@@ -38,6 +38,7 @@ from growsurf.types.campaign import (
     ReferralSource,
     ReferralStatus,
     ParticipantDeleteResponse,
+    ParticipantCreateMobileTokenResponse,
     ParticipantListRewardsResponse,
     ParticipantRecordTransactionResponse,
     ParticipantSendInvitesResponse,
@@ -51,6 +52,7 @@ Methods:
 - <code title="post /campaign/{id}/participant/{participantIdOrEmail}">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">update</a>(participant_id_or_email, \*, id, \*\*<a href="src/growsurf/types/campaign/participant_update_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/participant.py">Participant</a></code>
 - <code title="delete /campaign/{id}/participant/{participantIdOrEmail}">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">delete</a>(participant_id_or_email, \*, id) -> <a href="./src/growsurf/types/campaign/participant_delete_response.py">ParticipantDeleteResponse</a></code>
 - <code title="post /campaign/{id}/participant">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">add</a>(id, \*\*<a href="src/growsurf/types/campaign/participant_add_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/participant.py">Participant</a></code>
+- <code title="post /campaign/{id}/participant/{participantIdOrEmail}/mobile-token">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">create_mobile_token</a>(participant_id_or_email, \*, id) -> <a href="./src/growsurf/types/campaign/participant_create_mobile_token_response.py">ParticipantCreateMobileTokenResponse</a></code>
 - <code title="get /campaign/{id}/participant/{participantIdOrEmail}/commissions">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">list_commissions</a>(participant_id_or_email, \*, id, \*\*<a href="src/growsurf/types/campaign/participant_list_commissions_params.py">params</a>) -> <a href="./src/growsurf/types/participant_commission_list.py">ParticipantCommissionList</a></code>
 - <code title="get /campaign/{id}/participant/{participantIdOrEmail}/payouts">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">list_payouts</a>(participant_id_or_email, \*, id, \*\*<a href="src/growsurf/types/campaign/participant_list_payouts_params.py">params</a>) -> <a href="./src/growsurf/types/participant_payout_list.py">ParticipantPayoutList</a></code>
 - <code title="get /campaign/{id}/participant/{participantIdOrEmail}/referrals">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">list_referrals</a>(participant_id_or_email, \*, id, \*\*<a href="src/growsurf/types/campaign/participant_list_referrals_params.py">params</a>) -> <a href="./src/growsurf/types/referral_list.py">ReferralList</a></code>
