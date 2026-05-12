@@ -33,3 +33,6 @@ from .participant_trigger_referral_response import (
 from .participant_record_transaction_response import (
     ParticipantRecordTransactionResponse as ParticipantRecordTransactionResponse,
 )
+from .participant_create_mobile_token_response import (
+    ParticipantCreateMobileTokenResponse as ParticipantCreateMobileTokenResponse,
+)
