@@ -10,7 +10,11 @@ __all__ = ["CampaignRetrieveAnalyticsResponse", "Analytics"]
 
 
 class Analytics(BaseModel):
+    android_native_shares: Optional[int] = FieldInfo(alias="androidNativeShares", default=None)
+
     bluesky_shares: Optional[int] = FieldInfo(alias="blueskyShares", default=None)
+
+    copy_ref_link_shares: Optional[int] = FieldInfo(alias="copyRefLinkShares", default=None)
 
     email_shares: Optional[int] = FieldInfo(alias="emailShares", default=None)
 
@@ -19,6 +23,8 @@ class Analytics(BaseModel):
     impressions: Optional[int] = None
 
     invites: Optional[int] = None
+
+    ios_native_shares: Optional[int] = FieldInfo(alias="iosNativeShares", default=None)
 
     linked_in_shares: Optional[int] = FieldInfo(alias="linkedInShares", default=None)
 
