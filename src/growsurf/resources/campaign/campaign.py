@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Dict
 from typing_extensions import Literal
 
 import httpx
@@ -21,6 +22,7 @@ from ...types import (
     campaign_list_leaderboard_params,
     campaign_list_participants_params,
     campaign_retrieve_analytics_params,
+    campaign_create_mobile_participant_token_params,
 )
 from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from ..._utils import path_template, maybe_transform, async_maybe_transform
@@ -58,6 +60,7 @@ from ...types.participant_payout_list import ParticipantPayoutList
 from ...types.campaign.referral_status import ReferralStatus
 from ...types.participant_commission_list import ParticipantCommissionList
 from ...types.campaign_retrieve_analytics_response import CampaignRetrieveAnalyticsResponse
+from ...types.campaign_create_mobile_participant_token_response import CampaignCreateMobileParticipantTokenResponse
 
 __all__ = ["CampaignResource", "AsyncCampaignResource"]
 
@@ -146,6 +149,67 @@ class CampaignResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=CampaignListResponse,
+        )
+
+    def create_mobile_participant_token(
+        self,
+        id: str,
+        *,
+        email: str,
+        fingerprint: str | Omit = omit,
+        first_name: str | Omit = omit,
+        ip_address: str | Omit = omit,
+        last_name: str | Omit = omit,
+        metadata: Dict[str, object] | Omit = omit,
+        referral_status: Literal["CREDIT_PENDING", "CREDIT_AWARDED"] | Omit = omit,
+        referred_by: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CampaignCreateMobileParticipantTokenResponse:
+        """
+        Creates or returns a participant using the same input behavior as Add
+        Participant, then returns a participant-scoped token for GrowSurf mobile SDK
+        participant endpoints. Use this endpoint from your backend after your mobile app
+        authenticates a signed-in user. The program must have mobile SDK access enabled.
+
+        Args:
+          metadata: Shallow custom metadata object.
+
+          referred_by: Referrer participant ID or email address.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._post(
+            path_template("/campaign/{id}/mobile-participant-token", id=id),
+            body=maybe_transform(
+                {
+                    "email": email,
+                    "fingerprint": fingerprint,
+                    "first_name": first_name,
+                    "ip_address": ip_address,
+                    "last_name": last_name,
+                    "metadata": metadata,
+                    "referral_status": referral_status,
+                    "referred_by": referred_by,
+                },
+                campaign_create_mobile_participant_token_params.CampaignCreateMobileParticipantTokenParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=CampaignCreateMobileParticipantTokenResponse,
         )
 
     def list_commissions(
@@ -592,6 +656,67 @@ class AsyncCampaignResource(AsyncAPIResource):
             cast_to=CampaignListResponse,
         )
 
+    async def create_mobile_participant_token(
+        self,
+        id: str,
+        *,
+        email: str,
+        fingerprint: str | Omit = omit,
+        first_name: str | Omit = omit,
+        ip_address: str | Omit = omit,
+        last_name: str | Omit = omit,
+        metadata: Dict[str, object] | Omit = omit,
+        referral_status: Literal["CREDIT_PENDING", "CREDIT_AWARDED"] | Omit = omit,
+        referred_by: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CampaignCreateMobileParticipantTokenResponse:
+        """
+        Creates or returns a participant using the same input behavior as Add
+        Participant, then returns a participant-scoped token for GrowSurf mobile SDK
+        participant endpoints. Use this endpoint from your backend after your mobile app
+        authenticates a signed-in user. The program must have mobile SDK access enabled.
+
+        Args:
+          metadata: Shallow custom metadata object.
+
+          referred_by: Referrer participant ID or email address.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._post(
+            path_template("/campaign/{id}/mobile-participant-token", id=id),
+            body=await async_maybe_transform(
+                {
+                    "email": email,
+                    "fingerprint": fingerprint,
+                    "first_name": first_name,
+                    "ip_address": ip_address,
+                    "last_name": last_name,
+                    "metadata": metadata,
+                    "referral_status": referral_status,
+                    "referred_by": referred_by,
+                },
+                campaign_create_mobile_participant_token_params.CampaignCreateMobileParticipantTokenParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=CampaignCreateMobileParticipantTokenResponse,
+        )
+
     async def list_commissions(
         self,
         id: str,
@@ -960,6 +1085,9 @@ class CampaignResourceWithRawResponse:
         self.list = to_raw_response_wrapper(
             campaign.list,
         )
+        self.create_mobile_participant_token = to_raw_response_wrapper(
+            campaign.create_mobile_participant_token,
+        )
         self.list_commissions = to_raw_response_wrapper(
             campaign.list_commissions,
         )
@@ -1003,6 +1131,9 @@ class AsyncCampaignResourceWithRawResponse:
         )
         self.list = async_to_raw_response_wrapper(
             campaign.list,
+        )
+        self.create_mobile_participant_token = async_to_raw_response_wrapper(
+            campaign.create_mobile_participant_token,
         )
         self.list_commissions = async_to_raw_response_wrapper(
             campaign.list_commissions,
@@ -1048,6 +1179,9 @@ class CampaignResourceWithStreamingResponse:
         self.list = to_streamed_response_wrapper(
             campaign.list,
         )
+        self.create_mobile_participant_token = to_streamed_response_wrapper(
+            campaign.create_mobile_participant_token,
+        )
         self.list_commissions = to_streamed_response_wrapper(
             campaign.list_commissions,
         )
@@ -1091,6 +1225,9 @@ class AsyncCampaignResourceWithStreamingResponse:
         )
         self.list = async_to_streamed_response_wrapper(
             campaign.list,
+        )
+        self.create_mobile_participant_token = async_to_streamed_response_wrapper(
+            campaign.create_mobile_participant_token,
         )
         self.list_commissions = async_to_streamed_response_wrapper(
             campaign.list_commissions,
