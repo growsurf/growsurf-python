@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 (2026-05-19)
+
+Full Changelog: [v0.2.0...v0.3.0](https://github.com/growsurf/growsurf-python/compare/v0.2.0...v0.3.0)
+
+### Features
+
+* **api:** manual updates ([fa106aa](https://github.com/growsurf/growsurf-python/commit/fa106aacec6012c1edd197e17f39bd05fb0396ec))
+
 ## 0.2.0 (2026-05-15)
 
 Full Changelog: [v0.1.1...v0.2.0](https://github.com/growsurf/growsurf-python/compare/v0.1.1...v0.2.0)
