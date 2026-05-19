@@ -16,6 +16,7 @@ from growsurf.types import (
     ParticipantPayoutList,
     ParticipantCommissionList,
     CampaignRetrieveAnalyticsResponse,
+    CampaignCreateMobileParticipantTokenResponse,
 )
 from growsurf.types.campaign import Campaign
 
@@ -94,6 +95,68 @@ class TestCampaign:
             assert_matches_type(CampaignListResponse, campaign, path=["response"])
 
         assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_create_mobile_participant_token(self, client: Growsurf) -> None:
+        campaign = client.campaign.create_mobile_participant_token(
+            id="id",
+            email="dev@stainless.com",
+        )
+        assert_matches_type(CampaignCreateMobileParticipantTokenResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_create_mobile_participant_token_with_all_params(self, client: Growsurf) -> None:
+        campaign = client.campaign.create_mobile_participant_token(
+            id="id",
+            email="dev@stainless.com",
+            fingerprint="fingerprint",
+            first_name="firstName",
+            ip_address="ipAddress",
+            last_name="lastName",
+            metadata={"foo": "bar"},
+            referral_status="CREDIT_PENDING",
+            referred_by="referredBy",
+        )
+        assert_matches_type(CampaignCreateMobileParticipantTokenResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_create_mobile_participant_token(self, client: Growsurf) -> None:
+        response = client.campaign.with_raw_response.create_mobile_participant_token(
+            id="id",
+            email="dev@stainless.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = response.parse()
+        assert_matches_type(CampaignCreateMobileParticipantTokenResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_create_mobile_participant_token(self, client: Growsurf) -> None:
+        with client.campaign.with_streaming_response.create_mobile_participant_token(
+            id="id",
+            email="dev@stainless.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = response.parse()
+            assert_matches_type(CampaignCreateMobileParticipantTokenResponse, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_create_mobile_participant_token(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.with_raw_response.create_mobile_participant_token(
+                id="",
+                email="dev@stainless.com",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -494,6 +557,68 @@ class TestAsyncCampaign:
             assert_matches_type(CampaignListResponse, campaign, path=["response"])
 
         assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_create_mobile_participant_token(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.create_mobile_participant_token(
+            id="id",
+            email="dev@stainless.com",
+        )
+        assert_matches_type(CampaignCreateMobileParticipantTokenResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_create_mobile_participant_token_with_all_params(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.create_mobile_participant_token(
+            id="id",
+            email="dev@stainless.com",
+            fingerprint="fingerprint",
+            first_name="firstName",
+            ip_address="ipAddress",
+            last_name="lastName",
+            metadata={"foo": "bar"},
+            referral_status="CREDIT_PENDING",
+            referred_by="referredBy",
+        )
+        assert_matches_type(CampaignCreateMobileParticipantTokenResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_create_mobile_participant_token(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.with_raw_response.create_mobile_participant_token(
+            id="id",
+            email="dev@stainless.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = await response.parse()
+        assert_matches_type(CampaignCreateMobileParticipantTokenResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_create_mobile_participant_token(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.with_streaming_response.create_mobile_participant_token(
+            id="id",
+            email="dev@stainless.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = await response.parse()
+            assert_matches_type(CampaignCreateMobileParticipantTokenResponse, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_create_mobile_participant_token(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.with_raw_response.create_mobile_participant_token(
+                id="",
+                email="dev@stainless.com",
+            )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize

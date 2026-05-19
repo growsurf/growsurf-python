@@ -16,3 +16,9 @@ from .campaign_list_leaderboard_params import CampaignListLeaderboardParams as C
 from .campaign_list_participants_params import CampaignListParticipantsParams as CampaignListParticipantsParams
 from .campaign_retrieve_analytics_params import CampaignRetrieveAnalyticsParams as CampaignRetrieveAnalyticsParams
 from .campaign_retrieve_analytics_response import CampaignRetrieveAnalyticsResponse as CampaignRetrieveAnalyticsResponse
+from .campaign_create_mobile_participant_token_params import (
+    CampaignCreateMobileParticipantTokenParams as CampaignCreateMobileParticipantTokenParams,
+)
+from .campaign_create_mobile_participant_token_response import (
+    CampaignCreateMobileParticipantTokenResponse as CampaignCreateMobileParticipantTokenResponse,
+)
