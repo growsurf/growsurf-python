@@ -116,6 +116,7 @@ class TestCampaign:
             ip_address="ipAddress",
             last_name="lastName",
             metadata={"foo": "bar"},
+            mobile_instance_id="mobileInstanceId",
             referral_status="CREDIT_PENDING",
             referred_by="referredBy",
         )
@@ -578,6 +579,7 @@ class TestAsyncCampaign:
             ip_address="ipAddress",
             last_name="lastName",
             metadata={"foo": "bar"},
+            mobile_instance_id="mobileInstanceId",
             referral_status="CREDIT_PENDING",
             referred_by="referredBy",
         )

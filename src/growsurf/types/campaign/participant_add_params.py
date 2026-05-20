@@ -24,6 +24,12 @@ class ParticipantAddParams(TypedDict, total=False):
     metadata: Dict[str, object]
     """Shallow custom metadata object."""
 
+    mobile_instance_id: Annotated[str, PropertyInfo(alias="mobileInstanceId")]
+    """Optional app-install scoped identifier for native mobile anti-fraud.
+
+    Recommended for mobile participant creation and mobile participant token flows.
+    """
+
     referral_status: Annotated[Literal["CREDIT_PENDING", "CREDIT_AWARDED"], PropertyInfo(alias="referralStatus")]
 
     referred_by: Annotated[str, PropertyInfo(alias="referredBy")]

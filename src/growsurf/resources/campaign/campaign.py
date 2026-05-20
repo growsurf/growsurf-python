@@ -161,6 +161,7 @@ class CampaignResource(SyncAPIResource):
         ip_address: str | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
+        mobile_instance_id: str | Omit = omit,
         referral_status: Literal["CREDIT_PENDING", "CREDIT_AWARDED"] | Omit = omit,
         referred_by: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -178,6 +179,9 @@ class CampaignResource(SyncAPIResource):
 
         Args:
           metadata: Shallow custom metadata object.
+
+          mobile_instance_id: Optional app-install scoped identifier for native mobile anti-fraud. Recommended
+              for mobile participant creation and mobile participant token flows.
 
           referred_by: Referrer participant ID or email address.
 
@@ -201,6 +205,7 @@ class CampaignResource(SyncAPIResource):
                     "ip_address": ip_address,
                     "last_name": last_name,
                     "metadata": metadata,
+                    "mobile_instance_id": mobile_instance_id,
                     "referral_status": referral_status,
                     "referred_by": referred_by,
                 },
@@ -666,6 +671,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         ip_address: str | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
+        mobile_instance_id: str | Omit = omit,
         referral_status: Literal["CREDIT_PENDING", "CREDIT_AWARDED"] | Omit = omit,
         referred_by: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -683,6 +689,9 @@ class AsyncCampaignResource(AsyncAPIResource):
 
         Args:
           metadata: Shallow custom metadata object.
+
+          mobile_instance_id: Optional app-install scoped identifier for native mobile anti-fraud. Recommended
+              for mobile participant creation and mobile participant token flows.
 
           referred_by: Referrer participant ID or email address.
 
@@ -706,6 +715,7 @@ class AsyncCampaignResource(AsyncAPIResource):
                     "ip_address": ip_address,
                     "last_name": last_name,
                     "metadata": metadata,
+                    "mobile_instance_id": mobile_instance_id,
                     "referral_status": referral_status,
                     "referred_by": referred_by,
                 },
