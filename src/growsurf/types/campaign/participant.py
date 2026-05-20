@@ -114,6 +114,12 @@ class Participant(BaseModel):
     metadata: Optional[Dict[str, object]] = None
     """Shallow custom metadata object."""
 
+    mobile_instance_id: Optional[str] = FieldInfo(alias="mobileInstanceId", default=None)
+    """
+    App-install scoped mobile identifier used for anti-fraud matching when provided
+    by native mobile apps. Not stored when strict GDPR/CCPA mode is enabled.
+    """
+
     monthly_referrals: Optional[List[str]] = FieldInfo(alias="monthlyReferrals", default=None)
 
     notes: Optional[str] = None
