@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 (2026-05-20)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/growsurf/growsurf-python/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* **api:** Add Participant.mobileInstanceId ([0dc8db9](https://github.com/growsurf/growsurf-python/commit/0dc8db9d24e075b782975aaa5236281fb8d4c5fd))
+
 ## 0.3.0 (2026-05-19)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/growsurf/growsurf-python/compare/v0.2.0...v0.3.0)
