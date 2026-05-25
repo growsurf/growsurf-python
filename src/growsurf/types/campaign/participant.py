@@ -117,7 +117,8 @@ class Participant(BaseModel):
     mobile_instance_id: Optional[str] = FieldInfo(alias="mobileInstanceId", default=None)
     """
     App-install scoped mobile identifier used for anti-fraud matching when provided
-    by native mobile apps. Not stored when strict GDPR/CCPA mode is enabled.
+    by native mobile apps. The official mobile SDKs generate this as a lowercase
+    UUID. Not stored when strict GDPR/CCPA mode is enabled.
     """
 
     monthly_referrals: Optional[List[str]] = FieldInfo(alias="monthlyReferrals", default=None)
