@@ -28,6 +28,7 @@ class CampaignCreateMobileParticipantTokenParams(TypedDict, total=False):
     """Optional app-install scoped identifier for native mobile anti-fraud.
 
     Recommended for mobile participant creation and mobile participant token flows.
+    The official mobile SDKs generate this as a lowercase UUID.
     """
 
     referral_status: Annotated[Literal["CREDIT_PENDING", "CREDIT_AWARDED"], PropertyInfo(alias="referralStatus")]
