@@ -181,7 +181,8 @@ class CampaignResource(SyncAPIResource):
           metadata: Shallow custom metadata object.
 
           mobile_instance_id: Optional app-install scoped identifier for native mobile anti-fraud. Recommended
-              for mobile participant creation and mobile participant token flows.
+              for mobile participant creation and mobile participant token flows. The official
+              mobile SDKs generate this as a lowercase UUID.
 
           referred_by: Referrer participant ID or email address.
 
@@ -691,7 +692,8 @@ class AsyncCampaignResource(AsyncAPIResource):
           metadata: Shallow custom metadata object.
 
           mobile_instance_id: Optional app-install scoped identifier for native mobile anti-fraud. Recommended
-              for mobile participant creation and mobile participant token flows.
+              for mobile participant creation and mobile participant token flows. The official
+              mobile SDKs generate this as a lowercase UUID.
 
           referred_by: Referrer participant ID or email address.
 
