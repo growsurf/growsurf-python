@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.0 (2026-06-23)
+
+Full Changelog: [v0.5.0...v0.6.0](https://github.com/growsurf/growsurf-python/compare/v0.5.0...v0.6.0)
+
+### Features
+
+* **api:** add payoutSettings to Participant ([f1c59b5](https://github.com/growsurf/growsurf-python/commit/f1c59b55b06e1082f725d6df2fa5057458250347))
+* **api:** manual updates ([e949eb6](https://github.com/growsurf/growsurf-python/commit/e949eb62d25a5c1c67176b77199dee46abb161f8))
+
+
+### Bug Fixes
+
+* **auth:** prioritize first auth header ([c398225](https://github.com/growsurf/growsurf-python/commit/c39822597c0c851137b6a3b6ef954f8831e1601b))
+
 ## 0.5.0 (2026-05-25)
 
 Full Changelog: [v0.4.0...v0.5.0](https://github.com/growsurf/growsurf-python/compare/v0.4.0...v0.5.0)
