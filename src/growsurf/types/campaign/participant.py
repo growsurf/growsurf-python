@@ -1,6 +1,7 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import Dict, List, Optional
+from typing_extensions import Literal
 
 from pydantic import Field as FieldInfo
 
@@ -10,7 +11,13 @@ from .referral_status import ReferralStatus
 from .fraud_risk_level import FraudRiskLevel
 from .participant_reward import ParticipantReward
 
-__all__ = ["Participant", "Referrer"]
+__all__ = ["Participant", "PayoutSettings", "Referrer"]
+
+
+class PayoutSettings(BaseModel):
+    required_actions: Optional[List[Literal["PAYPAL_EMAIL", "TAX_INFO"]]] = FieldInfo(
+        alias="requiredActions", default=None
+    )
 
 
 class Referrer(BaseModel):
@@ -124,6 +131,8 @@ class Participant(BaseModel):
     monthly_referrals: Optional[List[str]] = FieldInfo(alias="monthlyReferrals", default=None)
 
     notes: Optional[str] = None
+
+    payout_settings: Optional[PayoutSettings] = FieldInfo(alias="payoutSettings", default=None)
 
     paypal_email_address: Optional[str] = FieldInfo(alias="paypalEmailAddress", default=None)
 
