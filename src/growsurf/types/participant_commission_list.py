@@ -13,7 +13,7 @@ __all__ = ["ParticipantCommissionList", "Commission"]
 class Commission(BaseModel):
     id: str
 
-    amount: int
+    amount: Optional[int] = None
 
     created_at: int = FieldInfo(alias="createdAt")
 
@@ -23,7 +23,7 @@ class Commission(BaseModel):
 
     referrer_id: str = FieldInfo(alias="referrerId")
 
-    sale_amount: int = FieldInfo(alias="saleAmount")
+    sale_amount: Optional[int] = FieldInfo(alias="saleAmount", default=None)
 
     status: Literal["PENDING", "APPROVED", "PAID", "REVERSED", "DELETED"]
 
@@ -49,8 +49,8 @@ class Commission(BaseModel):
 
     reversed_at: Optional[int] = FieldInfo(alias="reversedAt", default=None)
 
-    sale_amount_amount_in_campaign_currency: Optional[int] = FieldInfo(
-        alias="saleAmountAmountInCampaignCurrency", default=None
+    sale_amount_in_campaign_currency: Optional[int] = FieldInfo(
+        alias="saleAmountInCampaignCurrency", default=None
     )
 
 

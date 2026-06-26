@@ -41,6 +41,8 @@ class Payout(BaseModel):
 
     provider: Optional[str] = None
 
+    queued_at: Optional[int] = FieldInfo(alias="queuedAt", default=None)
+
 
 class ParticipantPayoutList(BaseModel):
     limit: int
