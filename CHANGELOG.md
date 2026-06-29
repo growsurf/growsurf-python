@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.0 (2026-06-29)
+
+Full Changelog: [v0.6.1...v0.7.0](https://github.com/growsurf/growsurf-python/compare/v0.6.1...v0.7.0)
+
+### Features
+
+* **api:** support delayed referral rewards and affiliate refunds ([f0afb36](https://github.com/growsurf/growsurf-python/commit/f0afb361ec64165cbb21134d277e8ad224a57106))
+
 ## 0.6.1 (2026-06-26)
 
 Full Changelog: [v0.6.0...v0.6.1](https://github.com/growsurf/growsurf-python/compare/v0.6.0...v0.6.1)
