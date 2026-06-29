@@ -27,7 +27,9 @@ from ...types.campaign import (
     participant_send_invites_params,
     participant_list_referrals_params,
     participant_list_commissions_params,
+    participant_trigger_referral_params,
     participant_record_transaction_params,
+    participant_refund_transaction_params,
 )
 from ...types.referral_list import ReferralList
 from ...types.campaign.participant import Participant
@@ -39,6 +41,7 @@ from ...types.campaign.participant_list_rewards_response import ParticipantListR
 from ...types.campaign.participant_send_invites_response import ParticipantSendInvitesResponse
 from ...types.campaign.participant_trigger_referral_response import ParticipantTriggerReferralResponse
 from ...types.campaign.participant_record_transaction_response import ParticipantRecordTransactionResponse
+from ...types.campaign.participant_refund_transaction_response import ParticipantRefundTransactionResponse
 
 __all__ = ["ParticipantResource", "AsyncParticipantResource"]
 
@@ -646,6 +649,87 @@ class ParticipantResource(SyncAPIResource):
             ),
         )
 
+    def refund_transaction(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        amendment_type: Literal["REFUND", "CHARGEBACK"] | Omit = omit,
+        amount: int | Omit = omit,
+        amount_refunded: int | Omit = omit,
+        charge_id: str | Omit = omit,
+        currency: str | Omit = omit,
+        description: str | Omit = omit,
+        external_id: str | Omit = omit,
+        invoice_id: str | Omit = omit,
+        order_id: str | Omit = omit,
+        payment_id: str | Omit = omit,
+        payment_intent_id: str | Omit = omit,
+        refund_amount: int | Omit = omit,
+        refund_id: str | Omit = omit,
+        refund_status: str | Omit = omit,
+        transaction_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantRefundTransactionResponse:
+        """
+        Records an amendment (refund, partial refund, refund cancellation, or
+        chargeback) against a previously recorded transaction and reverses or adjusts
+        the referrer's commission. The inverse of Record Affiliate Transaction.
+        Commissions already paid out are not clawed back; the amendment is recorded for
+        tax reporting only.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return self._post(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/transaction/refund",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            body=maybe_transform(
+                {
+                    "amendment_type": amendment_type,
+                    "amount": amount,
+                    "amount_refunded": amount_refunded,
+                    "charge_id": charge_id,
+                    "currency": currency,
+                    "description": description,
+                    "external_id": external_id,
+                    "invoice_id": invoice_id,
+                    "order_id": order_id,
+                    "payment_id": payment_id,
+                    "payment_intent_id": payment_intent_id,
+                    "refund_amount": refund_amount,
+                    "refund_id": refund_id,
+                    "refund_status": refund_status,
+                    "transaction_id": transaction_id,
+                },
+                participant_refund_transaction_params.ParticipantRefundTransactionParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ParticipantRefundTransactionResponse,
+        )
+
     def send_invites(
         self,
         participant_id_or_email: str,
@@ -704,6 +788,7 @@ class ParticipantResource(SyncAPIResource):
         participant_id_or_email: str,
         *,
         id: str,
+        delay_in_days: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -713,6 +798,58 @@ class ParticipantResource(SyncAPIResource):
     ) -> ParticipantTriggerReferralResponse:
         """
         Triggers referral credit for an existing referred participant by GrowSurf
+        participant ID or email address.
+
+        Args:
+          delay_in_days: Number of whole days to hold referral credit before it is awarded. Useful for
+              honoring a refund window before crediting a referrer. Omit this field to award
+              credit immediately. The credit is awarded automatically once the delay elapses,
+              and can be cancelled before then with the Cancel delayed referral trigger
+              request.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return self._post(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/ref",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            body=maybe_transform(
+                {"delay_in_days": delay_in_days}, participant_trigger_referral_params.ParticipantTriggerReferralParams
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ParticipantTriggerReferralResponse,
+        )
+
+    def cancel_delayed_referral(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantTriggerReferralResponse:
+        """
+        Cancels a pending delayed referral trigger for a participant by GrowSurf
         participant ID or email address.
 
         Args:
@@ -730,7 +867,7 @@ class ParticipantResource(SyncAPIResource):
             raise ValueError(
                 f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
             )
-        return self._post(
+        return self._delete(
             path_template(
                 "/campaign/{id}/participant/{participant_id_or_email}/ref",
                 id=id,
@@ -1346,6 +1483,87 @@ class AsyncParticipantResource(AsyncAPIResource):
             ),
         )
 
+    async def refund_transaction(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        amendment_type: Literal["REFUND", "CHARGEBACK"] | Omit = omit,
+        amount: int | Omit = omit,
+        amount_refunded: int | Omit = omit,
+        charge_id: str | Omit = omit,
+        currency: str | Omit = omit,
+        description: str | Omit = omit,
+        external_id: str | Omit = omit,
+        invoice_id: str | Omit = omit,
+        order_id: str | Omit = omit,
+        payment_id: str | Omit = omit,
+        payment_intent_id: str | Omit = omit,
+        refund_amount: int | Omit = omit,
+        refund_id: str | Omit = omit,
+        refund_status: str | Omit = omit,
+        transaction_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantRefundTransactionResponse:
+        """
+        Records an amendment (refund, partial refund, refund cancellation, or
+        chargeback) against a previously recorded transaction and reverses or adjusts
+        the referrer's commission. The inverse of Record Affiliate Transaction.
+        Commissions already paid out are not clawed back; the amendment is recorded for
+        tax reporting only.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return await self._post(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/transaction/refund",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            body=await async_maybe_transform(
+                {
+                    "amendment_type": amendment_type,
+                    "amount": amount,
+                    "amount_refunded": amount_refunded,
+                    "charge_id": charge_id,
+                    "currency": currency,
+                    "description": description,
+                    "external_id": external_id,
+                    "invoice_id": invoice_id,
+                    "order_id": order_id,
+                    "payment_id": payment_id,
+                    "payment_intent_id": payment_intent_id,
+                    "refund_amount": refund_amount,
+                    "refund_id": refund_id,
+                    "refund_status": refund_status,
+                    "transaction_id": transaction_id,
+                },
+                participant_refund_transaction_params.ParticipantRefundTransactionParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ParticipantRefundTransactionResponse,
+        )
+
     async def send_invites(
         self,
         participant_id_or_email: str,
@@ -1404,6 +1622,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         participant_id_or_email: str,
         *,
         id: str,
+        delay_in_days: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1413,6 +1632,58 @@ class AsyncParticipantResource(AsyncAPIResource):
     ) -> ParticipantTriggerReferralResponse:
         """
         Triggers referral credit for an existing referred participant by GrowSurf
+        participant ID or email address.
+
+        Args:
+          delay_in_days: Number of whole days to hold referral credit before it is awarded. Useful for
+              honoring a refund window before crediting a referrer. Omit this field to award
+              credit immediately. The credit is awarded automatically once the delay elapses,
+              and can be cancelled before then with the Cancel delayed referral trigger
+              request.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return await self._post(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/ref",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            body=await async_maybe_transform(
+                {"delay_in_days": delay_in_days}, participant_trigger_referral_params.ParticipantTriggerReferralParams
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ParticipantTriggerReferralResponse,
+        )
+
+    async def cancel_delayed_referral(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantTriggerReferralResponse:
+        """
+        Cancels a pending delayed referral trigger for a participant by GrowSurf
         participant ID or email address.
 
         Args:
@@ -1430,7 +1701,7 @@ class AsyncParticipantResource(AsyncAPIResource):
             raise ValueError(
                 f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
             )
-        return await self._post(
+        return await self._delete(
             path_template(
                 "/campaign/{id}/participant/{participant_id_or_email}/ref",
                 id=id,
@@ -1474,11 +1745,17 @@ class ParticipantResourceWithRawResponse:
         self.record_transaction = to_raw_response_wrapper(
             participant.record_transaction,
         )
+        self.refund_transaction = to_raw_response_wrapper(
+            participant.refund_transaction,
+        )
         self.send_invites = to_raw_response_wrapper(
             participant.send_invites,
         )
         self.trigger_referral = to_raw_response_wrapper(
             participant.trigger_referral,
+        )
+        self.cancel_delayed_referral = to_raw_response_wrapper(
+            participant.cancel_delayed_referral,
         )
 
 
@@ -1513,11 +1790,17 @@ class AsyncParticipantResourceWithRawResponse:
         self.record_transaction = async_to_raw_response_wrapper(
             participant.record_transaction,
         )
+        self.refund_transaction = async_to_raw_response_wrapper(
+            participant.refund_transaction,
+        )
         self.send_invites = async_to_raw_response_wrapper(
             participant.send_invites,
         )
         self.trigger_referral = async_to_raw_response_wrapper(
             participant.trigger_referral,
+        )
+        self.cancel_delayed_referral = async_to_raw_response_wrapper(
+            participant.cancel_delayed_referral,
         )
 
 
@@ -1552,11 +1835,17 @@ class ParticipantResourceWithStreamingResponse:
         self.record_transaction = to_streamed_response_wrapper(
             participant.record_transaction,
         )
+        self.refund_transaction = to_streamed_response_wrapper(
+            participant.refund_transaction,
+        )
         self.send_invites = to_streamed_response_wrapper(
             participant.send_invites,
         )
         self.trigger_referral = to_streamed_response_wrapper(
             participant.trigger_referral,
+        )
+        self.cancel_delayed_referral = to_streamed_response_wrapper(
+            participant.cancel_delayed_referral,
         )
 
 
@@ -1591,9 +1880,15 @@ class AsyncParticipantResourceWithStreamingResponse:
         self.record_transaction = async_to_streamed_response_wrapper(
             participant.record_transaction,
         )
+        self.refund_transaction = async_to_streamed_response_wrapper(
+            participant.refund_transaction,
+        )
         self.send_invites = async_to_streamed_response_wrapper(
             participant.send_invites,
         )
         self.trigger_referral = async_to_streamed_response_wrapper(
             participant.trigger_referral,
+        )
+        self.cancel_delayed_referral = async_to_streamed_response_wrapper(
+            participant.cancel_delayed_referral,
         )

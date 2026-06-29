@@ -17,6 +17,7 @@ from growsurf.types.campaign import (
     ParticipantSendInvitesResponse,
     ParticipantTriggerReferralResponse,
     ParticipantRecordTransactionResponse,
+    ParticipantRefundTransactionResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -634,6 +635,84 @@ class TestParticipant:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
+    def test_method_refund_transaction(self, client: Growsurf) -> None:
+        participant = client.campaign.participant.refund_transaction(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+        assert_matches_type(ParticipantRefundTransactionResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_refund_transaction_with_all_params(self, client: Growsurf) -> None:
+        participant = client.campaign.participant.refund_transaction(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            amendment_type="REFUND",
+            amount=9900,
+            amount_refunded=9900,
+            charge_id="chargeId",
+            currency="USD",
+            description="Customer refunded the Pro subscription",
+            external_id="externalId",
+            invoice_id="invoice_54",
+            order_id="orderId",
+            payment_id="paymentId",
+            payment_intent_id="paymentIntentId",
+            refund_amount=9900,
+            refund_id="refundId",
+            refund_status="canceled",
+            transaction_id="transactionId",
+        )
+        assert_matches_type(ParticipantRefundTransactionResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_refund_transaction(self, client: Growsurf) -> None:
+        response = client.campaign.participant.with_raw_response.refund_transaction(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = response.parse()
+        assert_matches_type(ParticipantRefundTransactionResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_refund_transaction(self, client: Growsurf) -> None:
+        with client.campaign.participant.with_streaming_response.refund_transaction(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = response.parse()
+            assert_matches_type(ParticipantRefundTransactionResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_refund_transaction(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.participant.with_raw_response.refund_transaction(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            client.campaign.participant.with_raw_response.refund_transaction(
+                participant_id_or_email="",
+                id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
     def test_method_send_invites(self, client: Growsurf) -> None:
         participant = client.campaign.participant.send_invites(
             participant_id_or_email="participantIdOrEmail",
@@ -712,6 +791,16 @@ class TestParticipant:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
+    def test_method_trigger_referral_with_all_params(self, client: Growsurf) -> None:
+        participant = client.campaign.participant.trigger_referral(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            delay_in_days=1,
+        )
+        assert_matches_type(ParticipantTriggerReferralResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
     def test_raw_response_trigger_referral(self, client: Growsurf) -> None:
         response = client.campaign.participant.with_raw_response.trigger_referral(
             participant_id_or_email="participantIdOrEmail",
@@ -751,6 +840,60 @@ class TestParticipant:
             ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
         ):
             client.campaign.participant.with_raw_response.trigger_referral(
+                participant_id_or_email="",
+                id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_cancel_delayed_referral(self, client: Growsurf) -> None:
+        participant = client.campaign.participant.cancel_delayed_referral(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+        assert_matches_type(ParticipantTriggerReferralResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_cancel_delayed_referral(self, client: Growsurf) -> None:
+        response = client.campaign.participant.with_raw_response.cancel_delayed_referral(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = response.parse()
+        assert_matches_type(ParticipantTriggerReferralResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_cancel_delayed_referral(self, client: Growsurf) -> None:
+        with client.campaign.participant.with_streaming_response.cancel_delayed_referral(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = response.parse()
+            assert_matches_type(ParticipantTriggerReferralResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_cancel_delayed_referral(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.participant.with_raw_response.cancel_delayed_referral(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            client.campaign.participant.with_raw_response.cancel_delayed_referral(
                 participant_id_or_email="",
                 id="id",
             )
@@ -1370,6 +1513,84 @@ class TestAsyncParticipant:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
+    async def test_method_refund_transaction(self, async_client: AsyncGrowsurf) -> None:
+        participant = await async_client.campaign.participant.refund_transaction(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+        assert_matches_type(ParticipantRefundTransactionResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_refund_transaction_with_all_params(self, async_client: AsyncGrowsurf) -> None:
+        participant = await async_client.campaign.participant.refund_transaction(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            amendment_type="REFUND",
+            amount=9900,
+            amount_refunded=9900,
+            charge_id="chargeId",
+            currency="USD",
+            description="Customer refunded the Pro subscription",
+            external_id="externalId",
+            invoice_id="invoice_54",
+            order_id="orderId",
+            payment_id="paymentId",
+            payment_intent_id="paymentIntentId",
+            refund_amount=9900,
+            refund_id="refundId",
+            refund_status="canceled",
+            transaction_id="transactionId",
+        )
+        assert_matches_type(ParticipantRefundTransactionResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_refund_transaction(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.participant.with_raw_response.refund_transaction(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = await response.parse()
+        assert_matches_type(ParticipantRefundTransactionResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_refund_transaction(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.participant.with_streaming_response.refund_transaction(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = await response.parse()
+            assert_matches_type(ParticipantRefundTransactionResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_refund_transaction(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.participant.with_raw_response.refund_transaction(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            await async_client.campaign.participant.with_raw_response.refund_transaction(
+                participant_id_or_email="",
+                id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
     async def test_method_send_invites(self, async_client: AsyncGrowsurf) -> None:
         participant = await async_client.campaign.participant.send_invites(
             participant_id_or_email="participantIdOrEmail",
@@ -1448,6 +1669,16 @@ class TestAsyncParticipant:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
+    async def test_method_trigger_referral_with_all_params(self, async_client: AsyncGrowsurf) -> None:
+        participant = await async_client.campaign.participant.trigger_referral(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            delay_in_days=1,
+        )
+        assert_matches_type(ParticipantTriggerReferralResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
     async def test_raw_response_trigger_referral(self, async_client: AsyncGrowsurf) -> None:
         response = await async_client.campaign.participant.with_raw_response.trigger_referral(
             participant_id_or_email="participantIdOrEmail",
@@ -1487,6 +1718,60 @@ class TestAsyncParticipant:
             ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
         ):
             await async_client.campaign.participant.with_raw_response.trigger_referral(
+                participant_id_or_email="",
+                id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_cancel_delayed_referral(self, async_client: AsyncGrowsurf) -> None:
+        participant = await async_client.campaign.participant.cancel_delayed_referral(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+        assert_matches_type(ParticipantTriggerReferralResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_cancel_delayed_referral(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.participant.with_raw_response.cancel_delayed_referral(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = await response.parse()
+        assert_matches_type(ParticipantTriggerReferralResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_cancel_delayed_referral(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.participant.with_streaming_response.cancel_delayed_referral(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = await response.parse()
+            assert_matches_type(ParticipantTriggerReferralResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_cancel_delayed_referral(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.participant.with_raw_response.cancel_delayed_referral(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            await async_client.campaign.participant.with_raw_response.cancel_delayed_referral(
                 participant_id_or_email="",
                 id="id",
             )
