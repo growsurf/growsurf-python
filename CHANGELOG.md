@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/growsurf/growsurf-python/compare/v0.7.0...v0.8.0) (2026-07-01)
+
+
+### Features
+
+* **api:** add campaign create/update/clone and program-reward CRUD ([ef2fee0](https://github.com/growsurf/growsurf-python/commit/ef2fee0997638e5461988d514ab5505c63436b35))
+
 ## 0.7.0 (2026-06-29)
 
 Full Changelog: [v0.6.1...v0.7.0](https://github.com/growsurf/growsurf-python/compare/v0.6.1...v0.7.0)
