@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
+from .reward import Reward as Reward
 from .campaign import Campaign as Campaign
 from .participant import Participant as Participant
 from .referral_source import ReferralSource as ReferralSource
 from .referral_status import ReferralStatus as ReferralStatus
 from .fraud_risk_level import FraudRiskLevel as FraudRiskLevel
 from .participant_reward import ParticipantReward as ParticipantReward
+from .reward_create_params import RewardCreateParams as RewardCreateParams
+from .reward_update_params import RewardUpdateParams as RewardUpdateParams
 from .reward_approve_params import RewardApproveParams as RewardApproveParams
+from .delete_reward_response import DeleteRewardResponse as DeleteRewardResponse
 from .participant_add_params import ParticipantAddParams as ParticipantAddParams
 from .reward_delete_response import RewardDeleteResponse as RewardDeleteResponse
 from .reward_approve_response import RewardApproveResponse as RewardApproveResponse
@@ -17,6 +21,7 @@ from .participant_update_params import ParticipantUpdateParams as ParticipantUpd
 from .commission_delete_response import CommissionDeleteResponse as CommissionDeleteResponse
 from .commission_approve_response import CommissionApproveResponse as CommissionApproveResponse
 from .participant_delete_response import ParticipantDeleteResponse as ParticipantDeleteResponse
+from .campaign_reward_list_response import CampaignRewardListResponse as CampaignRewardListResponse
 from .participant_list_payouts_params import ParticipantListPayoutsParams as ParticipantListPayoutsParams
 from .participant_list_rewards_params import ParticipantListRewardsParams as ParticipantListRewardsParams
 from .participant_send_invites_params import ParticipantSendInvitesParams as ParticipantSendInvitesParams

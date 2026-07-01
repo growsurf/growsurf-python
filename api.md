@@ -18,8 +18,11 @@ from growsurf.types import (
 
 Methods:
 
+- <code title="post /campaigns">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">create</a>(\*\*<a href="src/growsurf/types/campaign_create_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/campaign.py">Campaign</a></code>
 - <code title="get /campaign/{id}">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">retrieve</a>(id) -> <a href="./src/growsurf/types/campaign/campaign.py">Campaign</a></code>
+- <code title="patch /campaign/{id}">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">update</a>(id, \*\*<a href="src/growsurf/types/campaign_update_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/campaign.py">Campaign</a></code>
 - <code title="get /campaigns">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">list</a>() -> <a href="./src/growsurf/types/campaign_list_response.py">CampaignListResponse</a></code>
+- <code title="post /campaign/{id}/clone">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">clone</a>(id) -> <a href="./src/growsurf/types/campaign/campaign.py">Campaign</a></code>
 - <code title="post /campaign/{id}/mobile-participant-token">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">create_mobile_participant_token</a>(id, \*\*<a href="src/growsurf/types/campaign_create_mobile_participant_token_params.py">params</a>) -> <a href="./src/growsurf/types/campaign_create_mobile_participant_token_response.py">CampaignCreateMobileParticipantTokenResponse</a></code>
 - <code title="get /campaign/{id}/commissions">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">list_commissions</a>(id, \*\*<a href="src/growsurf/types/campaign_list_commissions_params.py">params</a>) -> <a href="./src/growsurf/types/participant_commission_list.py">ParticipantCommissionList</a></code>
 - <code title="get /campaign/{id}/leaderboard">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">list_leaderboard</a>(id, \*\*<a href="src/growsurf/types/campaign_list_leaderboard_params.py">params</a>) -> <a href="./src/growsurf/types/participant_list.py">ParticipantList</a></code>
@@ -95,3 +98,18 @@ Methods:
 
 - <code title="delete /campaign/{id}/commission/{commissionId}">client.campaign.commission.<a href="./src/growsurf/resources/campaign/commission.py">delete</a>(commission_id, \*, id) -> <a href="./src/growsurf/types/campaign/commission_delete_response.py">CommissionDeleteResponse</a></code>
 - <code title="post /campaign/{id}/commission/{commissionId}/approve">client.campaign.commission.<a href="./src/growsurf/resources/campaign/commission.py">approve</a>(commission_id, \*, id) -> <a href="./src/growsurf/types/campaign/commission_approve_response.py">CommissionApproveResponse</a></code>
+
+## Rewards
+
+Types:
+
+```python
+from growsurf.types.campaign import Reward, CampaignRewardListResponse, DeleteRewardResponse
+```
+
+Methods:
+
+- <code title="post /campaign/{id}/rewards">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">create</a>(id, \*\*<a href="src/growsurf/types/campaign/reward_create_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/reward.py">Reward</a></code>
+- <code title="patch /campaign/{id}/rewards/{rewardId}">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">update</a>(reward_id, \*, id, \*\*<a href="src/growsurf/types/campaign/reward_update_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/reward.py">Reward</a></code>
+- <code title="get /campaign/{id}/rewards">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">list</a>(id) -> <a href="./src/growsurf/types/campaign/campaign_reward_list_response.py">CampaignRewardListResponse</a></code>
+- <code title="delete /campaign/{id}/rewards/{rewardId}">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">delete</a>(reward_id, \*, id) -> <a href="./src/growsurf/types/campaign/delete_reward_response.py">DeleteRewardResponse</a></code>

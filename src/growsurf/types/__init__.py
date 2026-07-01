@@ -6,7 +6,9 @@ from .campaign import Campaign as Campaign
 from .referral_list import ReferralList as ReferralList
 from .participant_list import ParticipantList as ParticipantList
 from .commission_structure import CommissionStructure as CommissionStructure
+from .campaign_create_params import CampaignCreateParams as CampaignCreateParams
 from .campaign_list_response import CampaignListResponse as CampaignListResponse
+from .campaign_update_params import CampaignUpdateParams as CampaignUpdateParams
 from .participant_payout_list import ParticipantPayoutList as ParticipantPayoutList
 from .participant_commission_list import ParticipantCommissionList as ParticipantCommissionList
 from .campaign_list_payouts_params import CampaignListPayoutsParams as CampaignListPayoutsParams

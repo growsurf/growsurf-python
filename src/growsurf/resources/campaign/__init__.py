@@ -8,6 +8,14 @@ from .reward import (
     RewardResourceWithStreamingResponse,
     AsyncRewardResourceWithStreamingResponse,
 )
+from .rewards import (
+    RewardsResource,
+    AsyncRewardsResource,
+    RewardsResourceWithRawResponse,
+    AsyncRewardsResourceWithRawResponse,
+    RewardsResourceWithStreamingResponse,
+    AsyncRewardsResourceWithStreamingResponse,
+)
 from .campaign import (
     CampaignResource,
     AsyncCampaignResource,
@@ -46,6 +54,12 @@ __all__ = [
     "AsyncRewardResourceWithRawResponse",
     "RewardResourceWithStreamingResponse",
     "AsyncRewardResourceWithStreamingResponse",
+    "RewardsResource",
+    "AsyncRewardsResource",
+    "RewardsResourceWithRawResponse",
+    "AsyncRewardsResourceWithRawResponse",
+    "RewardsResourceWithStreamingResponse",
+    "AsyncRewardsResourceWithStreamingResponse",
     "CommissionResource",
     "AsyncCommissionResource",
     "CommissionResourceWithRawResponse",

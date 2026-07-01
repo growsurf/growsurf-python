@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, Iterable
 from typing_extensions import Literal
 
 import httpx
@@ -16,6 +16,8 @@ from .reward import (
     AsyncRewardResourceWithStreamingResponse,
 )
 from ...types import (
+    campaign_create_params,
+    campaign_update_params,
     campaign_list_payouts_params,
     campaign_list_referrals_params,
     campaign_list_commissions_params,
@@ -23,6 +25,14 @@ from ...types import (
     campaign_list_participants_params,
     campaign_retrieve_analytics_params,
     campaign_create_mobile_participant_token_params,
+)
+from .rewards import (
+    RewardsResource,
+    AsyncRewardsResource,
+    RewardsResourceWithRawResponse,
+    AsyncRewardsResourceWithRawResponse,
+    RewardsResourceWithStreamingResponse,
+    AsyncRewardsResourceWithStreamingResponse,
 )
 from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from ..._utils import path_template, maybe_transform, async_maybe_transform
@@ -51,7 +61,7 @@ from .participant import (
     AsyncParticipantResourceWithStreamingResponse,
 )
 from ..._base_client import make_request_options
-from ...types.campaign import ReferralStatus
+from ...types.campaign import ReferralStatus, reward_create_params
 from ...types.referral_list import ReferralList
 from ...types.participant_list import ParticipantList
 from ...types.campaign.campaign import Campaign
@@ -81,6 +91,11 @@ class CampaignResource(SyncAPIResource):
         return CommissionResource(self._client)
 
     @cached_property
+    def rewards(self) -> RewardsResource:
+        """Program reward (`CampaignReward`) configuration operations."""
+        return RewardsResource(self._client)
+
+    @cached_property
     def with_raw_response(self) -> CampaignResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
@@ -98,6 +113,71 @@ class CampaignResource(SyncAPIResource):
         For more information, see https://www.github.com/growsurf/growsurf-python#with_streaming_response
         """
         return CampaignResourceWithStreamingResponse(self)
+
+    def create(
+        self,
+        *,
+        type: Literal["REFERRAL", "AFFILIATE"],
+        company_logo_image_url: str | Omit = omit,
+        company_name: str | Omit = omit,
+        currency_iso: str | Omit = omit,
+        goal: str | Omit = omit,
+        name: str | Omit = omit,
+        options: Dict[str, object] | Omit = omit,
+        rewards: Iterable[reward_create_params.RewardCreateParams] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Campaign:
+        """
+        Creates a new program pre-populated with type-appropriate defaults, plus any
+        optional inline rewards. The new program is created in `DRAFT` status and owned
+        by the API key's account. Requires a verified account email and a paid plan
+        (referral) or a payment source on file (affiliate); subject to your plan's
+        program limit.
+
+        Args:
+          type: The program type. Immutable after creation.
+
+          currency_iso: ISO 4217 currency code. Defaults to USD.
+
+          name: The program name. Defaults to "Untitled Program".
+
+          options: A curated subset of program options to shallow-merge onto the defaults.
+
+          rewards: Optional inline rewards to create with the program.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._post(
+            "/campaigns",
+            body=maybe_transform(
+                {
+                    "type": type,
+                    "company_logo_image_url": company_logo_image_url,
+                    "company_name": company_name,
+                    "currency_iso": currency_iso,
+                    "goal": goal,
+                    "name": name,
+                    "options": options,
+                    "rewards": rewards,
+                },
+                campaign_create_params.CampaignCreateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Campaign,
+        )
 
     def retrieve(
         self,
@@ -132,6 +212,70 @@ class CampaignResource(SyncAPIResource):
             cast_to=Campaign,
         )
 
+    def update(
+        self,
+        id: str,
+        *,
+        company_logo_image_url: str | Omit = omit,
+        company_name: str | Omit = omit,
+        currency_iso: str | Omit = omit,
+        design: Dict[str, object] | Omit = omit,
+        emails: Dict[str, object] | Omit = omit,
+        goal: str | Omit = omit,
+        installation: Dict[str, object] | Omit = omit,
+        name: str | Omit = omit,
+        notifications: Dict[str, object] | Omit = omit,
+        options: Dict[str, object] | Omit = omit,
+        status: Literal["DRAFT", "PENDING", "IN_PROGRESS", "COMPLETE", "CANCELLED"] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Campaign:
+        """
+        Updates a program's configuration and/or status. Only the fields you send are
+        changed. `type` and `urlId` are immutable. Status changes are validated against
+        the allowed transitions; the program cannot be deleted via this endpoint.
+
+        Args:
+          status: The program status. Transitions are validated; DELETED is not allowed.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._patch(
+            path_template("/campaign/{id}", id=id),
+            body=maybe_transform(
+                {
+                    "company_logo_image_url": company_logo_image_url,
+                    "company_name": company_name,
+                    "currency_iso": currency_iso,
+                    "design": design,
+                    "emails": emails,
+                    "goal": goal,
+                    "installation": installation,
+                    "name": name,
+                    "notifications": notifications,
+                    "options": options,
+                    "status": status,
+                },
+                campaign_update_params.CampaignUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Campaign,
+        )
+
     def list(
         self,
         *,
@@ -149,6 +293,40 @@ class CampaignResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=CampaignListResponse,
+        )
+
+    def clone(
+        self,
+        id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Campaign:
+        """
+        Clones an existing program into a new `DRAFT` program. Integrations and
+        credentials are not copied; active rewards are cloned.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._post(
+            path_template("/campaign/{id}/clone", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Campaign,
         )
 
     def create_mobile_participant_token(
@@ -592,6 +770,11 @@ class AsyncCampaignResource(AsyncAPIResource):
         return AsyncCommissionResource(self._client)
 
     @cached_property
+    def rewards(self) -> AsyncRewardsResource:
+        """Program reward (`CampaignReward`) configuration operations."""
+        return AsyncRewardsResource(self._client)
+
+    @cached_property
     def with_raw_response(self) -> AsyncCampaignResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
@@ -609,6 +792,71 @@ class AsyncCampaignResource(AsyncAPIResource):
         For more information, see https://www.github.com/growsurf/growsurf-python#with_streaming_response
         """
         return AsyncCampaignResourceWithStreamingResponse(self)
+
+    async def create(
+        self,
+        *,
+        type: Literal["REFERRAL", "AFFILIATE"],
+        company_logo_image_url: str | Omit = omit,
+        company_name: str | Omit = omit,
+        currency_iso: str | Omit = omit,
+        goal: str | Omit = omit,
+        name: str | Omit = omit,
+        options: Dict[str, object] | Omit = omit,
+        rewards: Iterable[reward_create_params.RewardCreateParams] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Campaign:
+        """
+        Creates a new program pre-populated with type-appropriate defaults, plus any
+        optional inline rewards. The new program is created in `DRAFT` status and owned
+        by the API key's account. Requires a verified account email and a paid plan
+        (referral) or a payment source on file (affiliate); subject to your plan's
+        program limit.
+
+        Args:
+          type: The program type. Immutable after creation.
+
+          currency_iso: ISO 4217 currency code. Defaults to USD.
+
+          name: The program name. Defaults to "Untitled Program".
+
+          options: A curated subset of program options to shallow-merge onto the defaults.
+
+          rewards: Optional inline rewards to create with the program.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return await self._post(
+            "/campaigns",
+            body=await async_maybe_transform(
+                {
+                    "type": type,
+                    "company_logo_image_url": company_logo_image_url,
+                    "company_name": company_name,
+                    "currency_iso": currency_iso,
+                    "goal": goal,
+                    "name": name,
+                    "options": options,
+                    "rewards": rewards,
+                },
+                campaign_create_params.CampaignCreateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Campaign,
+        )
 
     async def retrieve(
         self,
@@ -643,6 +891,70 @@ class AsyncCampaignResource(AsyncAPIResource):
             cast_to=Campaign,
         )
 
+    async def update(
+        self,
+        id: str,
+        *,
+        company_logo_image_url: str | Omit = omit,
+        company_name: str | Omit = omit,
+        currency_iso: str | Omit = omit,
+        design: Dict[str, object] | Omit = omit,
+        emails: Dict[str, object] | Omit = omit,
+        goal: str | Omit = omit,
+        installation: Dict[str, object] | Omit = omit,
+        name: str | Omit = omit,
+        notifications: Dict[str, object] | Omit = omit,
+        options: Dict[str, object] | Omit = omit,
+        status: Literal["DRAFT", "PENDING", "IN_PROGRESS", "COMPLETE", "CANCELLED"] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Campaign:
+        """
+        Updates a program's configuration and/or status. Only the fields you send are
+        changed. `type` and `urlId` are immutable. Status changes are validated against
+        the allowed transitions; the program cannot be deleted via this endpoint.
+
+        Args:
+          status: The program status. Transitions are validated; DELETED is not allowed.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._patch(
+            path_template("/campaign/{id}", id=id),
+            body=await async_maybe_transform(
+                {
+                    "company_logo_image_url": company_logo_image_url,
+                    "company_name": company_name,
+                    "currency_iso": currency_iso,
+                    "design": design,
+                    "emails": emails,
+                    "goal": goal,
+                    "installation": installation,
+                    "name": name,
+                    "notifications": notifications,
+                    "options": options,
+                    "status": status,
+                },
+                campaign_update_params.CampaignUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Campaign,
+        )
+
     async def list(
         self,
         *,
@@ -660,6 +972,40 @@ class AsyncCampaignResource(AsyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=CampaignListResponse,
+        )
+
+    async def clone(
+        self,
+        id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Campaign:
+        """
+        Clones an existing program into a new `DRAFT` program. Integrations and
+        credentials are not copied; active rewards are cloned.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._post(
+            path_template("/campaign/{id}/clone", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Campaign,
         )
 
     async def create_mobile_participant_token(
@@ -1091,11 +1437,20 @@ class CampaignResourceWithRawResponse:
     def __init__(self, campaign: CampaignResource) -> None:
         self._campaign = campaign
 
+        self.create = to_raw_response_wrapper(
+            campaign.create,
+        )
         self.retrieve = to_raw_response_wrapper(
             campaign.retrieve,
         )
+        self.update = to_raw_response_wrapper(
+            campaign.update,
+        )
         self.list = to_raw_response_wrapper(
             campaign.list,
+        )
+        self.clone = to_raw_response_wrapper(
+            campaign.clone,
         )
         self.create_mobile_participant_token = to_raw_response_wrapper(
             campaign.create_mobile_participant_token,
@@ -1133,16 +1488,30 @@ class CampaignResourceWithRawResponse:
         """Affiliate transaction, commission, and payout operations."""
         return CommissionResourceWithRawResponse(self._campaign.commission)
 
+    @cached_property
+    def rewards(self) -> RewardsResourceWithRawResponse:
+        """Program reward (`CampaignReward`) configuration operations."""
+        return RewardsResourceWithRawResponse(self._campaign.rewards)
+
 
 class AsyncCampaignResourceWithRawResponse:
     def __init__(self, campaign: AsyncCampaignResource) -> None:
         self._campaign = campaign
 
+        self.create = async_to_raw_response_wrapper(
+            campaign.create,
+        )
         self.retrieve = async_to_raw_response_wrapper(
             campaign.retrieve,
         )
+        self.update = async_to_raw_response_wrapper(
+            campaign.update,
+        )
         self.list = async_to_raw_response_wrapper(
             campaign.list,
+        )
+        self.clone = async_to_raw_response_wrapper(
+            campaign.clone,
         )
         self.create_mobile_participant_token = async_to_raw_response_wrapper(
             campaign.create_mobile_participant_token,
@@ -1180,16 +1549,30 @@ class AsyncCampaignResourceWithRawResponse:
         """Affiliate transaction, commission, and payout operations."""
         return AsyncCommissionResourceWithRawResponse(self._campaign.commission)
 
+    @cached_property
+    def rewards(self) -> AsyncRewardsResourceWithRawResponse:
+        """Program reward (`CampaignReward`) configuration operations."""
+        return AsyncRewardsResourceWithRawResponse(self._campaign.rewards)
+
 
 class CampaignResourceWithStreamingResponse:
     def __init__(self, campaign: CampaignResource) -> None:
         self._campaign = campaign
 
+        self.create = to_streamed_response_wrapper(
+            campaign.create,
+        )
         self.retrieve = to_streamed_response_wrapper(
             campaign.retrieve,
         )
+        self.update = to_streamed_response_wrapper(
+            campaign.update,
+        )
         self.list = to_streamed_response_wrapper(
             campaign.list,
+        )
+        self.clone = to_streamed_response_wrapper(
+            campaign.clone,
         )
         self.create_mobile_participant_token = to_streamed_response_wrapper(
             campaign.create_mobile_participant_token,
@@ -1227,16 +1610,30 @@ class CampaignResourceWithStreamingResponse:
         """Affiliate transaction, commission, and payout operations."""
         return CommissionResourceWithStreamingResponse(self._campaign.commission)
 
+    @cached_property
+    def rewards(self) -> RewardsResourceWithStreamingResponse:
+        """Program reward (`CampaignReward`) configuration operations."""
+        return RewardsResourceWithStreamingResponse(self._campaign.rewards)
+
 
 class AsyncCampaignResourceWithStreamingResponse:
     def __init__(self, campaign: AsyncCampaignResource) -> None:
         self._campaign = campaign
 
+        self.create = async_to_streamed_response_wrapper(
+            campaign.create,
+        )
         self.retrieve = async_to_streamed_response_wrapper(
             campaign.retrieve,
         )
+        self.update = async_to_streamed_response_wrapper(
+            campaign.update,
+        )
         self.list = async_to_streamed_response_wrapper(
             campaign.list,
+        )
+        self.clone = async_to_streamed_response_wrapper(
+            campaign.clone,
         )
         self.create_mobile_participant_token = async_to_streamed_response_wrapper(
             campaign.create_mobile_participant_token,
@@ -1273,3 +1670,8 @@ class AsyncCampaignResourceWithStreamingResponse:
     def commission(self) -> AsyncCommissionResourceWithStreamingResponse:
         """Affiliate transaction, commission, and payout operations."""
         return AsyncCommissionResourceWithStreamingResponse(self._campaign.commission)
+
+    @cached_property
+    def rewards(self) -> AsyncRewardsResourceWithStreamingResponse:
+        """Program reward (`CampaignReward`) configuration operations."""
+        return AsyncRewardsResourceWithStreamingResponse(self._campaign.rewards)
