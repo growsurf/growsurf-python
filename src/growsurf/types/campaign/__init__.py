@@ -5,12 +5,17 @@ from __future__ import annotations
 from .reward import Reward as Reward
 from .campaign import Campaign as Campaign
 from .participant import Participant as Participant
+from .campaign_design import CampaignDesign as CampaignDesign
+from .campaign_emails import CampaignEmails as CampaignEmails
 from .referral_source import ReferralSource as ReferralSource
 from .referral_status import ReferralStatus as ReferralStatus
+from .campaign_options import CampaignOptions as CampaignOptions
 from .fraud_risk_level import FraudRiskLevel as FraudRiskLevel
 from .participant_reward import ParticipantReward as ParticipantReward
 from .reward_create_params import RewardCreateParams as RewardCreateParams
+from .reward_tax_valuation import RewardTaxValuation as RewardTaxValuation
 from .reward_update_params import RewardUpdateParams as RewardUpdateParams
+from .campaign_installation import CampaignInstallation as CampaignInstallation
 from .reward_approve_params import RewardApproveParams as RewardApproveParams
 from .delete_reward_response import DeleteRewardResponse as DeleteRewardResponse
 from .participant_add_params import ParticipantAddParams as ParticipantAddParams

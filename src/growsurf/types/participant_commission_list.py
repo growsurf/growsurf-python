@@ -49,9 +49,7 @@ class Commission(BaseModel):
 
     reversed_at: Optional[int] = FieldInfo(alias="reversedAt", default=None)
 
-    sale_amount_in_campaign_currency: Optional[int] = FieldInfo(
-        alias="saleAmountInCampaignCurrency", default=None
-    )
+    sale_amount_in_campaign_currency: Optional[int] = FieldInfo(alias="saleAmountInCampaignCurrency", default=None)
 
 
 class ParticipantCommissionList(BaseModel):

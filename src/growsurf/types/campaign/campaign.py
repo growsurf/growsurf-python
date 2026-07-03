@@ -6,6 +6,7 @@ from typing_extensions import Literal
 from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
+from .reward_tax_valuation import RewardTaxValuation
 from ..commission_structure import CommissionStructure
 
 __all__ = ["Campaign", "Reward"]
@@ -44,9 +45,24 @@ class Reward(BaseModel):
 
     order: Optional[int] = None
 
+    referral_coupon_code: Optional[str] = FieldInfo(alias="referralCouponCode", default=None)
+    """The coupon code delivered to the referred friend (double-sided rewards)."""
+
     referral_description: Optional[str] = FieldInfo(alias="referralDescription", default=None)
 
     referred_reward_upfront: Optional[bool] = FieldInfo(alias="referredRewardUpfront", default=None)
+
+    referred_value: Optional[RewardTaxValuation] = FieldInfo(alias="referredValue", default=None)
+    """Tax valuation for the referred friend's side of a double-sided reward.
+
+    Defaults to not tax-reportable (a purchase rebate).
+    """
+
+    value: Optional[RewardTaxValuation] = None
+    """Tax valuation for the reward (the referrer's side of a double-sided reward).
+
+    Used by tax documentation / 1099 reporting.
+    """
 
 
 class Campaign(BaseModel):

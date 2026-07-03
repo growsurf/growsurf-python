@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Iterable
+from typing import Iterable
 from typing_extensions import Literal, Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
@@ -20,15 +20,14 @@ class CampaignCreateParams(TypedDict, total=False):
     company_name: Annotated[str, PropertyInfo(alias="companyName")]
 
     currency_iso: Annotated[str, PropertyInfo(alias="currencyISO")]
-    """ISO 4217 currency code. Defaults to USD."""
+    """ISO 4217 currency code.
 
-    goal: str
+    Defaults to USD. Chosen when the program is created and immutable afterward — it
+    cannot be changed on update.
+    """
 
     name: str
     """The program name. Defaults to "Untitled Program"."""
-
-    options: Dict[str, object]
-    """A curated subset of program options to shallow-merge onto the defaults."""
 
     rewards: Iterable[RewardCreateParams]
     """Optional inline rewards to create with the program."""

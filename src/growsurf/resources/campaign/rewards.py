@@ -21,6 +21,7 @@ from ..._base_client import make_request_options
 from ...types.campaign import reward_create_params, reward_update_params
 from ...types.campaign.reward import Reward
 from ...types.commission_structure import CommissionStructure
+from ...types.campaign.reward_tax_valuation import RewardTaxValuation
 from ...types.campaign.delete_reward_response import DeleteRewardResponse
 from ...types.campaign.campaign_reward_list_response import CampaignRewardListResponse
 
@@ -28,7 +29,7 @@ __all__ = ["RewardsResource", "AsyncRewardsResource"]
 
 
 class RewardsResource(SyncAPIResource):
-    """Program reward (`CampaignReward`) configuration operations."""
+    """Campaign reward (`CampaignReward`) configuration operations."""
 
     @cached_property
     def with_raw_response(self) -> RewardsResourceWithRawResponse:
@@ -72,7 +73,9 @@ class RewardsResource(SyncAPIResource):
         referral_coupon_code: Optional[str] | Omit = omit,
         referral_description: Optional[str] | Omit = omit,
         referred_reward_upfront: bool | Omit = omit,
+        referred_value: RewardTaxValuation | Omit = omit,
         title: str | Omit = omit,
+        value: RewardTaxValuation | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -81,7 +84,7 @@ class RewardsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Reward:
         """
-        Creates a new program reward (`CampaignReward`) with a server-generated ID. The
+        Creates a new campaign reward (`CampaignReward`) with a server-generated ID. The
         reward type must be compatible with the program type (affiliate programs support
         only `AFFILIATE` rewards; referral programs support all other types). Enabling an
         active reward of a type automatically enables that reward type on the program.
@@ -119,7 +122,13 @@ class RewardsResource(SyncAPIResource):
           referred_reward_upfront: For double-sided rewards, deliver the referred friend's reward upfront as a
               discount.
 
+          referred_value: Tax valuation for the referred friend's side of a double-sided reward.
+              Defaults to not tax-reportable (a purchase rebate).
+
           title: The reward title (internal label).
+
+          value: Tax valuation for the reward (the referrer's side of a double-sided reward).
+              Used by tax documentation / 1099 reporting.
 
           extra_headers: Send extra headers
 
@@ -132,7 +141,7 @@ class RewardsResource(SyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         return self._post(
-            path_template("/campaign/{id}/rewards", id=id),
+            path_template("/campaign/{id}/reward-configs", id=id),
             body=maybe_transform(
                 {
                     "type": type,
@@ -154,7 +163,9 @@ class RewardsResource(SyncAPIResource):
                     "referral_coupon_code": referral_coupon_code,
                     "referral_description": referral_description,
                     "referred_reward_upfront": referred_reward_upfront,
+                    "referred_value": referred_value,
                     "title": title,
+                    "value": value,
                 },
                 reward_create_params.RewardCreateParams,
             ),
@@ -166,7 +177,7 @@ class RewardsResource(SyncAPIResource):
 
     def update(
         self,
-        reward_id: str,
+        campaign_reward_id: str,
         *,
         id: str,
         commission_structure: CommissionStructure | Omit = omit,
@@ -187,7 +198,9 @@ class RewardsResource(SyncAPIResource):
         referral_coupon_code: Optional[str] | Omit = omit,
         referral_description: Optional[str] | Omit = omit,
         referred_reward_upfront: bool | Omit = omit,
+        referred_value: RewardTaxValuation | Omit = omit,
         title: str | Omit = omit,
+        value: RewardTaxValuation | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -196,7 +209,7 @@ class RewardsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Reward:
         """
-        Updates an existing program reward (`CampaignReward`). The reward `type` is
+        Updates an existing campaign reward (`CampaignReward`). The reward `type` is
         immutable and cannot be changed.
 
         Args:
@@ -230,7 +243,13 @@ class RewardsResource(SyncAPIResource):
           referred_reward_upfront: For double-sided rewards, deliver the referred friend's reward upfront as a
               discount.
 
+          referred_value: Tax valuation for the referred friend's side of a double-sided reward.
+              Defaults to not tax-reportable (a purchase rebate).
+
           title: The reward title (internal label).
+
+          value: Tax valuation for the reward (the referrer's side of a double-sided reward).
+              Used by tax documentation / 1099 reporting.
 
           extra_headers: Send extra headers
 
@@ -242,10 +261,10 @@ class RewardsResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        if not reward_id:
-            raise ValueError(f"Expected a non-empty value for `reward_id` but received {reward_id!r}")
+        if not campaign_reward_id:
+            raise ValueError(f"Expected a non-empty value for `campaign_reward_id` but received {campaign_reward_id!r}")
         return self._patch(
-            path_template("/campaign/{id}/rewards/{reward_id}", id=id, reward_id=reward_id),
+            path_template("/campaign/{id}/reward-configs/{campaign_reward_id}", id=id, campaign_reward_id=campaign_reward_id),
             body=maybe_transform(
                 {
                     "commission_structure": commission_structure,
@@ -266,7 +285,9 @@ class RewardsResource(SyncAPIResource):
                     "referral_coupon_code": referral_coupon_code,
                     "referral_description": referral_description,
                     "referred_reward_upfront": referred_reward_upfront,
+                    "referred_value": referred_value,
                     "title": title,
+                    "value": value,
                 },
                 reward_update_params.RewardUpdateParams,
             ),
@@ -304,7 +325,7 @@ class RewardsResource(SyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         return self._get(
-            path_template("/campaign/{id}/rewards", id=id),
+            path_template("/campaign/{id}/reward-configs", id=id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -313,7 +334,7 @@ class RewardsResource(SyncAPIResource):
 
     def delete(
         self,
-        reward_id: str,
+        campaign_reward_id: str,
         *,
         id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -324,7 +345,7 @@ class RewardsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DeleteRewardResponse:
         """
-        Deletes a program reward (`CampaignReward`). The reward is deactivated, removed
+        Deletes a campaign reward (`CampaignReward`). The reward is deactivated, removed
         from the program's reward set, and any connected upfront-discount coupons are
         cleaned up.
 
@@ -339,10 +360,10 @@ class RewardsResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        if not reward_id:
-            raise ValueError(f"Expected a non-empty value for `reward_id` but received {reward_id!r}")
+        if not campaign_reward_id:
+            raise ValueError(f"Expected a non-empty value for `campaign_reward_id` but received {campaign_reward_id!r}")
         return self._delete(
-            path_template("/campaign/{id}/rewards/{reward_id}", id=id, reward_id=reward_id),
+            path_template("/campaign/{id}/reward-configs/{campaign_reward_id}", id=id, campaign_reward_id=campaign_reward_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -351,7 +372,7 @@ class RewardsResource(SyncAPIResource):
 
 
 class AsyncRewardsResource(AsyncAPIResource):
-    """Program reward (`CampaignReward`) configuration operations."""
+    """Campaign reward (`CampaignReward`) configuration operations."""
 
     @cached_property
     def with_raw_response(self) -> AsyncRewardsResourceWithRawResponse:
@@ -395,7 +416,9 @@ class AsyncRewardsResource(AsyncAPIResource):
         referral_coupon_code: Optional[str] | Omit = omit,
         referral_description: Optional[str] | Omit = omit,
         referred_reward_upfront: bool | Omit = omit,
+        referred_value: RewardTaxValuation | Omit = omit,
         title: str | Omit = omit,
+        value: RewardTaxValuation | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -404,7 +427,7 @@ class AsyncRewardsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Reward:
         """
-        Creates a new program reward (`CampaignReward`) with a server-generated ID. The
+        Creates a new campaign reward (`CampaignReward`) with a server-generated ID. The
         reward type must be compatible with the program type (affiliate programs support
         only `AFFILIATE` rewards; referral programs support all other types). Enabling an
         active reward of a type automatically enables that reward type on the program.
@@ -442,7 +465,13 @@ class AsyncRewardsResource(AsyncAPIResource):
           referred_reward_upfront: For double-sided rewards, deliver the referred friend's reward upfront as a
               discount.
 
+          referred_value: Tax valuation for the referred friend's side of a double-sided reward.
+              Defaults to not tax-reportable (a purchase rebate).
+
           title: The reward title (internal label).
+
+          value: Tax valuation for the reward (the referrer's side of a double-sided reward).
+              Used by tax documentation / 1099 reporting.
 
           extra_headers: Send extra headers
 
@@ -455,7 +484,7 @@ class AsyncRewardsResource(AsyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         return await self._post(
-            path_template("/campaign/{id}/rewards", id=id),
+            path_template("/campaign/{id}/reward-configs", id=id),
             body=await async_maybe_transform(
                 {
                     "type": type,
@@ -477,7 +506,9 @@ class AsyncRewardsResource(AsyncAPIResource):
                     "referral_coupon_code": referral_coupon_code,
                     "referral_description": referral_description,
                     "referred_reward_upfront": referred_reward_upfront,
+                    "referred_value": referred_value,
                     "title": title,
+                    "value": value,
                 },
                 reward_create_params.RewardCreateParams,
             ),
@@ -489,7 +520,7 @@ class AsyncRewardsResource(AsyncAPIResource):
 
     async def update(
         self,
-        reward_id: str,
+        campaign_reward_id: str,
         *,
         id: str,
         commission_structure: CommissionStructure | Omit = omit,
@@ -510,7 +541,9 @@ class AsyncRewardsResource(AsyncAPIResource):
         referral_coupon_code: Optional[str] | Omit = omit,
         referral_description: Optional[str] | Omit = omit,
         referred_reward_upfront: bool | Omit = omit,
+        referred_value: RewardTaxValuation | Omit = omit,
         title: str | Omit = omit,
+        value: RewardTaxValuation | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -519,7 +552,7 @@ class AsyncRewardsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Reward:
         """
-        Updates an existing program reward (`CampaignReward`). The reward `type` is
+        Updates an existing campaign reward (`CampaignReward`). The reward `type` is
         immutable and cannot be changed.
 
         Args:
@@ -553,7 +586,13 @@ class AsyncRewardsResource(AsyncAPIResource):
           referred_reward_upfront: For double-sided rewards, deliver the referred friend's reward upfront as a
               discount.
 
+          referred_value: Tax valuation for the referred friend's side of a double-sided reward.
+              Defaults to not tax-reportable (a purchase rebate).
+
           title: The reward title (internal label).
+
+          value: Tax valuation for the reward (the referrer's side of a double-sided reward).
+              Used by tax documentation / 1099 reporting.
 
           extra_headers: Send extra headers
 
@@ -565,10 +604,10 @@ class AsyncRewardsResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        if not reward_id:
-            raise ValueError(f"Expected a non-empty value for `reward_id` but received {reward_id!r}")
+        if not campaign_reward_id:
+            raise ValueError(f"Expected a non-empty value for `campaign_reward_id` but received {campaign_reward_id!r}")
         return await self._patch(
-            path_template("/campaign/{id}/rewards/{reward_id}", id=id, reward_id=reward_id),
+            path_template("/campaign/{id}/reward-configs/{campaign_reward_id}", id=id, campaign_reward_id=campaign_reward_id),
             body=await async_maybe_transform(
                 {
                     "commission_structure": commission_structure,
@@ -589,7 +628,9 @@ class AsyncRewardsResource(AsyncAPIResource):
                     "referral_coupon_code": referral_coupon_code,
                     "referral_description": referral_description,
                     "referred_reward_upfront": referred_reward_upfront,
+                    "referred_value": referred_value,
                     "title": title,
+                    "value": value,
                 },
                 reward_update_params.RewardUpdateParams,
             ),
@@ -627,7 +668,7 @@ class AsyncRewardsResource(AsyncAPIResource):
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         return await self._get(
-            path_template("/campaign/{id}/rewards", id=id),
+            path_template("/campaign/{id}/reward-configs", id=id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -636,7 +677,7 @@ class AsyncRewardsResource(AsyncAPIResource):
 
     async def delete(
         self,
-        reward_id: str,
+        campaign_reward_id: str,
         *,
         id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -647,7 +688,7 @@ class AsyncRewardsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DeleteRewardResponse:
         """
-        Deletes a program reward (`CampaignReward`). The reward is deactivated, removed
+        Deletes a campaign reward (`CampaignReward`). The reward is deactivated, removed
         from the program's reward set, and any connected upfront-discount coupons are
         cleaned up.
 
@@ -662,10 +703,10 @@ class AsyncRewardsResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        if not reward_id:
-            raise ValueError(f"Expected a non-empty value for `reward_id` but received {reward_id!r}")
+        if not campaign_reward_id:
+            raise ValueError(f"Expected a non-empty value for `campaign_reward_id` but received {campaign_reward_id!r}")
         return await self._delete(
-            path_template("/campaign/{id}/rewards/{reward_id}", id=id, reward_id=reward_id),
+            path_template("/campaign/{id}/reward-configs/{campaign_reward_id}", id=id, campaign_reward_id=campaign_reward_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),

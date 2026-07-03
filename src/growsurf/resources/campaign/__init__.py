@@ -1,5 +1,21 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from .design import (
+    DesignResource,
+    AsyncDesignResource,
+    DesignResourceWithRawResponse,
+    AsyncDesignResourceWithRawResponse,
+    DesignResourceWithStreamingResponse,
+    AsyncDesignResourceWithStreamingResponse,
+)
+from .emails import (
+    EmailsResource,
+    AsyncEmailsResource,
+    EmailsResourceWithRawResponse,
+    AsyncEmailsResourceWithRawResponse,
+    EmailsResourceWithStreamingResponse,
+    AsyncEmailsResourceWithStreamingResponse,
+)
 from .reward import (
     RewardResource,
     AsyncRewardResource,
@@ -7,6 +23,14 @@ from .reward import (
     AsyncRewardResourceWithRawResponse,
     RewardResourceWithStreamingResponse,
     AsyncRewardResourceWithStreamingResponse,
+)
+from .options import (
+    OptionsResource,
+    AsyncOptionsResource,
+    OptionsResourceWithRawResponse,
+    AsyncOptionsResourceWithRawResponse,
+    OptionsResourceWithStreamingResponse,
+    AsyncOptionsResourceWithStreamingResponse,
 )
 from .rewards import (
     RewardsResource,
@@ -40,6 +64,14 @@ from .participant import (
     ParticipantResourceWithStreamingResponse,
     AsyncParticipantResourceWithStreamingResponse,
 )
+from .installation import (
+    InstallationResource,
+    AsyncInstallationResource,
+    InstallationResourceWithRawResponse,
+    AsyncInstallationResourceWithRawResponse,
+    InstallationResourceWithStreamingResponse,
+    AsyncInstallationResourceWithStreamingResponse,
+)
 
 __all__ = [
     "ParticipantResource",
@@ -60,6 +92,30 @@ __all__ = [
     "AsyncRewardsResourceWithRawResponse",
     "RewardsResourceWithStreamingResponse",
     "AsyncRewardsResourceWithStreamingResponse",
+    "DesignResource",
+    "AsyncDesignResource",
+    "DesignResourceWithRawResponse",
+    "AsyncDesignResourceWithRawResponse",
+    "DesignResourceWithStreamingResponse",
+    "AsyncDesignResourceWithStreamingResponse",
+    "EmailsResource",
+    "AsyncEmailsResource",
+    "EmailsResourceWithRawResponse",
+    "AsyncEmailsResourceWithRawResponse",
+    "EmailsResourceWithStreamingResponse",
+    "AsyncEmailsResourceWithStreamingResponse",
+    "OptionsResource",
+    "AsyncOptionsResource",
+    "OptionsResourceWithRawResponse",
+    "AsyncOptionsResourceWithRawResponse",
+    "OptionsResourceWithStreamingResponse",
+    "AsyncOptionsResourceWithStreamingResponse",
+    "InstallationResource",
+    "AsyncInstallationResource",
+    "InstallationResourceWithRawResponse",
+    "AsyncInstallationResourceWithRawResponse",
+    "InstallationResourceWithStreamingResponse",
+    "AsyncInstallationResourceWithStreamingResponse",
     "CommissionResource",
     "AsyncCommissionResource",
     "CommissionResourceWithRawResponse",

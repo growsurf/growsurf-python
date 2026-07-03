@@ -6,6 +6,7 @@ from typing_extensions import Literal
 from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
+from .reward_tax_valuation import RewardTaxValuation
 from ..commission_structure import CommissionStructure
 
 __all__ = ["Reward"]
@@ -13,7 +14,7 @@ __all__ = ["Reward"]
 
 class Reward(BaseModel):
     id: str
-    """The unique identifier of the program reward."""
+    """The unique identifier of the campaign reward."""
 
     is_unlimited: bool = FieldInfo(alias="isUnlimited")
     """`true` if this reward can be earned by a single participant an unlimited number of times."""
@@ -68,6 +69,9 @@ class Reward(BaseModel):
     order: Optional[int] = None
     """If there are multiple rewards, the order in which the reward should be displayed."""
 
+    referral_coupon_code: Optional[str] = FieldInfo(alias="referralCouponCode", default=None)
+    """The coupon code delivered to the referred friend (double-sided rewards)."""
+
     referral_description: Optional[str] = FieldInfo(alias="referralDescription", default=None)
     """The reward description shown to the referred friend (only applicable for double-sided reward types)."""
 
@@ -76,4 +80,16 @@ class Reward(BaseModel):
 
     When `true`, the referred friend's reward is delivered upfront as a discount and
     no `ParticipantReward` is created for them when the referral triggers.
+    """
+
+    referred_value: Optional[RewardTaxValuation] = FieldInfo(alias="referredValue", default=None)
+    """Tax valuation for the referred friend's side of a double-sided reward.
+
+    Defaults to not tax-reportable (a purchase rebate).
+    """
+
+    value: Optional[RewardTaxValuation] = None
+    """Tax valuation for the reward (the referrer's side of a double-sided reward).
+
+    Used by tax documentation / 1099 reporting.
     """

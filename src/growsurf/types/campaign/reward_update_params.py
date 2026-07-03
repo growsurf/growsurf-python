@@ -6,6 +6,7 @@ from typing import Dict, Optional
 from typing_extensions import Literal, Required, Annotated, TypedDict
 
 from ..._utils import PropertyInfo
+from .reward_tax_valuation import RewardTaxValuation
 from ..commission_structure import CommissionStructure
 
 __all__ = ["RewardUpdateParams"]
@@ -64,5 +65,17 @@ class RewardUpdateParams(TypedDict, total=False):
     referred_reward_upfront: Annotated[bool, PropertyInfo(alias="referredRewardUpfront")]
     """For double-sided rewards, deliver the referred friend's reward upfront as a discount."""
 
+    referred_value: Annotated[RewardTaxValuation, PropertyInfo(alias="referredValue")]
+    """Tax valuation for the referred friend's side of a double-sided reward.
+
+    Defaults to not tax-reportable (a purchase rebate).
+    """
+
     title: str
     """The reward title (internal label)."""
+
+    value: RewardTaxValuation
+    """Tax valuation for the reward (the referrer's side of a double-sided reward).
+
+    Used by tax documentation / 1099 reporting.
+    """

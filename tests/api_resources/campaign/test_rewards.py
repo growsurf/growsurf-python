@@ -98,7 +98,7 @@ class TestRewards:
     @parametrize
     def test_method_update(self, client: Growsurf) -> None:
         reward = client.campaign.rewards.update(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
         )
         assert_matches_type(Reward, reward, path=["response"])
@@ -107,7 +107,7 @@ class TestRewards:
     @parametrize
     def test_method_update_with_all_params(self, client: Growsurf) -> None:
         reward = client.campaign.rewards.update(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
             conversions_required=1,
             coupon_code="couponCode",
@@ -134,7 +134,7 @@ class TestRewards:
     @parametrize
     def test_raw_response_update(self, client: Growsurf) -> None:
         response = client.campaign.rewards.with_raw_response.update(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
         )
 
@@ -147,7 +147,7 @@ class TestRewards:
     @parametrize
     def test_streaming_response_update(self, client: Growsurf) -> None:
         with client.campaign.rewards.with_streaming_response.update(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
         ) as response:
             assert not response.is_closed
@@ -163,13 +163,13 @@ class TestRewards:
     def test_path_params_update(self, client: Growsurf) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.campaign.rewards.with_raw_response.update(
-                reward_id="rewardId",
+                campaign_reward_id="rewardId",
                 id="",
             )
 
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `reward_id` but received ''"):
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `campaign_reward_id` but received ''"):
             client.campaign.rewards.with_raw_response.update(
-                reward_id="",
+                campaign_reward_id="",
                 id="id",
             )
 
@@ -219,7 +219,7 @@ class TestRewards:
     @parametrize
     def test_method_delete(self, client: Growsurf) -> None:
         reward = client.campaign.rewards.delete(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
         )
         assert_matches_type(DeleteRewardResponse, reward, path=["response"])
@@ -228,7 +228,7 @@ class TestRewards:
     @parametrize
     def test_raw_response_delete(self, client: Growsurf) -> None:
         response = client.campaign.rewards.with_raw_response.delete(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
         )
 
@@ -241,7 +241,7 @@ class TestRewards:
     @parametrize
     def test_streaming_response_delete(self, client: Growsurf) -> None:
         with client.campaign.rewards.with_streaming_response.delete(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
         ) as response:
             assert not response.is_closed
@@ -257,13 +257,13 @@ class TestRewards:
     def test_path_params_delete(self, client: Growsurf) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.campaign.rewards.with_raw_response.delete(
-                reward_id="rewardId",
+                campaign_reward_id="rewardId",
                 id="",
             )
 
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `reward_id` but received ''"):
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `campaign_reward_id` but received ''"):
             client.campaign.rewards.with_raw_response.delete(
-                reward_id="",
+                campaign_reward_id="",
                 id="id",
             )
 
@@ -350,7 +350,7 @@ class TestAsyncRewards:
     @parametrize
     async def test_method_update(self, async_client: AsyncGrowsurf) -> None:
         reward = await async_client.campaign.rewards.update(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
         )
         assert_matches_type(Reward, reward, path=["response"])
@@ -359,7 +359,7 @@ class TestAsyncRewards:
     @parametrize
     async def test_method_update_with_all_params(self, async_client: AsyncGrowsurf) -> None:
         reward = await async_client.campaign.rewards.update(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
             conversions_required=1,
             coupon_code="couponCode",
@@ -386,7 +386,7 @@ class TestAsyncRewards:
     @parametrize
     async def test_raw_response_update(self, async_client: AsyncGrowsurf) -> None:
         response = await async_client.campaign.rewards.with_raw_response.update(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
         )
 
@@ -399,7 +399,7 @@ class TestAsyncRewards:
     @parametrize
     async def test_streaming_response_update(self, async_client: AsyncGrowsurf) -> None:
         async with async_client.campaign.rewards.with_streaming_response.update(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
         ) as response:
             assert not response.is_closed
@@ -415,13 +415,13 @@ class TestAsyncRewards:
     async def test_path_params_update(self, async_client: AsyncGrowsurf) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.campaign.rewards.with_raw_response.update(
-                reward_id="rewardId",
+                campaign_reward_id="rewardId",
                 id="",
             )
 
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `reward_id` but received ''"):
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `campaign_reward_id` but received ''"):
             await async_client.campaign.rewards.with_raw_response.update(
-                reward_id="",
+                campaign_reward_id="",
                 id="id",
             )
 
@@ -471,7 +471,7 @@ class TestAsyncRewards:
     @parametrize
     async def test_method_delete(self, async_client: AsyncGrowsurf) -> None:
         reward = await async_client.campaign.rewards.delete(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
         )
         assert_matches_type(DeleteRewardResponse, reward, path=["response"])
@@ -480,7 +480,7 @@ class TestAsyncRewards:
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncGrowsurf) -> None:
         response = await async_client.campaign.rewards.with_raw_response.delete(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
         )
 
@@ -493,7 +493,7 @@ class TestAsyncRewards:
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncGrowsurf) -> None:
         async with async_client.campaign.rewards.with_streaming_response.delete(
-            reward_id="rewardId",
+            campaign_reward_id="rewardId",
             id="id",
         ) as response:
             assert not response.is_closed
@@ -509,12 +509,12 @@ class TestAsyncRewards:
     async def test_path_params_delete(self, async_client: AsyncGrowsurf) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.campaign.rewards.with_raw_response.delete(
-                reward_id="rewardId",
+                campaign_reward_id="rewardId",
                 id="",
             )
 
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `reward_id` but received ''"):
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `campaign_reward_id` but received ''"):
             await async_client.campaign.rewards.with_raw_response.delete(
-                reward_id="",
+                campaign_reward_id="",
                 id="id",
             )

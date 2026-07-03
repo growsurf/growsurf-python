@@ -7,6 +7,22 @@ from typing_extensions import Literal
 
 import httpx
 
+from .design import (
+    DesignResource,
+    AsyncDesignResource,
+    DesignResourceWithRawResponse,
+    AsyncDesignResourceWithRawResponse,
+    DesignResourceWithStreamingResponse,
+    AsyncDesignResourceWithStreamingResponse,
+)
+from .emails import (
+    EmailsResource,
+    AsyncEmailsResource,
+    EmailsResourceWithRawResponse,
+    AsyncEmailsResourceWithRawResponse,
+    EmailsResourceWithStreamingResponse,
+    AsyncEmailsResourceWithStreamingResponse,
+)
 from .reward import (
     RewardResource,
     AsyncRewardResource,
@@ -25,6 +41,14 @@ from ...types import (
     campaign_list_participants_params,
     campaign_retrieve_analytics_params,
     campaign_create_mobile_participant_token_params,
+)
+from .options import (
+    OptionsResource,
+    AsyncOptionsResource,
+    OptionsResourceWithRawResponse,
+    AsyncOptionsResourceWithRawResponse,
+    OptionsResourceWithStreamingResponse,
+    AsyncOptionsResourceWithStreamingResponse,
 )
 from .rewards import (
     RewardsResource,
@@ -60,6 +84,14 @@ from .participant import (
     ParticipantResourceWithStreamingResponse,
     AsyncParticipantResourceWithStreamingResponse,
 )
+from .installation import (
+    InstallationResource,
+    AsyncInstallationResource,
+    InstallationResourceWithRawResponse,
+    AsyncInstallationResourceWithRawResponse,
+    InstallationResourceWithStreamingResponse,
+    AsyncInstallationResourceWithStreamingResponse,
+)
 from ..._base_client import make_request_options
 from ...types.campaign import ReferralStatus, reward_create_params
 from ...types.referral_list import ReferralList
@@ -92,8 +124,28 @@ class CampaignResource(SyncAPIResource):
 
     @cached_property
     def rewards(self) -> RewardsResource:
-        """Program reward (`CampaignReward`) configuration operations."""
+        """Campaign reward (`CampaignReward`) configuration operations."""
         return RewardsResource(self._client)
+
+    @cached_property
+    def design(self) -> DesignResource:
+        """Campaign design (`CampaignDesign`) configuration — the Program Editor's Design tab."""
+        return DesignResource(self._client)
+
+    @cached_property
+    def emails(self) -> EmailsResource:
+        """Campaign emails (`CampaignEmails`) configuration — the Program Editor's Emails tab."""
+        return EmailsResource(self._client)
+
+    @cached_property
+    def options(self) -> OptionsResource:
+        """Campaign options (`CampaignOptions`) — the Program Editor's Options tab."""
+        return OptionsResource(self._client)
+
+    @cached_property
+    def installation(self) -> InstallationResource:
+        """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
+        return InstallationResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> CampaignResourceWithRawResponse:
@@ -121,9 +173,7 @@ class CampaignResource(SyncAPIResource):
         company_logo_image_url: str | Omit = omit,
         company_name: str | Omit = omit,
         currency_iso: str | Omit = omit,
-        goal: str | Omit = omit,
         name: str | Omit = omit,
-        options: Dict[str, object] | Omit = omit,
         rewards: Iterable[reward_create_params.RewardCreateParams] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -142,11 +192,10 @@ class CampaignResource(SyncAPIResource):
         Args:
           type: The program type. Immutable after creation.
 
-          currency_iso: ISO 4217 currency code. Defaults to USD.
+          currency_iso: ISO 4217 currency code. Defaults to USD. Chosen when the program is
+              created and immutable afterward — it cannot be changed on update.
 
           name: The program name. Defaults to "Untitled Program".
-
-          options: A curated subset of program options to shallow-merge onto the defaults.
 
           rewards: Optional inline rewards to create with the program.
 
@@ -166,9 +215,7 @@ class CampaignResource(SyncAPIResource):
                     "company_logo_image_url": company_logo_image_url,
                     "company_name": company_name,
                     "currency_iso": currency_iso,
-                    "goal": goal,
                     "name": name,
-                    "options": options,
                     "rewards": rewards,
                 },
                 campaign_create_params.CampaignCreateParams,
@@ -218,14 +265,7 @@ class CampaignResource(SyncAPIResource):
         *,
         company_logo_image_url: str | Omit = omit,
         company_name: str | Omit = omit,
-        currency_iso: str | Omit = omit,
-        design: Dict[str, object] | Omit = omit,
-        emails: Dict[str, object] | Omit = omit,
-        goal: str | Omit = omit,
-        installation: Dict[str, object] | Omit = omit,
         name: str | Omit = omit,
-        notifications: Dict[str, object] | Omit = omit,
-        options: Dict[str, object] | Omit = omit,
         status: Literal["DRAFT", "PENDING", "IN_PROGRESS", "COMPLETE", "CANCELLED"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -236,7 +276,7 @@ class CampaignResource(SyncAPIResource):
     ) -> Campaign:
         """
         Updates a program's configuration and/or status. Only the fields you send are
-        changed. `type` and `urlId` are immutable. Status changes are validated against
+        changed. `type`, `urlId`, and `currencyISO` are immutable. Status changes are validated against
         the allowed transitions; the program cannot be deleted via this endpoint.
 
         Args:
@@ -258,14 +298,7 @@ class CampaignResource(SyncAPIResource):
                 {
                     "company_logo_image_url": company_logo_image_url,
                     "company_name": company_name,
-                    "currency_iso": currency_iso,
-                    "design": design,
-                    "emails": emails,
-                    "goal": goal,
-                    "installation": installation,
                     "name": name,
-                    "notifications": notifications,
-                    "options": options,
                     "status": status,
                 },
                 campaign_update_params.CampaignUpdateParams,
@@ -771,8 +804,28 @@ class AsyncCampaignResource(AsyncAPIResource):
 
     @cached_property
     def rewards(self) -> AsyncRewardsResource:
-        """Program reward (`CampaignReward`) configuration operations."""
+        """Campaign reward (`CampaignReward`) configuration operations."""
         return AsyncRewardsResource(self._client)
+
+    @cached_property
+    def design(self) -> AsyncDesignResource:
+        """Campaign design (`CampaignDesign`) configuration — the Program Editor's Design tab."""
+        return AsyncDesignResource(self._client)
+
+    @cached_property
+    def emails(self) -> AsyncEmailsResource:
+        """Campaign emails (`CampaignEmails`) configuration — the Program Editor's Emails tab."""
+        return AsyncEmailsResource(self._client)
+
+    @cached_property
+    def options(self) -> AsyncOptionsResource:
+        """Campaign options (`CampaignOptions`) — the Program Editor's Options tab."""
+        return AsyncOptionsResource(self._client)
+
+    @cached_property
+    def installation(self) -> AsyncInstallationResource:
+        """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
+        return AsyncInstallationResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncCampaignResourceWithRawResponse:
@@ -800,9 +853,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         company_logo_image_url: str | Omit = omit,
         company_name: str | Omit = omit,
         currency_iso: str | Omit = omit,
-        goal: str | Omit = omit,
         name: str | Omit = omit,
-        options: Dict[str, object] | Omit = omit,
         rewards: Iterable[reward_create_params.RewardCreateParams] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -821,11 +872,10 @@ class AsyncCampaignResource(AsyncAPIResource):
         Args:
           type: The program type. Immutable after creation.
 
-          currency_iso: ISO 4217 currency code. Defaults to USD.
+          currency_iso: ISO 4217 currency code. Defaults to USD. Chosen when the program is
+              created and immutable afterward — it cannot be changed on update.
 
           name: The program name. Defaults to "Untitled Program".
-
-          options: A curated subset of program options to shallow-merge onto the defaults.
 
           rewards: Optional inline rewards to create with the program.
 
@@ -845,9 +895,7 @@ class AsyncCampaignResource(AsyncAPIResource):
                     "company_logo_image_url": company_logo_image_url,
                     "company_name": company_name,
                     "currency_iso": currency_iso,
-                    "goal": goal,
                     "name": name,
-                    "options": options,
                     "rewards": rewards,
                 },
                 campaign_create_params.CampaignCreateParams,
@@ -897,14 +945,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         *,
         company_logo_image_url: str | Omit = omit,
         company_name: str | Omit = omit,
-        currency_iso: str | Omit = omit,
-        design: Dict[str, object] | Omit = omit,
-        emails: Dict[str, object] | Omit = omit,
-        goal: str | Omit = omit,
-        installation: Dict[str, object] | Omit = omit,
         name: str | Omit = omit,
-        notifications: Dict[str, object] | Omit = omit,
-        options: Dict[str, object] | Omit = omit,
         status: Literal["DRAFT", "PENDING", "IN_PROGRESS", "COMPLETE", "CANCELLED"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -915,7 +956,7 @@ class AsyncCampaignResource(AsyncAPIResource):
     ) -> Campaign:
         """
         Updates a program's configuration and/or status. Only the fields you send are
-        changed. `type` and `urlId` are immutable. Status changes are validated against
+        changed. `type`, `urlId`, and `currencyISO` are immutable. Status changes are validated against
         the allowed transitions; the program cannot be deleted via this endpoint.
 
         Args:
@@ -937,14 +978,7 @@ class AsyncCampaignResource(AsyncAPIResource):
                 {
                     "company_logo_image_url": company_logo_image_url,
                     "company_name": company_name,
-                    "currency_iso": currency_iso,
-                    "design": design,
-                    "emails": emails,
-                    "goal": goal,
-                    "installation": installation,
                     "name": name,
-                    "notifications": notifications,
-                    "options": options,
                     "status": status,
                 },
                 campaign_update_params.CampaignUpdateParams,
@@ -1490,8 +1524,28 @@ class CampaignResourceWithRawResponse:
 
     @cached_property
     def rewards(self) -> RewardsResourceWithRawResponse:
-        """Program reward (`CampaignReward`) configuration operations."""
+        """Campaign reward (`CampaignReward`) configuration operations."""
         return RewardsResourceWithRawResponse(self._campaign.rewards)
+
+    @cached_property
+    def design(self) -> DesignResourceWithRawResponse:
+        """Campaign design (`CampaignDesign`) configuration — the Program Editor's Design tab."""
+        return DesignResourceWithRawResponse(self._campaign.design)
+
+    @cached_property
+    def emails(self) -> EmailsResourceWithRawResponse:
+        """Campaign emails (`CampaignEmails`) configuration — the Program Editor's Emails tab."""
+        return EmailsResourceWithRawResponse(self._campaign.emails)
+
+    @cached_property
+    def options(self) -> OptionsResourceWithRawResponse:
+        """Campaign options (`CampaignOptions`) — the Program Editor's Options tab."""
+        return OptionsResourceWithRawResponse(self._campaign.options)
+
+    @cached_property
+    def installation(self) -> InstallationResourceWithRawResponse:
+        """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
+        return InstallationResourceWithRawResponse(self._campaign.installation)
 
 
 class AsyncCampaignResourceWithRawResponse:
@@ -1551,8 +1605,28 @@ class AsyncCampaignResourceWithRawResponse:
 
     @cached_property
     def rewards(self) -> AsyncRewardsResourceWithRawResponse:
-        """Program reward (`CampaignReward`) configuration operations."""
+        """Campaign reward (`CampaignReward`) configuration operations."""
         return AsyncRewardsResourceWithRawResponse(self._campaign.rewards)
+
+    @cached_property
+    def design(self) -> AsyncDesignResourceWithRawResponse:
+        """Campaign design (`CampaignDesign`) configuration — the Program Editor's Design tab."""
+        return AsyncDesignResourceWithRawResponse(self._campaign.design)
+
+    @cached_property
+    def emails(self) -> AsyncEmailsResourceWithRawResponse:
+        """Campaign emails (`CampaignEmails`) configuration — the Program Editor's Emails tab."""
+        return AsyncEmailsResourceWithRawResponse(self._campaign.emails)
+
+    @cached_property
+    def options(self) -> AsyncOptionsResourceWithRawResponse:
+        """Campaign options (`CampaignOptions`) — the Program Editor's Options tab."""
+        return AsyncOptionsResourceWithRawResponse(self._campaign.options)
+
+    @cached_property
+    def installation(self) -> AsyncInstallationResourceWithRawResponse:
+        """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
+        return AsyncInstallationResourceWithRawResponse(self._campaign.installation)
 
 
 class CampaignResourceWithStreamingResponse:
@@ -1612,8 +1686,28 @@ class CampaignResourceWithStreamingResponse:
 
     @cached_property
     def rewards(self) -> RewardsResourceWithStreamingResponse:
-        """Program reward (`CampaignReward`) configuration operations."""
+        """Campaign reward (`CampaignReward`) configuration operations."""
         return RewardsResourceWithStreamingResponse(self._campaign.rewards)
+
+    @cached_property
+    def design(self) -> DesignResourceWithStreamingResponse:
+        """Campaign design (`CampaignDesign`) configuration — the Program Editor's Design tab."""
+        return DesignResourceWithStreamingResponse(self._campaign.design)
+
+    @cached_property
+    def emails(self) -> EmailsResourceWithStreamingResponse:
+        """Campaign emails (`CampaignEmails`) configuration — the Program Editor's Emails tab."""
+        return EmailsResourceWithStreamingResponse(self._campaign.emails)
+
+    @cached_property
+    def options(self) -> OptionsResourceWithStreamingResponse:
+        """Campaign options (`CampaignOptions`) — the Program Editor's Options tab."""
+        return OptionsResourceWithStreamingResponse(self._campaign.options)
+
+    @cached_property
+    def installation(self) -> InstallationResourceWithStreamingResponse:
+        """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
+        return InstallationResourceWithStreamingResponse(self._campaign.installation)
 
 
 class AsyncCampaignResourceWithStreamingResponse:
@@ -1673,5 +1767,25 @@ class AsyncCampaignResourceWithStreamingResponse:
 
     @cached_property
     def rewards(self) -> AsyncRewardsResourceWithStreamingResponse:
-        """Program reward (`CampaignReward`) configuration operations."""
+        """Campaign reward (`CampaignReward`) configuration operations."""
         return AsyncRewardsResourceWithStreamingResponse(self._campaign.rewards)
+
+    @cached_property
+    def design(self) -> AsyncDesignResourceWithStreamingResponse:
+        """Campaign design (`CampaignDesign`) configuration — the Program Editor's Design tab."""
+        return AsyncDesignResourceWithStreamingResponse(self._campaign.design)
+
+    @cached_property
+    def emails(self) -> AsyncEmailsResourceWithStreamingResponse:
+        """Campaign emails (`CampaignEmails`) configuration — the Program Editor's Emails tab."""
+        return AsyncEmailsResourceWithStreamingResponse(self._campaign.emails)
+
+    @cached_property
+    def options(self) -> AsyncOptionsResourceWithStreamingResponse:
+        """Campaign options (`CampaignOptions`) — the Program Editor's Options tab."""
+        return AsyncOptionsResourceWithStreamingResponse(self._campaign.options)
+
+    @cached_property
+    def installation(self) -> AsyncInstallationResourceWithStreamingResponse:
+        """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
+        return AsyncInstallationResourceWithStreamingResponse(self._campaign.installation)

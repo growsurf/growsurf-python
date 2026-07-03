@@ -104,12 +104,64 @@ Methods:
 Types:
 
 ```python
-from growsurf.types.campaign import Reward, CampaignRewardListResponse, DeleteRewardResponse
+from growsurf.types.campaign import Reward, RewardTaxValuation, CampaignRewardListResponse, DeleteRewardResponse
 ```
 
 Methods:
 
-- <code title="post /campaign/{id}/rewards">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">create</a>(id, \*\*<a href="src/growsurf/types/campaign/reward_create_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/reward.py">Reward</a></code>
-- <code title="patch /campaign/{id}/rewards/{rewardId}">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">update</a>(reward_id, \*, id, \*\*<a href="src/growsurf/types/campaign/reward_update_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/reward.py">Reward</a></code>
-- <code title="get /campaign/{id}/rewards">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">list</a>(id) -> <a href="./src/growsurf/types/campaign/campaign_reward_list_response.py">CampaignRewardListResponse</a></code>
-- <code title="delete /campaign/{id}/rewards/{rewardId}">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">delete</a>(reward_id, \*, id) -> <a href="./src/growsurf/types/campaign/delete_reward_response.py">DeleteRewardResponse</a></code>
+- <code title="post /campaign/{id}/reward-configs">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">create</a>(id, \*\*<a href="src/growsurf/types/campaign/reward_create_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/reward.py">Reward</a></code>
+- <code title="patch /campaign/{id}/reward-configs/{campaignRewardId}">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">update</a>(campaign_reward_id, \*, id, \*\*<a href="src/growsurf/types/campaign/reward_update_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/reward.py">Reward</a></code>
+- <code title="get /campaign/{id}/reward-configs">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">list</a>(id) -> <a href="./src/growsurf/types/campaign/campaign_reward_list_response.py">CampaignRewardListResponse</a></code>
+- <code title="delete /campaign/{id}/reward-configs/{campaignRewardId}">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">delete</a>(campaign_reward_id, \*, id) -> <a href="./src/growsurf/types/campaign/delete_reward_response.py">DeleteRewardResponse</a></code>
+
+## Design
+
+Types:
+
+```python
+from growsurf.types.campaign import CampaignDesign
+```
+
+Methods:
+
+- <code title="get /campaign/{id}/design">client.campaign.design.<a href="./src/growsurf/resources/campaign/design.py">retrieve</a>(id) -> <a href="./src/growsurf/types/campaign/campaign_design.py">CampaignDesign</a></code>
+- <code title="patch /campaign/{id}/design">client.campaign.design.<a href="./src/growsurf/resources/campaign/design.py">update</a>(id, \*, body) -> <a href="./src/growsurf/types/campaign/campaign_design.py">CampaignDesign</a></code>
+
+## Emails
+
+Types:
+
+```python
+from growsurf.types.campaign import CampaignEmails
+```
+
+Methods:
+
+- <code title="get /campaign/{id}/emails">client.campaign.emails.<a href="./src/growsurf/resources/campaign/emails.py">retrieve</a>(id) -> <a href="./src/growsurf/types/campaign/campaign_emails.py">CampaignEmails</a></code>
+- <code title="patch /campaign/{id}/emails">client.campaign.emails.<a href="./src/growsurf/resources/campaign/emails.py">update</a>(id, \*, body) -> <a href="./src/growsurf/types/campaign/campaign_emails.py">CampaignEmails</a></code>
+
+## Options
+
+Types:
+
+```python
+from growsurf.types.campaign import CampaignOptions
+```
+
+Methods:
+
+- <code title="get /campaign/{id}/options">client.campaign.options.<a href="./src/growsurf/resources/campaign/options.py">retrieve</a>(id) -> <a href="./src/growsurf/types/campaign/campaign_options.py">CampaignOptions</a></code>
+- <code title="patch /campaign/{id}/options">client.campaign.options.<a href="./src/growsurf/resources/campaign/options.py">update</a>(id, \*, body) -> <a href="./src/growsurf/types/campaign/campaign_options.py">CampaignOptions</a></code>
+
+## Installation
+
+Types:
+
+```python
+from growsurf.types.campaign import CampaignInstallation
+```
+
+Methods:
+
+- <code title="get /campaign/{id}/installation">client.campaign.installation.<a href="./src/growsurf/resources/campaign/installation.py">retrieve</a>(id) -> <a href="./src/growsurf/types/campaign/campaign_installation.py">CampaignInstallation</a></code>
+- <code title="patch /campaign/{id}/installation">client.campaign.installation.<a href="./src/growsurf/resources/campaign/installation.py">update</a>(id, \*, body) -> <a href="./src/growsurf/types/campaign/campaign_installation.py">CampaignInstallation</a></code>

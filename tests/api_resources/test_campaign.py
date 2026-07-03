@@ -42,9 +42,7 @@ class TestCampaign:
             company_logo_image_url="companyLogoImageUrl",
             company_name="companyName",
             currency_iso="currencyISO",
-            goal="goal",
             name="name",
-            options={"foo": "bar"},
             rewards=[{"type": "SINGLE_SIDED"}],
         )
         assert_matches_type(Campaign, campaign, path=["response"])
@@ -132,14 +130,7 @@ class TestCampaign:
             id="id",
             company_logo_image_url="companyLogoImageUrl",
             company_name="companyName",
-            currency_iso="currencyISO",
-            design={"foo": "bar"},
-            emails={"foo": "bar"},
-            goal="goal",
-            installation={"foo": "bar"},
             name="name",
-            notifications={"foo": "bar"},
-            options={"foo": "bar"},
             status="DRAFT",
         )
         assert_matches_type(Campaign, campaign, path=["response"])
@@ -657,9 +648,7 @@ class TestAsyncCampaign:
             company_logo_image_url="companyLogoImageUrl",
             company_name="companyName",
             currency_iso="currencyISO",
-            goal="goal",
             name="name",
-            options={"foo": "bar"},
             rewards=[{"type": "SINGLE_SIDED"}],
         )
         assert_matches_type(Campaign, campaign, path=["response"])
@@ -747,14 +736,7 @@ class TestAsyncCampaign:
             id="id",
             company_logo_image_url="companyLogoImageUrl",
             company_name="companyName",
-            currency_iso="currencyISO",
-            design={"foo": "bar"},
-            emails={"foo": "bar"},
-            goal="goal",
-            installation={"foo": "bar"},
             name="name",
-            notifications={"foo": "bar"},
-            options={"foo": "bar"},
             status="DRAFT",
         )
         assert_matches_type(Campaign, campaign, path=["response"])
