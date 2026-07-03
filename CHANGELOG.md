@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://github.com/growsurf/growsurf-python/compare/v0.8.0...v1.0.0) (2026-07-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* campaign create no longer accepts `options`, and campaign update no longer accepts the design / emails / options / notifications / installation config blobs — edit those via the new config sub-resources. Reward-config CRUD moved from /campaign/{id}/rewards to /campaign/{id}/reward-configs[/{campaignRewardId}].
+
+### Features
+
+* add campaign management endpoints; drop deprecated create/update config blobs ([6116f40](https://github.com/growsurf/growsurf-python/commit/6116f400534856bfeafcafa21a42fd648b167fe5))
+
 ## [0.8.0](https://github.com/growsurf/growsurf-python/compare/v0.7.0...v0.8.0) (2026-07-01)
 
 
