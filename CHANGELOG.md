@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/growsurf/growsurf-python/compare/v1.0.0...v1.1.0) (2026-07-08)
+
+
+### Features
+
+* add account webhook and participant APIs ([6b8fc27](https://github.com/growsurf/growsurf-python/commit/6b8fc2734e28322d8d6891295e8d3a4a2487c1d5))
+
+
+### Bug Fixes
+
+* sort Python SDK imports ([e3a8a9d](https://github.com/growsurf/growsurf-python/commit/e3a8a9dc9b3793bad975c4c3951287ceeea20733))
+
 ## [1.0.0](https://github.com/growsurf/growsurf-python/compare/v0.8.0...v1.0.0) (2026-07-03)
 
 
