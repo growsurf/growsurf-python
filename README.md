@@ -1,7 +1,7 @@
 # Growsurf Python API library
 
 <!-- prettier-ignore -->
-[![PyPI version](https://img.shields.io/pypi/v/growsurf-python.svg?label=pypi%20(stable))](https://pypi.org/project/growsurf-python/)
+[![PyPI version](https://img.shields.io/pypi/v/growsurf-python.svg?label=pypi%20(stable)&cacheSeconds=300)](https://pypi.org/project/growsurf-python/)
 
 The Growsurf Python library provides convenient access to the Growsurf REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
