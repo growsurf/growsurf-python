@@ -109,8 +109,8 @@ from ...types.campaign_list_response import CampaignListResponse
 from ...types.participant_payout_list import ParticipantPayoutList
 from ...types.campaign.referral_status import ReferralStatus
 from ...types.participant_commission_list import ParticipantCommissionList
-from ...types.campaign_retrieve_analytics_response import CampaignRetrieveAnalyticsResponse
 from ...types.referral_flow_screenshots_response import ReferralFlowScreenshotsResponse
+from ...types.campaign_retrieve_analytics_response import CampaignRetrieveAnalyticsResponse
 from ...types.campaign_create_mobile_participant_token_response import CampaignCreateMobileParticipantTokenResponse
 
 __all__ = ["CampaignResource", "AsyncCampaignResource"]
