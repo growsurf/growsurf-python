@@ -60,6 +60,14 @@ from .rewards import (
 )
 from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from ..._utils import path_template, maybe_transform, async_maybe_transform
+from .webhooks import (
+    WebhooksResource,
+    AsyncWebhooksResource,
+    WebhooksResourceWithRawResponse,
+    AsyncWebhooksResourceWithRawResponse,
+    WebhooksResourceWithStreamingResponse,
+    AsyncWebhooksResourceWithStreamingResponse,
+)
 from ..._compat import cached_property
 from .commission import (
     CommissionResource,
@@ -102,6 +110,7 @@ from ...types.participant_payout_list import ParticipantPayoutList
 from ...types.campaign.referral_status import ReferralStatus
 from ...types.participant_commission_list import ParticipantCommissionList
 from ...types.campaign_retrieve_analytics_response import CampaignRetrieveAnalyticsResponse
+from ...types.referral_flow_screenshots_response import ReferralFlowScreenshotsResponse
 from ...types.campaign_create_mobile_participant_token_response import CampaignCreateMobileParticipantTokenResponse
 
 __all__ = ["CampaignResource", "AsyncCampaignResource"]
@@ -126,6 +135,11 @@ class CampaignResource(SyncAPIResource):
     def rewards(self) -> RewardsResource:
         """Campaign reward (`CampaignReward`) configuration operations."""
         return RewardsResource(self._client)
+
+    @cached_property
+    def webhooks(self) -> WebhooksResource:
+        """Campaign webhook (`Webhook`) configuration operations."""
+        return WebhooksResource(self._client)
 
     @cached_property
     def design(self) -> DesignResource:
@@ -185,9 +199,7 @@ class CampaignResource(SyncAPIResource):
         """
         Creates a new program pre-populated with type-appropriate defaults, plus any
         optional inline rewards. The new program is created in `DRAFT` status and owned
-        by the API key's account. Requires a verified account email and a paid plan
-        (referral) or a payment source on file (affiliate); subject to your plan's
-        program limit.
+        by the API key's account. Requires a verified account email.
 
         Args:
           type: The program type. Immutable after creation.
@@ -266,7 +278,7 @@ class CampaignResource(SyncAPIResource):
         company_logo_image_url: str | Omit = omit,
         company_name: str | Omit = omit,
         name: str | Omit = omit,
-        status: Literal["DRAFT", "PENDING", "IN_PROGRESS", "COMPLETE", "CANCELLED"] | Omit = omit,
+        status: Literal["IN_PROGRESS", "COMPLETE"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -275,12 +287,15 @@ class CampaignResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Campaign:
         """
-        Updates a program's configuration and/or status. Only the fields you send are
-        changed. `type`, `urlId`, and `currencyISO` are immutable. Status changes are validated against
-        the allowed transitions; the program cannot be deleted via this endpoint.
+        Updates a program's identity and lifecycle. Only the fields you send are
+        changed. `type`, `urlId`, and `currencyISO` are immutable. Editor-tab
+        configuration (design, emails, options, installation) is edited via the
+        dedicated config sub-resources, not here. The program cannot be deleted via
+        this endpoint.
 
         Args:
-          status: The program status. Transitions are validated; DELETED is not allowed.
+          status: The requested program status. `IN_PROGRESS` publishes or resumes the program;
+              `COMPLETE` ends it. Any other value returns a `400`.
 
           extra_headers: Send extra headers
 
@@ -360,6 +375,40 @@ class CampaignResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=Campaign,
+        )
+
+    def get_referral_flow_screenshots(
+        self,
+        id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ReferralFlowScreenshotsResponse:
+        """
+        Captures two preview screenshots for the program: the authenticated referrer
+        view and the referred-friend view.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._get(
+            path_template("/campaign/{id}/referral-flow-screenshots", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ReferralFlowScreenshotsResponse,
         )
 
     def create_mobile_participant_token(
@@ -737,6 +786,8 @@ class CampaignResource(SyncAPIResource):
         *,
         days: int | Omit = omit,
         end_date: int | Omit = omit,
+        include: str | Omit = omit,
+        interval: Literal["day", "week", "month", "total"] | Omit = omit,
         start_date: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -746,13 +797,25 @@ class CampaignResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignRetrieveAnalyticsResponse:
         """
-        Retrieves analytics for a program.
+        Retrieves analytics for a program. Pass ``interval`` to also get a time-series
+        (``series``) alongside the totals, and ``include`` to add previous-period
+        totals, status breakdowns, or derived rates — useful for detecting trends over
+        time.
 
         Args:
           days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.
 
           end_date: End date of the analytics timeframe as a Unix timestamp in milliseconds.
               Required if `days` is not set.
+
+          include: Comma-separated list of optional enrichments (opt-in to keep the default
+              response lean). Any of `previousPeriod` (totals for the equal-length window
+              immediately before the requested one), `statusCounts` (reward and, for affiliate
+              programs, affiliate/commission/payout status breakdowns), and `rates` (derived
+              referral rates).
+
+          interval: When set to `day`, `week`, or `month`, the response also includes a `series`
+              array with per-period totals. Defaults to `total` (no series).
 
           start_date: Start date of the analytics timeframe as a Unix timestamp in milliseconds.
               Required if `days` is not set.
@@ -778,6 +841,8 @@ class CampaignResource(SyncAPIResource):
                     {
                         "days": days,
                         "end_date": end_date,
+                        "include": include,
+                        "interval": interval,
                         "start_date": start_date,
                     },
                     campaign_retrieve_analytics_params.CampaignRetrieveAnalyticsParams,
@@ -806,6 +871,11 @@ class AsyncCampaignResource(AsyncAPIResource):
     def rewards(self) -> AsyncRewardsResource:
         """Campaign reward (`CampaignReward`) configuration operations."""
         return AsyncRewardsResource(self._client)
+
+    @cached_property
+    def webhooks(self) -> AsyncWebhooksResource:
+        """Campaign webhook (`Webhook`) configuration operations."""
+        return AsyncWebhooksResource(self._client)
 
     @cached_property
     def design(self) -> AsyncDesignResource:
@@ -865,9 +935,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         """
         Creates a new program pre-populated with type-appropriate defaults, plus any
         optional inline rewards. The new program is created in `DRAFT` status and owned
-        by the API key's account. Requires a verified account email and a paid plan
-        (referral) or a payment source on file (affiliate); subject to your plan's
-        program limit.
+        by the API key's account. Requires a verified account email.
 
         Args:
           type: The program type. Immutable after creation.
@@ -946,7 +1014,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         company_logo_image_url: str | Omit = omit,
         company_name: str | Omit = omit,
         name: str | Omit = omit,
-        status: Literal["DRAFT", "PENDING", "IN_PROGRESS", "COMPLETE", "CANCELLED"] | Omit = omit,
+        status: Literal["IN_PROGRESS", "COMPLETE"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -955,12 +1023,15 @@ class AsyncCampaignResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Campaign:
         """
-        Updates a program's configuration and/or status. Only the fields you send are
-        changed. `type`, `urlId`, and `currencyISO` are immutable. Status changes are validated against
-        the allowed transitions; the program cannot be deleted via this endpoint.
+        Updates a program's identity and lifecycle. Only the fields you send are
+        changed. `type`, `urlId`, and `currencyISO` are immutable. Editor-tab
+        configuration (design, emails, options, installation) is edited via the
+        dedicated config sub-resources, not here. The program cannot be deleted via
+        this endpoint.
 
         Args:
-          status: The program status. Transitions are validated; DELETED is not allowed.
+          status: The requested program status. `IN_PROGRESS` publishes or resumes the program;
+              `COMPLETE` ends it. Any other value returns a `400`.
 
           extra_headers: Send extra headers
 
@@ -1040,6 +1111,40 @@ class AsyncCampaignResource(AsyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=Campaign,
+        )
+
+    async def get_referral_flow_screenshots(
+        self,
+        id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ReferralFlowScreenshotsResponse:
+        """
+        Captures two preview screenshots for the program: the authenticated referrer
+        view and the referred-friend view.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._get(
+            path_template("/campaign/{id}/referral-flow-screenshots", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ReferralFlowScreenshotsResponse,
         )
 
     async def create_mobile_participant_token(
@@ -1417,6 +1522,8 @@ class AsyncCampaignResource(AsyncAPIResource):
         *,
         days: int | Omit = omit,
         end_date: int | Omit = omit,
+        include: str | Omit = omit,
+        interval: Literal["day", "week", "month", "total"] | Omit = omit,
         start_date: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1426,13 +1533,25 @@ class AsyncCampaignResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignRetrieveAnalyticsResponse:
         """
-        Retrieves analytics for a program.
+        Retrieves analytics for a program. Pass ``interval`` to also get a time-series
+        (``series``) alongside the totals, and ``include`` to add previous-period
+        totals, status breakdowns, or derived rates — useful for detecting trends over
+        time.
 
         Args:
           days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.
 
           end_date: End date of the analytics timeframe as a Unix timestamp in milliseconds.
               Required if `days` is not set.
+
+          include: Comma-separated list of optional enrichments (opt-in to keep the default
+              response lean). Any of `previousPeriod` (totals for the equal-length window
+              immediately before the requested one), `statusCounts` (reward and, for affiliate
+              programs, affiliate/commission/payout status breakdowns), and `rates` (derived
+              referral rates).
+
+          interval: When set to `day`, `week`, or `month`, the response also includes a `series`
+              array with per-period totals. Defaults to `total` (no series).
 
           start_date: Start date of the analytics timeframe as a Unix timestamp in milliseconds.
               Required if `days` is not set.
@@ -1458,6 +1577,8 @@ class AsyncCampaignResource(AsyncAPIResource):
                     {
                         "days": days,
                         "end_date": end_date,
+                        "include": include,
+                        "interval": interval,
                         "start_date": start_date,
                     },
                     campaign_retrieve_analytics_params.CampaignRetrieveAnalyticsParams,
@@ -1485,6 +1606,9 @@ class CampaignResourceWithRawResponse:
         )
         self.clone = to_raw_response_wrapper(
             campaign.clone,
+        )
+        self.get_referral_flow_screenshots = to_raw_response_wrapper(
+            campaign.get_referral_flow_screenshots,
         )
         self.create_mobile_participant_token = to_raw_response_wrapper(
             campaign.create_mobile_participant_token,
@@ -1528,6 +1652,11 @@ class CampaignResourceWithRawResponse:
         return RewardsResourceWithRawResponse(self._campaign.rewards)
 
     @cached_property
+    def webhooks(self) -> WebhooksResourceWithRawResponse:
+        """Campaign webhook (`Webhook`) configuration operations."""
+        return WebhooksResourceWithRawResponse(self._campaign.webhooks)
+
+    @cached_property
     def design(self) -> DesignResourceWithRawResponse:
         """Campaign design (`CampaignDesign`) configuration — the Program Editor's Design tab."""
         return DesignResourceWithRawResponse(self._campaign.design)
@@ -1566,6 +1695,9 @@ class AsyncCampaignResourceWithRawResponse:
         )
         self.clone = async_to_raw_response_wrapper(
             campaign.clone,
+        )
+        self.get_referral_flow_screenshots = async_to_raw_response_wrapper(
+            campaign.get_referral_flow_screenshots,
         )
         self.create_mobile_participant_token = async_to_raw_response_wrapper(
             campaign.create_mobile_participant_token,
@@ -1609,6 +1741,11 @@ class AsyncCampaignResourceWithRawResponse:
         return AsyncRewardsResourceWithRawResponse(self._campaign.rewards)
 
     @cached_property
+    def webhooks(self) -> AsyncWebhooksResourceWithRawResponse:
+        """Campaign webhook (`Webhook`) configuration operations."""
+        return AsyncWebhooksResourceWithRawResponse(self._campaign.webhooks)
+
+    @cached_property
     def design(self) -> AsyncDesignResourceWithRawResponse:
         """Campaign design (`CampaignDesign`) configuration — the Program Editor's Design tab."""
         return AsyncDesignResourceWithRawResponse(self._campaign.design)
@@ -1647,6 +1784,9 @@ class CampaignResourceWithStreamingResponse:
         )
         self.clone = to_streamed_response_wrapper(
             campaign.clone,
+        )
+        self.get_referral_flow_screenshots = to_streamed_response_wrapper(
+            campaign.get_referral_flow_screenshots,
         )
         self.create_mobile_participant_token = to_streamed_response_wrapper(
             campaign.create_mobile_participant_token,
@@ -1690,6 +1830,11 @@ class CampaignResourceWithStreamingResponse:
         return RewardsResourceWithStreamingResponse(self._campaign.rewards)
 
     @cached_property
+    def webhooks(self) -> WebhooksResourceWithStreamingResponse:
+        """Campaign webhook (`Webhook`) configuration operations."""
+        return WebhooksResourceWithStreamingResponse(self._campaign.webhooks)
+
+    @cached_property
     def design(self) -> DesignResourceWithStreamingResponse:
         """Campaign design (`CampaignDesign`) configuration — the Program Editor's Design tab."""
         return DesignResourceWithStreamingResponse(self._campaign.design)
@@ -1728,6 +1873,9 @@ class AsyncCampaignResourceWithStreamingResponse:
         )
         self.clone = async_to_streamed_response_wrapper(
             campaign.clone,
+        )
+        self.get_referral_flow_screenshots = async_to_streamed_response_wrapper(
+            campaign.get_referral_flow_screenshots,
         )
         self.create_mobile_participant_token = async_to_streamed_response_wrapper(
             campaign.create_mobile_participant_token,
@@ -1769,6 +1917,11 @@ class AsyncCampaignResourceWithStreamingResponse:
     def rewards(self) -> AsyncRewardsResourceWithStreamingResponse:
         """Campaign reward (`CampaignReward`) configuration operations."""
         return AsyncRewardsResourceWithStreamingResponse(self._campaign.rewards)
+
+    @cached_property
+    def webhooks(self) -> AsyncWebhooksResourceWithStreamingResponse:
+        """Campaign webhook (`Webhook`) configuration operations."""
+        return AsyncWebhooksResourceWithStreamingResponse(self._campaign.webhooks)
 
     @cached_property
     def design(self) -> AsyncDesignResourceWithStreamingResponse:

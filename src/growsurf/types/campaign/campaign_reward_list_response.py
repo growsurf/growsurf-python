@@ -10,4 +10,4 @@ __all__ = ["CampaignRewardListResponse"]
 
 class CampaignRewardListResponse(BaseModel):
     rewards: List[Reward]
-    """The program's active, visible, and enabled rewards."""
+    """The program's configured rewards."""

@@ -60,7 +60,6 @@ class RewardsResource(SyncAPIResource):
         coupon_code: Optional[str] | Omit = omit,
         description: str | Omit = omit,
         image_url: Optional[str] | Omit = omit,
-        is_active: bool | Omit = omit,
         is_unlimited: bool | Omit = omit,
         is_visible: bool | Omit = omit,
         limit: int | Omit = omit,
@@ -100,11 +99,11 @@ class RewardsResource(SyncAPIResource):
 
           image_url: An image URL for the reward.
 
-          is_active: Whether the reward is active (awardable).
+          is_unlimited: Whether the reward can be earned an unlimited number of times. Defaults to
+              `true`, except `MILESTONE` rewards, which can only be earned once.
 
-          is_unlimited: Whether the reward can be earned an unlimited number of times.
-
-          is_visible: Whether the reward is visible.
+          is_visible: Whether the reward is enabled. When `false`, the reward is hidden from
+              participants (including those who already earned it) and no longer awarded.
 
           limit: The number of times a participant can earn the reward (overridden by
               `isUnlimited`).
@@ -113,7 +112,9 @@ class RewardsResource(SyncAPIResource):
 
           metadata: Custom key/value metadata (single-level; values are stored as strings).
 
-          number_of_winners: The maximum number of winners (LEADERBOARD rewards).
+          number_of_winners: The maximum number of winners. Only applies to LEADERBOARD rewards. With
+              `limitDuration` `PER_MONTH` this many win each month; otherwise this many win in total.
+              Omitting it defaults to 3.
 
           order: The display order of the reward.
 
@@ -150,7 +151,6 @@ class RewardsResource(SyncAPIResource):
                     "coupon_code": coupon_code,
                     "description": description,
                     "image_url": image_url,
-                    "is_active": is_active,
                     "is_unlimited": is_unlimited,
                     "is_visible": is_visible,
                     "limit": limit,
@@ -185,7 +185,6 @@ class RewardsResource(SyncAPIResource):
         coupon_code: Optional[str] | Omit = omit,
         description: str | Omit = omit,
         image_url: Optional[str] | Omit = omit,
-        is_active: bool | Omit = omit,
         is_unlimited: bool | Omit = omit,
         is_visible: bool | Omit = omit,
         limit: int | Omit = omit,
@@ -221,11 +220,11 @@ class RewardsResource(SyncAPIResource):
 
           image_url: An image URL for the reward.
 
-          is_active: Whether the reward is active (awardable).
+          is_unlimited: Whether the reward can be earned an unlimited number of times. Defaults to
+              `true`, except `MILESTONE` rewards, which can only be earned once.
 
-          is_unlimited: Whether the reward can be earned an unlimited number of times.
-
-          is_visible: Whether the reward is visible.
+          is_visible: Whether the reward is enabled. When `false`, the reward is hidden from
+              participants (including those who already earned it) and no longer awarded.
 
           limit: The number of times a participant can earn the reward (overridden by
               `isUnlimited`).
@@ -234,7 +233,9 @@ class RewardsResource(SyncAPIResource):
 
           metadata: Custom key/value metadata (single-level; values are stored as strings).
 
-          number_of_winners: The maximum number of winners (LEADERBOARD rewards).
+          number_of_winners: The maximum number of winners. Only applies to LEADERBOARD rewards. With
+              `limitDuration` `PER_MONTH` this many win each month; otherwise this many win in total.
+              Omitting it defaults to 3.
 
           order: The display order of the reward.
 
@@ -272,7 +273,6 @@ class RewardsResource(SyncAPIResource):
                     "coupon_code": coupon_code,
                     "description": description,
                     "image_url": image_url,
-                    "is_active": is_active,
                     "is_unlimited": is_unlimited,
                     "is_visible": is_visible,
                     "limit": limit,
@@ -309,9 +309,8 @@ class RewardsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignRewardListResponse:
         """
-        Retrieves the list of a program's configured rewards (`CampaignReward`s). Returns
-        the active, visible, and enabled rewards — the same set embedded in the `rewards`
-        array of the campaign response.
+        Retrieves the list of a program's configured rewards (`CampaignReward`s), the same
+        set embedded in the `rewards` array of the campaign response.
 
         Args:
           extra_headers: Send extra headers
@@ -403,7 +402,6 @@ class AsyncRewardsResource(AsyncAPIResource):
         coupon_code: Optional[str] | Omit = omit,
         description: str | Omit = omit,
         image_url: Optional[str] | Omit = omit,
-        is_active: bool | Omit = omit,
         is_unlimited: bool | Omit = omit,
         is_visible: bool | Omit = omit,
         limit: int | Omit = omit,
@@ -443,11 +441,11 @@ class AsyncRewardsResource(AsyncAPIResource):
 
           image_url: An image URL for the reward.
 
-          is_active: Whether the reward is active (awardable).
+          is_unlimited: Whether the reward can be earned an unlimited number of times. Defaults to
+              `true`, except `MILESTONE` rewards, which can only be earned once.
 
-          is_unlimited: Whether the reward can be earned an unlimited number of times.
-
-          is_visible: Whether the reward is visible.
+          is_visible: Whether the reward is enabled. When `false`, the reward is hidden from
+              participants (including those who already earned it) and no longer awarded.
 
           limit: The number of times a participant can earn the reward (overridden by
               `isUnlimited`).
@@ -456,7 +454,9 @@ class AsyncRewardsResource(AsyncAPIResource):
 
           metadata: Custom key/value metadata (single-level; values are stored as strings).
 
-          number_of_winners: The maximum number of winners (LEADERBOARD rewards).
+          number_of_winners: The maximum number of winners. Only applies to LEADERBOARD rewards. With
+              `limitDuration` `PER_MONTH` this many win each month; otherwise this many win in total.
+              Omitting it defaults to 3.
 
           order: The display order of the reward.
 
@@ -493,7 +493,6 @@ class AsyncRewardsResource(AsyncAPIResource):
                     "coupon_code": coupon_code,
                     "description": description,
                     "image_url": image_url,
-                    "is_active": is_active,
                     "is_unlimited": is_unlimited,
                     "is_visible": is_visible,
                     "limit": limit,
@@ -528,7 +527,6 @@ class AsyncRewardsResource(AsyncAPIResource):
         coupon_code: Optional[str] | Omit = omit,
         description: str | Omit = omit,
         image_url: Optional[str] | Omit = omit,
-        is_active: bool | Omit = omit,
         is_unlimited: bool | Omit = omit,
         is_visible: bool | Omit = omit,
         limit: int | Omit = omit,
@@ -564,11 +562,11 @@ class AsyncRewardsResource(AsyncAPIResource):
 
           image_url: An image URL for the reward.
 
-          is_active: Whether the reward is active (awardable).
+          is_unlimited: Whether the reward can be earned an unlimited number of times. Defaults to
+              `true`, except `MILESTONE` rewards, which can only be earned once.
 
-          is_unlimited: Whether the reward can be earned an unlimited number of times.
-
-          is_visible: Whether the reward is visible.
+          is_visible: Whether the reward is enabled. When `false`, the reward is hidden from
+              participants (including those who already earned it) and no longer awarded.
 
           limit: The number of times a participant can earn the reward (overridden by
               `isUnlimited`).
@@ -577,7 +575,9 @@ class AsyncRewardsResource(AsyncAPIResource):
 
           metadata: Custom key/value metadata (single-level; values are stored as strings).
 
-          number_of_winners: The maximum number of winners (LEADERBOARD rewards).
+          number_of_winners: The maximum number of winners. Only applies to LEADERBOARD rewards. With
+              `limitDuration` `PER_MONTH` this many win each month; otherwise this many win in total.
+              Omitting it defaults to 3.
 
           order: The display order of the reward.
 
@@ -615,7 +615,6 @@ class AsyncRewardsResource(AsyncAPIResource):
                     "coupon_code": coupon_code,
                     "description": description,
                     "image_url": image_url,
-                    "is_active": is_active,
                     "is_unlimited": is_unlimited,
                     "is_visible": is_visible,
                     "limit": limit,
@@ -652,9 +651,8 @@ class AsyncRewardsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignRewardListResponse:
         """
-        Retrieves the list of a program's configured rewards (`CampaignReward`s). Returns
-        the active, visible, and enabled rewards — the same set embedded in the `rewards`
-        array of the campaign response.
+        Retrieves the list of a program's configured rewards (`CampaignReward`s), the same
+        set embedded in the `rewards` array of the campaign response.
 
         Args:
           extra_headers: Send extra headers

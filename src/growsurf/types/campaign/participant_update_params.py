@@ -23,6 +23,13 @@ class ParticipantUpdateParams(TypedDict, total=False):
     metadata: Dict[str, object]
     """Shallow custom metadata object."""
 
+    notes: str
+    """Freeform internal notes about the participant (internal only, never exposed to
+    participants)."""
+
+    paypal_email: Annotated[str, PropertyInfo(alias="paypalEmail")]
+    """The participant's PayPal email address, used for affiliate payouts."""
+
     referral_status: Annotated[
         Literal["CREDIT_PENDING", "CREDIT_AWARDED", "CREDIT_EXPIRED"], PropertyInfo(alias="referralStatus")
     ]

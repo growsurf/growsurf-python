@@ -21,13 +21,17 @@ from ..._base_client import make_request_options
 from ...types.campaign import (
     ReferralStatus,
     participant_add_params,
+    participant_email_params,
     participant_update_params,
+    participant_analytics_params,
+    participant_bulk_delete_params,
     participant_list_payouts_params,
     participant_list_rewards_params,
     participant_send_invites_params,
     participant_list_referrals_params,
     participant_list_commissions_params,
     participant_trigger_referral_params,
+    participant_list_activity_logs_params,
     participant_record_transaction_params,
     participant_refund_transaction_params,
 )
@@ -36,9 +40,13 @@ from ...types.campaign.participant import Participant
 from ...types.participant_payout_list import ParticipantPayoutList
 from ...types.campaign.referral_status import ReferralStatus
 from ...types.participant_commission_list import ParticipantCommissionList
+from ...types.campaign.email_participant_response import EmailParticipantResponse
 from ...types.campaign.participant_delete_response import ParticipantDeleteResponse
+from ...types.campaign.participant_analytics_response import ParticipantAnalyticsResponse
+from ...types.campaign.participant_bulk_delete_response import ParticipantBulkDeleteResponse
 from ...types.campaign.participant_list_rewards_response import ParticipantListRewardsResponse
 from ...types.campaign.participant_send_invites_response import ParticipantSendInvitesResponse
+from ...types.campaign.participant_activity_logs_response import ParticipantActivityLogsResponse
 from ...types.campaign.participant_trigger_referral_response import ParticipantTriggerReferralResponse
 from ...types.campaign.participant_record_transaction_response import ParticipantRecordTransactionResponse
 from ...types.campaign.participant_refund_transaction_response import ParticipantRefundTransactionResponse
@@ -117,6 +125,8 @@ class ParticipantResource(SyncAPIResource):
         first_name: str | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
+        notes: str | Omit = omit,
+        paypal_email: str | Omit = omit,
         referral_status: Literal["CREDIT_PENDING", "CREDIT_AWARDED", "CREDIT_EXPIRED"] | Omit = omit,
         referred_by: str | Omit = omit,
         unsubscribed: bool | Omit = omit,
@@ -133,6 +143,11 @@ class ParticipantResource(SyncAPIResource):
 
         Args:
           metadata: Shallow custom metadata object.
+
+          notes: Freeform internal notes about the participant (internal only, never exposed to
+              participants).
+
+          paypal_email: The participant's PayPal email address, used for affiliate payouts.
 
           extra_headers: Send extra headers
 
@@ -160,6 +175,8 @@ class ParticipantResource(SyncAPIResource):
                     "first_name": first_name,
                     "last_name": last_name,
                     "metadata": metadata,
+                    "notes": notes,
+                    "paypal_email": paypal_email,
                     "referral_status": referral_status,
                     "referred_by": referred_by,
                     "unsubscribed": unsubscribed,
@@ -215,6 +232,53 @@ class ParticipantResource(SyncAPIResource):
             cast_to=ParticipantDeleteResponse,
         )
 
+    def bulk_delete(
+        self,
+        id: str,
+        *,
+        participants: SequenceNotStr[str],
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantBulkDeleteResponse:
+        """Deletes a list of participants from a program in one request.
+
+        Each entry in
+        `participants` is a GrowSurf participant ID or an email address (mixed lists
+        are allowed). Up to `200` entries per request — chunk larger lists across
+        multiple calls. The response reports a per-row `status` for every submitted
+        entry, so a `200` can include rows that were `NOT_FOUND` or failed. Deletion
+        is permanent and removes the participants' referrals, rewards, commissions,
+        and payout records.
+
+        Args:
+          participants: GrowSurf participant IDs and/or email addresses to delete. Mixed entries are
+              allowed.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._post(
+            path_template("/campaign/{id}/participants/bulk-delete", id=id),
+            body=maybe_transform(
+                {"participants": participants}, participant_bulk_delete_params.ParticipantBulkDeleteParams
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ParticipantBulkDeleteResponse,
+        )
+
     def add(
         self,
         id: str,
@@ -246,6 +310,11 @@ class ParticipantResource(SyncAPIResource):
           mobile_instance_id: Optional app-install scoped identifier for native mobile anti-fraud. Recommended
               for mobile participant creation and mobile participant token flows. The official
               mobile SDKs generate this as a lowercase UUID.
+
+          referral_status: The referral credit status. Only meaningful when `referred_by` resolves to a
+              referrer. When omitted it is derived from the program's referral trigger
+              (`CREDIT_AWARDED`, `CREDIT_PENDING`, or `CREDIT_EXPIRED`); left unset when no referrer
+              resolves.
 
           referred_by: Referrer participant ID or email address.
 
@@ -589,6 +658,14 @@ class ParticipantResource(SyncAPIResource):
         Records a sale made by a referred customer and generates affiliate commissions
         for their referrer when applicable.
 
+        At least one transaction identifier is required: one of ``external_id``,
+        ``transaction_id``, ``order_id``, ``payment_id``, ``invoice_id``,
+        ``payment_intent_id``, or ``charge_id``. ``customer_id`` and ``subscription_id``
+        do not count, since they identify the customer or subscription rather than the
+        specific transaction. Without an identifier, resending the same sale creates a
+        duplicate commission and double-pays the referrer; the server rejects such
+        requests with HTTP 400.
+
         Args:
           extra_headers: Send extra headers
 
@@ -748,6 +825,9 @@ class ParticipantResource(SyncAPIResource):
         """
         Sends email invites on behalf of a participant to a list of email addresses.
 
+        Sending invites via the API requires a verified custom email domain on the
+        program; the request fails until one is verified.
+
         Args:
           extra_headers: Send extra headers
 
@@ -879,6 +959,219 @@ class ParticipantResource(SyncAPIResource):
             cast_to=ParticipantTriggerReferralResponse,
         )
 
+    def email(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        email_type: str | Omit = omit,
+        body: str | Omit = omit,
+        preheader: str | Omit = omit,
+        subject: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> EmailParticipantResponse:
+        """
+        Sends an email to a participant. Provide EITHER ``email_type`` to trigger one of
+        the program's configured email templates, OR ``subject`` + ``body`` for a
+        free-form email. Free-form emails are sent with the same compliance handling
+        (company name, postal address, and an unsubscribe link are added automatically,
+        and unsubscribed participants are suppressed). Sending requires the account to be
+        verified by the GrowSurf team. Requires a verified custom email domain on the
+        program (set up in Campaign Editor > 3. Emails > Email Settings). Returns `400`
+        until one is verified. The email is accepted for delivery.
+
+        Args:
+          email_type: The program email template to trigger (template mode). The valid values depend on
+              the program type; the template's `isEnabled` setting only controls automatic sends.
+              Referral programs: `welcomeNonReferred`, `referralLinkViewedFirstTime`, `referralLinkUsed`,
+              `referredSignup`, `welcomeReferred`, `goalAchieved`, `campaignEndedWinners`,
+              `campaignEndedNonWinners`, `progressUpdateMonthly`. Affiliate programs:
+              `welcomeNonReferred`, `referralLinkViewedFirstTime`, `referredSignup`,
+              `commissionGenerated`, `commissionAdjusted`, `payoutPending`, `payoutSentSuccess`,
+              `progressUpdateMonthly`. System/transactional types (login link, PayPal confirmation,
+              tax) and the invite email cannot be sent.
+
+          body: HTML body for a free-form email. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails).
+
+          preheader: Optional preheader text for a free-form email.
+
+          subject: Subject line for a free-form email. Supports dynamic text (`{{...}}` tokens), the same as the body.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return self._post(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/email",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            body=maybe_transform(
+                {
+                    "email_type": email_type,
+                    "body": body,
+                    "preheader": preheader,
+                    "subject": subject,
+                },
+                participant_email_params.ParticipantEmailParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=EmailParticipantResponse,
+        )
+
+    def list_activity_logs(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantActivityLogsResponse:
+        """
+        Returns a participant's activity logs, most recent first (offset/limit
+        paginated).
+
+        Args:
+          limit: Number of logs to return (1–100, default 20).
+
+          offset: Number of logs to skip.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return self._get(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/activity-logs",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "limit": limit,
+                        "offset": offset,
+                    },
+                    participant_list_activity_logs_params.ParticipantListActivityLogsParams,
+                ),
+            ),
+            cast_to=ParticipantActivityLogsResponse,
+        )
+
+    def retrieve_analytics(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        days: int | Omit = omit,
+        end_date: int | Omit = omit,
+        include: Literal["series"] | Omit = omit,
+        interval: Literal["day", "week", "month"] | Omit = omit,
+        start_date: int | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantAnalyticsResponse:
+        """
+        Retrieves analytics for a single participant — all-time engagement counters,
+        leaderboard ranks, and per-channel share counts (plus affiliate money metrics for
+        affiliate programs). Useful for segmenting and re-engaging participants. Pass
+        ``include=series`` to also get this participant's own activity over time.
+
+        Args:
+          days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.
+
+          end_date: End date of the analytics timeframe as a Unix timestamp in milliseconds.
+              Required if `days` is not set.
+
+          include: Set to `series` to also return this participant's own activity per period.
+
+          interval: Bucket size for the `series` (only used with `include=series`). Defaults to
+              `day`.
+
+          start_date: Start date of the analytics timeframe as a Unix timestamp in milliseconds.
+              Required if `days` is not set.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return self._get(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/analytics",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "days": days,
+                        "end_date": end_date,
+                        "include": include,
+                        "interval": interval,
+                        "start_date": start_date,
+                    },
+                    participant_analytics_params.ParticipantAnalyticsParams,
+                ),
+            ),
+            cast_to=ParticipantAnalyticsResponse,
+        )
+
 
 class AsyncParticipantResource(AsyncAPIResource):
     @cached_property
@@ -951,6 +1244,8 @@ class AsyncParticipantResource(AsyncAPIResource):
         first_name: str | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
+        notes: str | Omit = omit,
+        paypal_email: str | Omit = omit,
         referral_status: Literal["CREDIT_PENDING", "CREDIT_AWARDED", "CREDIT_EXPIRED"] | Omit = omit,
         referred_by: str | Omit = omit,
         unsubscribed: bool | Omit = omit,
@@ -967,6 +1262,11 @@ class AsyncParticipantResource(AsyncAPIResource):
 
         Args:
           metadata: Shallow custom metadata object.
+
+          notes: Freeform internal notes about the participant (internal only, never exposed to
+              participants).
+
+          paypal_email: The participant's PayPal email address, used for affiliate payouts.
 
           extra_headers: Send extra headers
 
@@ -994,6 +1294,8 @@ class AsyncParticipantResource(AsyncAPIResource):
                     "first_name": first_name,
                     "last_name": last_name,
                     "metadata": metadata,
+                    "notes": notes,
+                    "paypal_email": paypal_email,
                     "referral_status": referral_status,
                     "referred_by": referred_by,
                     "unsubscribed": unsubscribed,
@@ -1049,6 +1351,53 @@ class AsyncParticipantResource(AsyncAPIResource):
             cast_to=ParticipantDeleteResponse,
         )
 
+    async def bulk_delete(
+        self,
+        id: str,
+        *,
+        participants: SequenceNotStr[str],
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantBulkDeleteResponse:
+        """Deletes a list of participants from a program in one request.
+
+        Each entry in
+        `participants` is a GrowSurf participant ID or an email address (mixed lists
+        are allowed). Up to `200` entries per request — chunk larger lists across
+        multiple calls. The response reports a per-row `status` for every submitted
+        entry, so a `200` can include rows that were `NOT_FOUND` or failed. Deletion
+        is permanent and removes the participants' referrals, rewards, commissions,
+        and payout records.
+
+        Args:
+          participants: GrowSurf participant IDs and/or email addresses to delete. Mixed entries are
+              allowed.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._post(
+            path_template("/campaign/{id}/participants/bulk-delete", id=id),
+            body=await async_maybe_transform(
+                {"participants": participants}, participant_bulk_delete_params.ParticipantBulkDeleteParams
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ParticipantBulkDeleteResponse,
+        )
+
     async def add(
         self,
         id: str,
@@ -1080,6 +1429,11 @@ class AsyncParticipantResource(AsyncAPIResource):
           mobile_instance_id: Optional app-install scoped identifier for native mobile anti-fraud. Recommended
               for mobile participant creation and mobile participant token flows. The official
               mobile SDKs generate this as a lowercase UUID.
+
+          referral_status: The referral credit status. Only meaningful when `referred_by` resolves to a
+              referrer. When omitted it is derived from the program's referral trigger
+              (`CREDIT_AWARDED`, `CREDIT_PENDING`, or `CREDIT_EXPIRED`); left unset when no referrer
+              resolves.
 
           referred_by: Referrer participant ID or email address.
 
@@ -1423,6 +1777,14 @@ class AsyncParticipantResource(AsyncAPIResource):
         Records a sale made by a referred customer and generates affiliate commissions
         for their referrer when applicable.
 
+        At least one transaction identifier is required: one of ``external_id``,
+        ``transaction_id``, ``order_id``, ``payment_id``, ``invoice_id``,
+        ``payment_intent_id``, or ``charge_id``. ``customer_id`` and ``subscription_id``
+        do not count, since they identify the customer or subscription rather than the
+        specific transaction. Without an identifier, resending the same sale creates a
+        duplicate commission and double-pays the referrer; the server rejects such
+        requests with HTTP 400.
+
         Args:
           extra_headers: Send extra headers
 
@@ -1582,6 +1944,9 @@ class AsyncParticipantResource(AsyncAPIResource):
         """
         Sends email invites on behalf of a participant to a list of email addresses.
 
+        Sending invites via the API requires a verified custom email domain on the
+        program; the request fails until one is verified.
+
         Args:
           extra_headers: Send extra headers
 
@@ -1713,6 +2078,219 @@ class AsyncParticipantResource(AsyncAPIResource):
             cast_to=ParticipantTriggerReferralResponse,
         )
 
+    async def email(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        email_type: str | Omit = omit,
+        body: str | Omit = omit,
+        preheader: str | Omit = omit,
+        subject: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> EmailParticipantResponse:
+        """
+        Sends an email to a participant. Provide EITHER ``email_type`` to trigger one of
+        the program's configured email templates, OR ``subject`` + ``body`` for a
+        free-form email. Free-form emails are sent with the same compliance handling
+        (company name, postal address, and an unsubscribe link are added automatically,
+        and unsubscribed participants are suppressed). Sending requires the account to be
+        verified by the GrowSurf team. Requires a verified custom email domain on the
+        program (set up in Campaign Editor > 3. Emails > Email Settings). Returns `400`
+        until one is verified. The email is accepted for delivery.
+
+        Args:
+          email_type: The program email template to trigger (template mode). The valid values depend on
+              the program type; the template's `isEnabled` setting only controls automatic sends.
+              Referral programs: `welcomeNonReferred`, `referralLinkViewedFirstTime`, `referralLinkUsed`,
+              `referredSignup`, `welcomeReferred`, `goalAchieved`, `campaignEndedWinners`,
+              `campaignEndedNonWinners`, `progressUpdateMonthly`. Affiliate programs:
+              `welcomeNonReferred`, `referralLinkViewedFirstTime`, `referredSignup`,
+              `commissionGenerated`, `commissionAdjusted`, `payoutPending`, `payoutSentSuccess`,
+              `progressUpdateMonthly`. System/transactional types (login link, PayPal confirmation,
+              tax) and the invite email cannot be sent.
+
+          body: HTML body for a free-form email. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails).
+
+          preheader: Optional preheader text for a free-form email.
+
+          subject: Subject line for a free-form email. Supports dynamic text (`{{...}}` tokens), the same as the body.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return await self._post(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/email",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            body=await async_maybe_transform(
+                {
+                    "email_type": email_type,
+                    "body": body,
+                    "preheader": preheader,
+                    "subject": subject,
+                },
+                participant_email_params.ParticipantEmailParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=EmailParticipantResponse,
+        )
+
+    async def list_activity_logs(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantActivityLogsResponse:
+        """
+        Returns a participant's activity logs, most recent first (offset/limit
+        paginated).
+
+        Args:
+          limit: Number of logs to return (1–100, default 20).
+
+          offset: Number of logs to skip.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return await self._get(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/activity-logs",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {
+                        "limit": limit,
+                        "offset": offset,
+                    },
+                    participant_list_activity_logs_params.ParticipantListActivityLogsParams,
+                ),
+            ),
+            cast_to=ParticipantActivityLogsResponse,
+        )
+
+    async def retrieve_analytics(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        days: int | Omit = omit,
+        end_date: int | Omit = omit,
+        include: Literal["series"] | Omit = omit,
+        interval: Literal["day", "week", "month"] | Omit = omit,
+        start_date: int | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantAnalyticsResponse:
+        """
+        Retrieves analytics for a single participant — all-time engagement counters,
+        leaderboard ranks, and per-channel share counts (plus affiliate money metrics for
+        affiliate programs). Useful for segmenting and re-engaging participants. Pass
+        ``include=series`` to also get this participant's own activity over time.
+
+        Args:
+          days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.
+
+          end_date: End date of the analytics timeframe as a Unix timestamp in milliseconds.
+              Required if `days` is not set.
+
+          include: Set to `series` to also return this participant's own activity per period.
+
+          interval: Bucket size for the `series` (only used with `include=series`). Defaults to
+              `day`.
+
+          start_date: Start date of the analytics timeframe as a Unix timestamp in milliseconds.
+              Required if `days` is not set.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return await self._get(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/analytics",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {
+                        "days": days,
+                        "end_date": end_date,
+                        "include": include,
+                        "interval": interval,
+                        "start_date": start_date,
+                    },
+                    participant_analytics_params.ParticipantAnalyticsParams,
+                ),
+            ),
+            cast_to=ParticipantAnalyticsResponse,
+        )
+
 
 class ParticipantResourceWithRawResponse:
     def __init__(self, participant: ParticipantResource) -> None:
@@ -1726,6 +2304,9 @@ class ParticipantResourceWithRawResponse:
         )
         self.delete = to_raw_response_wrapper(
             participant.delete,
+        )
+        self.bulk_delete = to_raw_response_wrapper(
+            participant.bulk_delete,
         )
         self.add = to_raw_response_wrapper(
             participant.add,
@@ -1757,6 +2338,15 @@ class ParticipantResourceWithRawResponse:
         self.cancel_delayed_referral = to_raw_response_wrapper(
             participant.cancel_delayed_referral,
         )
+        self.email = to_raw_response_wrapper(
+            participant.email,
+        )
+        self.list_activity_logs = to_raw_response_wrapper(
+            participant.list_activity_logs,
+        )
+        self.retrieve_analytics = to_raw_response_wrapper(
+            participant.retrieve_analytics,
+        )
 
 
 class AsyncParticipantResourceWithRawResponse:
@@ -1771,6 +2361,9 @@ class AsyncParticipantResourceWithRawResponse:
         )
         self.delete = async_to_raw_response_wrapper(
             participant.delete,
+        )
+        self.bulk_delete = async_to_raw_response_wrapper(
+            participant.bulk_delete,
         )
         self.add = async_to_raw_response_wrapper(
             participant.add,
@@ -1802,6 +2395,15 @@ class AsyncParticipantResourceWithRawResponse:
         self.cancel_delayed_referral = async_to_raw_response_wrapper(
             participant.cancel_delayed_referral,
         )
+        self.email = async_to_raw_response_wrapper(
+            participant.email,
+        )
+        self.list_activity_logs = async_to_raw_response_wrapper(
+            participant.list_activity_logs,
+        )
+        self.retrieve_analytics = async_to_raw_response_wrapper(
+            participant.retrieve_analytics,
+        )
 
 
 class ParticipantResourceWithStreamingResponse:
@@ -1816,6 +2418,9 @@ class ParticipantResourceWithStreamingResponse:
         )
         self.delete = to_streamed_response_wrapper(
             participant.delete,
+        )
+        self.bulk_delete = to_streamed_response_wrapper(
+            participant.bulk_delete,
         )
         self.add = to_streamed_response_wrapper(
             participant.add,
@@ -1847,6 +2452,15 @@ class ParticipantResourceWithStreamingResponse:
         self.cancel_delayed_referral = to_streamed_response_wrapper(
             participant.cancel_delayed_referral,
         )
+        self.email = to_streamed_response_wrapper(
+            participant.email,
+        )
+        self.list_activity_logs = to_streamed_response_wrapper(
+            participant.list_activity_logs,
+        )
+        self.retrieve_analytics = to_streamed_response_wrapper(
+            participant.retrieve_analytics,
+        )
 
 
 class AsyncParticipantResourceWithStreamingResponse:
@@ -1861,6 +2475,9 @@ class AsyncParticipantResourceWithStreamingResponse:
         )
         self.delete = async_to_streamed_response_wrapper(
             participant.delete,
+        )
+        self.bulk_delete = async_to_streamed_response_wrapper(
+            participant.bulk_delete,
         )
         self.add = async_to_streamed_response_wrapper(
             participant.add,
@@ -1891,4 +2508,13 @@ class AsyncParticipantResourceWithStreamingResponse:
         )
         self.cancel_delayed_referral = async_to_streamed_response_wrapper(
             participant.cancel_delayed_referral,
+        )
+        self.email = async_to_streamed_response_wrapper(
+            participant.email,
+        )
+        self.list_activity_logs = async_to_streamed_response_wrapper(
+            participant.list_activity_logs,
+        )
+        self.retrieve_analytics = async_to_streamed_response_wrapper(
+            participant.retrieve_analytics,
         )

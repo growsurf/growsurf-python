@@ -36,7 +36,8 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import campaign
+    from .resources import account, campaign
+    from .resources.account import AccountResource, AsyncAccountResource
     from .resources.campaign.campaign import CampaignResource, AsyncCampaignResource
 
 __all__ = [
@@ -114,6 +115,12 @@ class Growsurf(SyncAPIClient):
             custom_query=default_query,
             _strict_response_validation=_strict_response_validation,
         )
+
+    @cached_property
+    def account(self) -> AccountResource:
+        from .resources.account import AccountResource
+
+        return AccountResource(self)
 
     @cached_property
     def campaign(self) -> CampaignResource:
@@ -306,6 +313,12 @@ class AsyncGrowsurf(AsyncAPIClient):
         )
 
     @cached_property
+    def account(self) -> AsyncAccountResource:
+        from .resources.account import AsyncAccountResource
+
+        return AsyncAccountResource(self)
+
+    @cached_property
     def campaign(self) -> AsyncCampaignResource:
         from .resources.campaign import AsyncCampaignResource
 
@@ -438,6 +451,12 @@ class GrowsurfWithRawResponse:
         self._client = client
 
     @cached_property
+    def account(self) -> account.AccountResourceWithRawResponse:
+        from .resources.account import AccountResourceWithRawResponse
+
+        return AccountResourceWithRawResponse(self._client.account)
+
+    @cached_property
     def campaign(self) -> campaign.CampaignResourceWithRawResponse:
         from .resources.campaign import CampaignResourceWithRawResponse
 
@@ -449,6 +468,12 @@ class AsyncGrowsurfWithRawResponse:
 
     def __init__(self, client: AsyncGrowsurf) -> None:
         self._client = client
+
+    @cached_property
+    def account(self) -> account.AsyncAccountResourceWithRawResponse:
+        from .resources.account import AsyncAccountResourceWithRawResponse
+
+        return AsyncAccountResourceWithRawResponse(self._client.account)
 
     @cached_property
     def campaign(self) -> campaign.AsyncCampaignResourceWithRawResponse:
@@ -464,6 +489,12 @@ class GrowsurfWithStreamedResponse:
         self._client = client
 
     @cached_property
+    def account(self) -> account.AccountResourceWithStreamingResponse:
+        from .resources.account import AccountResourceWithStreamingResponse
+
+        return AccountResourceWithStreamingResponse(self._client.account)
+
+    @cached_property
     def campaign(self) -> campaign.CampaignResourceWithStreamingResponse:
         from .resources.campaign import CampaignResourceWithStreamingResponse
 
@@ -475,6 +506,12 @@ class AsyncGrowsurfWithStreamedResponse:
 
     def __init__(self, client: AsyncGrowsurf) -> None:
         self._client = client
+
+    @cached_property
+    def account(self) -> account.AsyncAccountResourceWithStreamingResponse:
+        from .resources.account import AsyncAccountResourceWithStreamingResponse
+
+        return AsyncAccountResourceWithStreamingResponse(self._client.account)
 
     @cached_property
     def campaign(self) -> campaign.AsyncCampaignResourceWithStreamingResponse:

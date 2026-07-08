@@ -15,6 +15,7 @@ from growsurf.types import (
     CampaignListResponse,
     ParticipantPayoutList,
     ParticipantCommissionList,
+    ReferralFlowScreenshotsResponse,
     CampaignRetrieveAnalyticsResponse,
     CampaignCreateMobileParticipantTokenResponse,
 )
@@ -131,7 +132,7 @@ class TestCampaign:
             company_logo_image_url="companyLogoImageUrl",
             company_name="companyName",
             name="name",
-            status="DRAFT",
+            status="IN_PROGRESS",
         )
         assert_matches_type(Campaign, campaign, path=["response"])
 
@@ -236,6 +237,48 @@ class TestCampaign:
     def test_path_params_clone(self, client: Growsurf) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             client.campaign.with_raw_response.clone(
+                "",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_get_referral_flow_screenshots(self, client: Growsurf) -> None:
+        campaign = client.campaign.get_referral_flow_screenshots(
+            "id",
+        )
+        assert_matches_type(ReferralFlowScreenshotsResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_get_referral_flow_screenshots(self, client: Growsurf) -> None:
+        response = client.campaign.with_raw_response.get_referral_flow_screenshots(
+            "id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = response.parse()
+        assert_matches_type(ReferralFlowScreenshotsResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_get_referral_flow_screenshots(self, client: Growsurf) -> None:
+        with client.campaign.with_streaming_response.get_referral_flow_screenshots(
+            "id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = response.parse()
+            assert_matches_type(ReferralFlowScreenshotsResponse, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_get_referral_flow_screenshots(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.with_raw_response.get_referral_flow_screenshots(
                 "",
             )
 
@@ -588,6 +631,8 @@ class TestCampaign:
             id="id",
             days=1,
             end_date=0,
+            include="previousPeriod,statusCounts,rates",
+            interval="day",
             start_date=0,
         )
         assert_matches_type(CampaignRetrieveAnalyticsResponse, campaign, path=["response"])
@@ -737,7 +782,7 @@ class TestAsyncCampaign:
             company_logo_image_url="companyLogoImageUrl",
             company_name="companyName",
             name="name",
-            status="DRAFT",
+            status="IN_PROGRESS",
         )
         assert_matches_type(Campaign, campaign, path=["response"])
 
@@ -842,6 +887,48 @@ class TestAsyncCampaign:
     async def test_path_params_clone(self, async_client: AsyncGrowsurf) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.campaign.with_raw_response.clone(
+                "",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_get_referral_flow_screenshots(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.get_referral_flow_screenshots(
+            "id",
+        )
+        assert_matches_type(ReferralFlowScreenshotsResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_get_referral_flow_screenshots(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.with_raw_response.get_referral_flow_screenshots(
+            "id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = await response.parse()
+        assert_matches_type(ReferralFlowScreenshotsResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_get_referral_flow_screenshots(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.with_streaming_response.get_referral_flow_screenshots(
+            "id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = await response.parse()
+            assert_matches_type(ReferralFlowScreenshotsResponse, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_get_referral_flow_screenshots(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.with_raw_response.get_referral_flow_screenshots(
                 "",
             )
 
@@ -1194,6 +1281,8 @@ class TestAsyncCampaign:
             id="id",
             days=1,
             end_date=0,
+            include="previousPeriod,statusCounts,rates",
+            interval="day",
             start_date=0,
         )
         assert_matches_type(CampaignRetrieveAnalyticsResponse, campaign, path=["response"])

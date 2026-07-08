@@ -58,7 +58,8 @@ class DesignResource(SyncAPIResource):
         """
         Retrieves a program's design configuration — the same surface as the dashboard
         Program Editor's **Design** tab. This is a large object whose available fields
-        depend on the program type; see the API reference for the full field list.
+        depend on the program type; the response includes every field and its current
+        value, which is the same shape you send back on `PATCH`.
 
         Args:
           extra_headers: Send extra headers
@@ -92,11 +93,12 @@ class DesignResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignDesign:
         """
-        Updates a program's design configuration. Only the fields you send are changed (a
-        surgical merge; arrays such as `signup.fields` replace wholesale). Unknown
-        fields, fields not available for the program type, and invalid values return a
-        `400`. The request body is a partial `CampaignDesign` object; see the API
-        reference for the full field list.
+        Updates a program's design configuration. Only the fields you send are changed;
+        anything you leave out is untouched (arrays such as `signup.fields` replace
+        wholesale). Unknown fields, fields not available for the program type, and
+        invalid values return a `400`. To see the full `CampaignDesign` object with every
+        field and its current value, `GET` this resource first, then `PATCH` back only the
+        fields you want to change.
 
         Args:
           body: A partial `CampaignDesign` object — only the fields you send are changed.
@@ -157,7 +159,8 @@ class AsyncDesignResource(AsyncAPIResource):
         """
         Retrieves a program's design configuration — the same surface as the dashboard
         Program Editor's **Design** tab. This is a large object whose available fields
-        depend on the program type; see the API reference for the full field list.
+        depend on the program type; the response includes every field and its current
+        value, which is the same shape you send back on `PATCH`.
 
         Args:
           extra_headers: Send extra headers
@@ -191,11 +194,12 @@ class AsyncDesignResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignDesign:
         """
-        Updates a program's design configuration. Only the fields you send are changed (a
-        surgical merge; arrays such as `signup.fields` replace wholesale). Unknown
-        fields, fields not available for the program type, and invalid values return a
-        `400`. The request body is a partial `CampaignDesign` object; see the API
-        reference for the full field list.
+        Updates a program's design configuration. Only the fields you send are changed;
+        anything you leave out is untouched (arrays such as `signup.fields` replace
+        wholesale). Unknown fields, fields not available for the program type, and
+        invalid values return a `400`. To see the full `CampaignDesign` object with every
+        field and its current value, `GET` this resource first, then `PATCH` back only the
+        fields you want to change.
 
         Args:
           body: A partial `CampaignDesign` object — only the fields you send are changed.

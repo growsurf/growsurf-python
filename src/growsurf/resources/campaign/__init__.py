@@ -48,6 +48,14 @@ from .campaign import (
     CampaignResourceWithStreamingResponse,
     AsyncCampaignResourceWithStreamingResponse,
 )
+from .webhooks import (
+    WebhooksResource,
+    AsyncWebhooksResource,
+    WebhooksResourceWithRawResponse,
+    AsyncWebhooksResourceWithRawResponse,
+    WebhooksResourceWithStreamingResponse,
+    AsyncWebhooksResourceWithStreamingResponse,
+)
 from .commission import (
     CommissionResource,
     AsyncCommissionResource,
@@ -92,6 +100,12 @@ __all__ = [
     "AsyncRewardsResourceWithRawResponse",
     "RewardsResourceWithStreamingResponse",
     "AsyncRewardsResourceWithStreamingResponse",
+    "WebhooksResource",
+    "AsyncWebhooksResource",
+    "WebhooksResourceWithRawResponse",
+    "AsyncWebhooksResourceWithRawResponse",
+    "WebhooksResourceWithStreamingResponse",
+    "AsyncWebhooksResourceWithStreamingResponse",
     "DesignResource",
     "AsyncDesignResource",
     "DesignResourceWithRawResponse",

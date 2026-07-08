@@ -32,7 +32,11 @@ class Reward(BaseModel):
     """The number of referrals a participant must make to earn this reward."""
 
     coupon_code: Optional[str] = FieldInfo(alias="couponCode", default=None)
-    """A coupon code."""
+    """A legacy static coupon code shown to the referrer in the reward-won email and webhook.
+
+    Display text only (GrowSurf does not create or validate it); superseded by a
+    connected billing integration's issued coupon when one exists.
+    """
 
     description: Optional[str] = None
     """The reward description shown to the referrer."""
@@ -64,13 +68,21 @@ class Reward(BaseModel):
     """
 
     number_of_winners: Optional[int] = FieldInfo(alias="numberOfWinners", default=None)
-    """The maximum number of participants that can earn this reward when `type` is `LEADERBOARD`."""
+    """The maximum number of winners. Only applies to `LEADERBOARD` rewards.
+
+    With `limitDuration` `PER_MONTH` this many top referrers win each month; otherwise
+    this many win in total.
+    """
 
     order: Optional[int] = None
     """If there are multiple rewards, the order in which the reward should be displayed."""
 
     referral_coupon_code: Optional[str] = FieldInfo(alias="referralCouponCode", default=None)
-    """The coupon code delivered to the referred friend (double-sided rewards)."""
+    """A legacy static coupon code shown to the referred friend in the reward-won email and webhook (double-sided rewards).
+
+    Same caveats as `couponCode`: display text only, superseded by a connected billing
+    integration's issued coupon when one exists.
+    """
 
     referral_description: Optional[str] = FieldInfo(alias="referralDescription", default=None)
     """The reward description shown to the referred friend (only applicable for double-sided reward types)."""

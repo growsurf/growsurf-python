@@ -420,7 +420,7 @@ wheels = [
 
 [[package]]
 name = "growsurf-python"
-version = "0.6.1"
+version = "0.8.0"
 source = { editable = "." }
 dependencies = [
     { name = "anyio" },

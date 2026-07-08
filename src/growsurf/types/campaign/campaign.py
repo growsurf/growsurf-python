@@ -46,7 +46,11 @@ class Reward(BaseModel):
     order: Optional[int] = None
 
     referral_coupon_code: Optional[str] = FieldInfo(alias="referralCouponCode", default=None)
-    """The coupon code delivered to the referred friend (double-sided rewards)."""
+    """A legacy static coupon code shown to the referred friend in the reward-won email and webhook (double-sided rewards).
+
+    Display text only; superseded by a connected billing integration's issued coupon
+    when one exists.
+    """
 
     referral_description: Optional[str] = FieldInfo(alias="referralDescription", default=None)
 

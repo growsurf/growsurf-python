@@ -13,6 +13,8 @@ __all__ = ["CommissionStructure"]
 class CommissionStructure(BaseModel):
     amount: Optional[int] = None
 
+    amount_iso: Optional[str] = FieldInfo(alias="amountISO", default=None)
+
     approval_required: Optional[bool] = FieldInfo(alias="approvalRequired", default=None)
 
     duration: Optional[str] = None
@@ -47,7 +49,7 @@ class CommissionStructure(BaseModel):
 
     percent: Optional[float] = None
 
-    type: Optional[Literal["PERCENT", "AMOUNT"]] = None
+    type: Optional[Literal["PERCENT", "FIXED"]] = None
 
     if TYPE_CHECKING:
         # Some versions of Pydantic <2.8.0 have a bug and don’t allow assigning a

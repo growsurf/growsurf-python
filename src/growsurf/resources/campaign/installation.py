@@ -58,7 +58,8 @@ class InstallationResource(SyncAPIResource):
         """
         Retrieves a program's installation configuration — the same surface as the dashboard
         Program Editor's **Installation** tab. This is a large object whose available fields
-        depend on the program type; see the API reference for the full field list.
+        depend on the program type; the response includes every field and its current
+        value, which is the same shape you send back on `PATCH`.
 
         Args:
           extra_headers: Send extra headers
@@ -93,10 +94,11 @@ class InstallationResource(SyncAPIResource):
     ) -> CampaignInstallation:
         """
         Updates a program's installation configuration. Only the fields you send are
-        changed (a surgical merge). `referralTrigger` is only available for referral
-        programs. `mobile.publicKey` is read-only (server-generated). URLs must include an
-        explicit `http://` or `https://` scheme. The request body is a partial
-        `CampaignInstallation` object; see the API reference for the full field list.
+        changed; omitted fields are left untouched. `referralTrigger` is only available
+        for referral programs. `mobile.publicKey` is read-only (server-generated). URLs
+        must include an explicit `http://` or `https://` scheme. To see the full
+        `CampaignInstallation` object with every field and its current value, `GET` this
+        resource first, then `PATCH` back only the fields you want to change.
 
         Args:
           body: A partial `CampaignInstallation` object — only the fields you send are changed.
@@ -157,7 +159,8 @@ class AsyncInstallationResource(AsyncAPIResource):
         """
         Retrieves a program's installation configuration — the same surface as the dashboard
         Program Editor's **Installation** tab. This is a large object whose available fields
-        depend on the program type; see the API reference for the full field list.
+        depend on the program type; the response includes every field and its current
+        value, which is the same shape you send back on `PATCH`.
 
         Args:
           extra_headers: Send extra headers
@@ -192,10 +195,11 @@ class AsyncInstallationResource(AsyncAPIResource):
     ) -> CampaignInstallation:
         """
         Updates a program's installation configuration. Only the fields you send are
-        changed (a surgical merge). `referralTrigger` is only available for referral
-        programs. `mobile.publicKey` is read-only (server-generated). URLs must include an
-        explicit `http://` or `https://` scheme. The request body is a partial
-        `CampaignInstallation` object; see the API reference for the full field list.
+        changed; omitted fields are left untouched. `referralTrigger` is only available
+        for referral programs. `mobile.publicKey` is read-only (server-generated). URLs
+        must include an explicit `http://` or `https://` scheme. To see the full
+        `CampaignInstallation` object with every field and its current value, `GET` this
+        resource first, then `PATCH` back only the fields you want to change.
 
         Args:
           body: A partial `CampaignInstallation` object — only the fields you send are changed.

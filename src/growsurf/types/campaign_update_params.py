@@ -16,5 +16,9 @@ class CampaignUpdateParams(TypedDict, total=False):
 
     name: str
 
-    status: Literal["DRAFT", "PENDING", "IN_PROGRESS", "COMPLETE", "CANCELLED"]
-    """The program status. Transitions are validated; DELETED is not allowed."""
+    status: Literal["IN_PROGRESS", "COMPLETE"]
+    """The requested program status.
+
+    `IN_PROGRESS` publishes or resumes the program; `COMPLETE` ends it. Any other
+    value returns a `400`.
+    """

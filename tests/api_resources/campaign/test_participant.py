@@ -12,9 +12,13 @@ from tests.utils import assert_matches_type
 from growsurf.types import ReferralList, ParticipantPayoutList, ParticipantCommissionList
 from growsurf.types.campaign import (
     Participant,
+    EmailParticipantResponse,
     ParticipantDeleteResponse,
+    ParticipantAnalyticsResponse,
+    ParticipantBulkDeleteResponse,
     ParticipantListRewardsResponse,
     ParticipantSendInvitesResponse,
+    ParticipantActivityLogsResponse,
     ParticipantTriggerReferralResponse,
     ParticipantRecordTransactionResponse,
     ParticipantRefundTransactionResponse,
@@ -99,6 +103,8 @@ class TestParticipant:
             first_name="Gavin",
             last_name="Belson",
             metadata={"company": "bar"},
+            notes="notes",
+            paypal_email="dev@stainless.com",
             referral_status="CREDIT_PENDING",
             referred_by="referredBy",
             unsubscribed=False,
@@ -203,6 +209,52 @@ class TestParticipant:
             client.campaign.participant.with_raw_response.delete(
                 participant_id_or_email="",
                 id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_bulk_delete(self, client: Growsurf) -> None:
+        participant = client.campaign.participant.bulk_delete(
+            id="id",
+            participants=["gavin@hooli.com"],
+        )
+        assert_matches_type(ParticipantBulkDeleteResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_bulk_delete(self, client: Growsurf) -> None:
+        response = client.campaign.participant.with_raw_response.bulk_delete(
+            id="id",
+            participants=["gavin@hooli.com"],
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = response.parse()
+        assert_matches_type(ParticipantBulkDeleteResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_bulk_delete(self, client: Growsurf) -> None:
+        with client.campaign.participant.with_streaming_response.bulk_delete(
+            id="id",
+            participants=["gavin@hooli.com"],
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = response.parse()
+            assert_matches_type(ParticipantBulkDeleteResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_bulk_delete(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.participant.with_raw_response.bulk_delete(
+                id="",
+                participants=["gavin@hooli.com"],
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -898,6 +950,206 @@ class TestParticipant:
                 id="id",
             )
 
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_email(self, client: Growsurf) -> None:
+        participant = client.campaign.participant.email(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+        assert_matches_type(EmailParticipantResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_email_with_all_params(self, client: Growsurf) -> None:
+        participant = client.campaign.participant.email(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            email_type="goalAchieved",
+            body="<p>Hi {{firstName}}, thanks for spreading the word — you're at {{referrals}} referrals!</p>",
+            preheader="preheader",
+            subject="A quick update from Pied Piper",
+        )
+        assert_matches_type(EmailParticipantResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_email(self, client: Growsurf) -> None:
+        response = client.campaign.participant.with_raw_response.email(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = response.parse()
+        assert_matches_type(EmailParticipantResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_email(self, client: Growsurf) -> None:
+        with client.campaign.participant.with_streaming_response.email(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = response.parse()
+            assert_matches_type(EmailParticipantResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_email(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.participant.with_raw_response.email(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            client.campaign.participant.with_raw_response.email(
+                participant_id_or_email="",
+                id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_list_activity_logs(self, client: Growsurf) -> None:
+        participant = client.campaign.participant.list_activity_logs(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+        assert_matches_type(ParticipantActivityLogsResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_list_activity_logs_with_all_params(self, client: Growsurf) -> None:
+        participant = client.campaign.participant.list_activity_logs(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            limit=1,
+            offset=0,
+        )
+        assert_matches_type(ParticipantActivityLogsResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_list_activity_logs(self, client: Growsurf) -> None:
+        response = client.campaign.participant.with_raw_response.list_activity_logs(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = response.parse()
+        assert_matches_type(ParticipantActivityLogsResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_list_activity_logs(self, client: Growsurf) -> None:
+        with client.campaign.participant.with_streaming_response.list_activity_logs(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = response.parse()
+            assert_matches_type(ParticipantActivityLogsResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_list_activity_logs(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.participant.with_raw_response.list_activity_logs(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            client.campaign.participant.with_raw_response.list_activity_logs(
+                participant_id_or_email="",
+                id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_retrieve_analytics(self, client: Growsurf) -> None:
+        participant = client.campaign.participant.retrieve_analytics(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+        assert_matches_type(ParticipantAnalyticsResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_retrieve_analytics_with_all_params(self, client: Growsurf) -> None:
+        participant = client.campaign.participant.retrieve_analytics(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            days=1,
+            end_date=0,
+            include="series",
+            interval="day",
+            start_date=0,
+        )
+        assert_matches_type(ParticipantAnalyticsResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_retrieve_analytics(self, client: Growsurf) -> None:
+        response = client.campaign.participant.with_raw_response.retrieve_analytics(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = response.parse()
+        assert_matches_type(ParticipantAnalyticsResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_retrieve_analytics(self, client: Growsurf) -> None:
+        with client.campaign.participant.with_streaming_response.retrieve_analytics(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = response.parse()
+            assert_matches_type(ParticipantAnalyticsResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_retrieve_analytics(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.participant.with_raw_response.retrieve_analytics(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            client.campaign.participant.with_raw_response.retrieve_analytics(
+                participant_id_or_email="",
+                id="id",
+            )
+
 
 class TestAsyncParticipant:
     parametrize = pytest.mark.parametrize(
@@ -977,6 +1229,8 @@ class TestAsyncParticipant:
             first_name="Gavin",
             last_name="Belson",
             metadata={"company": "bar"},
+            notes="notes",
+            paypal_email="dev@stainless.com",
             referral_status="CREDIT_PENDING",
             referred_by="referredBy",
             unsubscribed=False,
@@ -1081,6 +1335,52 @@ class TestAsyncParticipant:
             await async_client.campaign.participant.with_raw_response.delete(
                 participant_id_or_email="",
                 id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_bulk_delete(self, async_client: AsyncGrowsurf) -> None:
+        participant = await async_client.campaign.participant.bulk_delete(
+            id="id",
+            participants=["gavin@hooli.com"],
+        )
+        assert_matches_type(ParticipantBulkDeleteResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_bulk_delete(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.participant.with_raw_response.bulk_delete(
+            id="id",
+            participants=["gavin@hooli.com"],
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = await response.parse()
+        assert_matches_type(ParticipantBulkDeleteResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_bulk_delete(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.participant.with_streaming_response.bulk_delete(
+            id="id",
+            participants=["gavin@hooli.com"],
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = await response.parse()
+            assert_matches_type(ParticipantBulkDeleteResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_bulk_delete(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.participant.with_raw_response.bulk_delete(
+                id="",
+                participants=["gavin@hooli.com"],
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -1772,6 +2072,206 @@ class TestAsyncParticipant:
             ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
         ):
             await async_client.campaign.participant.with_raw_response.cancel_delayed_referral(
+                participant_id_or_email="",
+                id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_email(self, async_client: AsyncGrowsurf) -> None:
+        participant = await async_client.campaign.participant.email(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+        assert_matches_type(EmailParticipantResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_email_with_all_params(self, async_client: AsyncGrowsurf) -> None:
+        participant = await async_client.campaign.participant.email(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            email_type="goalAchieved",
+            body="<p>Hi {{firstName}}, thanks for spreading the word — you're at {{referrals}} referrals!</p>",
+            preheader="preheader",
+            subject="A quick update from Pied Piper",
+        )
+        assert_matches_type(EmailParticipantResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_email(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.participant.with_raw_response.email(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = await response.parse()
+        assert_matches_type(EmailParticipantResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_email(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.participant.with_streaming_response.email(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = await response.parse()
+            assert_matches_type(EmailParticipantResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_email(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.participant.with_raw_response.email(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            await async_client.campaign.participant.with_raw_response.email(
+                participant_id_or_email="",
+                id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_list_activity_logs(self, async_client: AsyncGrowsurf) -> None:
+        participant = await async_client.campaign.participant.list_activity_logs(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+        assert_matches_type(ParticipantActivityLogsResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_list_activity_logs_with_all_params(self, async_client: AsyncGrowsurf) -> None:
+        participant = await async_client.campaign.participant.list_activity_logs(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            limit=1,
+            offset=0,
+        )
+        assert_matches_type(ParticipantActivityLogsResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_list_activity_logs(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.participant.with_raw_response.list_activity_logs(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = await response.parse()
+        assert_matches_type(ParticipantActivityLogsResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_list_activity_logs(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.participant.with_streaming_response.list_activity_logs(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = await response.parse()
+            assert_matches_type(ParticipantActivityLogsResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_list_activity_logs(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.participant.with_raw_response.list_activity_logs(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            await async_client.campaign.participant.with_raw_response.list_activity_logs(
+                participant_id_or_email="",
+                id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_retrieve_analytics(self, async_client: AsyncGrowsurf) -> None:
+        participant = await async_client.campaign.participant.retrieve_analytics(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+        assert_matches_type(ParticipantAnalyticsResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_retrieve_analytics_with_all_params(self, async_client: AsyncGrowsurf) -> None:
+        participant = await async_client.campaign.participant.retrieve_analytics(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            days=1,
+            end_date=0,
+            include="series",
+            interval="day",
+            start_date=0,
+        )
+        assert_matches_type(ParticipantAnalyticsResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_retrieve_analytics(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.participant.with_raw_response.retrieve_analytics(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = await response.parse()
+        assert_matches_type(ParticipantAnalyticsResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_retrieve_analytics(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.participant.with_streaming_response.retrieve_analytics(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = await response.parse()
+            assert_matches_type(ParticipantAnalyticsResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_retrieve_analytics(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.participant.with_raw_response.retrieve_analytics(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            await async_client.campaign.participant.with_raw_response.retrieve_analytics(
                 participant_id_or_email="",
                 id="id",
             )
