@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.1](https://github.com/growsurf/growsurf-python/compare/v1.1.0...v1.1.1) (2026-07-09)
+
+
+### Bug Fixes
+
+* remove referral screenshot REST surface ([28e5902](https://github.com/growsurf/growsurf-python/commit/28e59029205433515d7797b99985fd480ed3a67a))
+* skip mobile token mock tests ([b3592eb](https://github.com/growsurf/growsurf-python/commit/b3592eb63df762cb7539250f6c939f265a7a9fe1))
+
+
+### Documentation
+
+* reduce PyPI badge cache ([358dd6d](https://github.com/growsurf/growsurf-python/commit/358dd6dc1a69895e12a87772e77561e967f2cf2d))
+
 ## [1.1.0](https://github.com/growsurf/growsurf-python/compare/v1.0.0...v1.1.0) (2026-07-08)
 
 
