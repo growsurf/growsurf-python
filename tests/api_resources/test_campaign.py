@@ -239,6 +239,7 @@ class TestCampaign:
                 "",
             )
 
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_create_mobile_participant_token(self, client: Growsurf) -> None:
         campaign = client.campaign.create_mobile_participant_token(
@@ -846,6 +847,7 @@ class TestAsyncCampaign:
                 "",
             )
 
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_create_mobile_participant_token(self, async_client: AsyncGrowsurf) -> None:
         campaign = await async_client.campaign.create_mobile_participant_token(
