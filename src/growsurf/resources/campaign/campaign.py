@@ -109,7 +109,6 @@ from ...types.campaign_list_response import CampaignListResponse
 from ...types.participant_payout_list import ParticipantPayoutList
 from ...types.campaign.referral_status import ReferralStatus
 from ...types.participant_commission_list import ParticipantCommissionList
-from ...types.referral_flow_screenshots_response import ReferralFlowScreenshotsResponse
 from ...types.campaign_retrieve_analytics_response import CampaignRetrieveAnalyticsResponse
 from ...types.campaign_create_mobile_participant_token_response import CampaignCreateMobileParticipantTokenResponse
 
@@ -375,40 +374,6 @@ class CampaignResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=Campaign,
-        )
-
-    def get_referral_flow_screenshots(
-        self,
-        id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ReferralFlowScreenshotsResponse:
-        """
-        Captures two preview screenshots for the program: the authenticated referrer
-        view and the referred-friend view.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not id:
-            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        return self._get(
-            path_template("/campaign/{id}/referral-flow-screenshots", id=id),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=ReferralFlowScreenshotsResponse,
         )
 
     def create_mobile_participant_token(
@@ -1113,40 +1078,6 @@ class AsyncCampaignResource(AsyncAPIResource):
             cast_to=Campaign,
         )
 
-    async def get_referral_flow_screenshots(
-        self,
-        id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ReferralFlowScreenshotsResponse:
-        """
-        Captures two preview screenshots for the program: the authenticated referrer
-        view and the referred-friend view.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not id:
-            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        return await self._get(
-            path_template("/campaign/{id}/referral-flow-screenshots", id=id),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=ReferralFlowScreenshotsResponse,
-        )
-
     async def create_mobile_participant_token(
         self,
         id: str,
@@ -1607,9 +1538,6 @@ class CampaignResourceWithRawResponse:
         self.clone = to_raw_response_wrapper(
             campaign.clone,
         )
-        self.get_referral_flow_screenshots = to_raw_response_wrapper(
-            campaign.get_referral_flow_screenshots,
-        )
         self.create_mobile_participant_token = to_raw_response_wrapper(
             campaign.create_mobile_participant_token,
         )
@@ -1695,9 +1623,6 @@ class AsyncCampaignResourceWithRawResponse:
         )
         self.clone = async_to_raw_response_wrapper(
             campaign.clone,
-        )
-        self.get_referral_flow_screenshots = async_to_raw_response_wrapper(
-            campaign.get_referral_flow_screenshots,
         )
         self.create_mobile_participant_token = async_to_raw_response_wrapper(
             campaign.create_mobile_participant_token,
@@ -1785,9 +1710,6 @@ class CampaignResourceWithStreamingResponse:
         self.clone = to_streamed_response_wrapper(
             campaign.clone,
         )
-        self.get_referral_flow_screenshots = to_streamed_response_wrapper(
-            campaign.get_referral_flow_screenshots,
-        )
         self.create_mobile_participant_token = to_streamed_response_wrapper(
             campaign.create_mobile_participant_token,
         )
@@ -1873,9 +1795,6 @@ class AsyncCampaignResourceWithStreamingResponse:
         )
         self.clone = async_to_streamed_response_wrapper(
             campaign.clone,
-        )
-        self.get_referral_flow_screenshots = async_to_streamed_response_wrapper(
-            campaign.get_referral_flow_screenshots,
         )
         self.create_mobile_participant_token = async_to_streamed_response_wrapper(
             campaign.create_mobile_participant_token,
