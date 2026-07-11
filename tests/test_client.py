@@ -399,6 +399,17 @@ class TestGrowsurf:
         test_client.close()
         test_client2.close()
 
+    def test_mutating_requests_include_a_retry_stable_idempotency_key(self, client: Growsurf) -> None:
+        options = FinalRequestOptions(method="post", url="/account/api-key")
+        options.idempotency_key = client._idempotency_key()
+        request = client._build_request(options)
+
+        assert client._idempotency_header == "Idempotency-Key"
+        idempotency_key = request.headers.get("Idempotency-Key")
+        assert idempotency_key is not None
+        assert idempotency_key.startswith("stainless-python-retry-")
+        assert options.idempotency_key == idempotency_key
+
     def test_validate_headers(self) -> None:
         client = Growsurf(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1313,6 +1324,17 @@ class TestAsyncGrowsurf:
 
         await test_client.close()
         await test_client2.close()
+
+    def test_mutating_requests_include_a_retry_stable_idempotency_key(self, client: AsyncGrowsurf) -> None:
+        options = FinalRequestOptions(method="post", url="/account/api-key")
+        options.idempotency_key = client._idempotency_key()
+        request = client._build_request(options)
+
+        assert client._idempotency_header == "Idempotency-Key"
+        idempotency_key = request.headers.get("Idempotency-Key")
+        assert idempotency_key is not None
+        assert idempotency_key.startswith("stainless-python-retry-")
+        assert options.idempotency_key == idempotency_key
 
     def test_validate_headers(self) -> None:
         client = AsyncGrowsurf(base_url=base_url, api_key=api_key, _strict_response_validation=True)

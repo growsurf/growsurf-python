@@ -96,7 +96,8 @@ class RewardResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> RewardApproveResponse:
         """
-        Approves a manually approved reward earned by a participant.
+        Approves a manually approved reward earned by a participant. Requires
+        `reward:write`. Passing `fulfill=True` also requires `reward:fulfill`.
 
         Args:
           fulfill: Set true to mark the reward as fulfilled after approval.
@@ -135,7 +136,7 @@ class RewardResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> RewardFulfillResponse:
         """
-        Marks an approved participant reward as fulfilled.
+        Marks an approved participant reward as fulfilled. Requires `reward:fulfill`.
 
         Args:
           extra_headers: Send extra headers
@@ -232,7 +233,8 @@ class AsyncRewardResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> RewardApproveResponse:
         """
-        Approves a manually approved reward earned by a participant.
+        Approves a manually approved reward earned by a participant. Requires
+        `reward:write`. Passing `fulfill=True` also requires `reward:fulfill`.
 
         Args:
           fulfill: Set true to mark the reward as fulfilled after approval.
@@ -271,7 +273,7 @@ class AsyncRewardResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> RewardFulfillResponse:
         """
-        Marks an approved participant reward as fulfilled.
+        Marks an approved participant reward as fulfilled. Requires `reward:fulfill`.
 
         Args:
           extra_headers: Send extra headers

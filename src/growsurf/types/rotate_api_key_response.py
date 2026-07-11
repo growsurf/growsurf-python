@@ -9,4 +9,4 @@ __all__ = ["RotateApiKeyResponse"]
 
 class RotateApiKeyResponse(BaseModel):
     api_key: str = FieldInfo(alias="apiKey")
-    """The new API key. The previous key is revoked immediately."""
+    """The new API key. Store it now; the key used for rotation stops working immediately."""
