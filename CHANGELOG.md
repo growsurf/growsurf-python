@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/growsurf/growsurf-python/compare/v1.1.1...v1.1.2) (2026-07-11)
+
+
+### Bug Fixes
+
+* support retry-safe API key rotation ([8656a44](https://github.com/growsurf/growsurf-python/commit/8656a4469e8e48a6ad7252ad1c9241d8cef09ee2))
+
 ## [1.1.1](https://github.com/growsurf/growsurf-python/compare/v1.1.0...v1.1.1) (2026-07-09)
 
 
