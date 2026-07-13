@@ -198,7 +198,7 @@ class CampaignResource(SyncAPIResource):
         """
         Creates a new program pre-populated with type-appropriate defaults, plus any
         optional inline rewards. The new program is created in `DRAFT` status and owned
-        by the API key's account. Requires a verified account email.
+        by the API key's bound team. Requires the team owner's verified email.
 
         Args:
           type: The program type. Immutable after creation.
@@ -900,7 +900,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         """
         Creates a new program pre-populated with type-appropriate defaults, plus any
         optional inline rewards. The new program is created in `DRAFT` status and owned
-        by the API key's account. Requires a verified account email.
+        by the API key's bound team. Requires the team owner's verified email.
 
         Args:
           type: The program type. Immutable after creation.

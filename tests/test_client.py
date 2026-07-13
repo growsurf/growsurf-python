@@ -23,7 +23,7 @@ from growsurf import Growsurf, AsyncGrowsurf, APIResponseValidationError
 from growsurf._types import Omit
 from growsurf._utils import asyncify
 from growsurf._models import BaseModel, FinalRequestOptions
-from growsurf._exceptions import GrowsurfError, APIStatusError, APITimeoutError, APIResponseValidationError
+from growsurf._exceptions import APIStatusError, APITimeoutError, APIResponseValidationError
 from growsurf._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
@@ -400,7 +400,7 @@ class TestGrowsurf:
         test_client2.close()
 
     def test_mutating_requests_include_a_retry_stable_idempotency_key(self, client: Growsurf) -> None:
-        options = FinalRequestOptions(method="post", url="/account/api-key")
+        options = FinalRequestOptions(method="post", url="/api-key/rotate")
         options.idempotency_key = client._idempotency_key()
         request = client._build_request(options)
 
@@ -410,15 +410,17 @@ class TestGrowsurf:
         assert idempotency_key.startswith("stainless-python-retry-")
         assert options.idempotency_key == idempotency_key
 
-    def test_validate_headers(self) -> None:
+    def test_auth_headers_allow_keyless_client(self) -> None:
         client = Growsurf(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("Authorization") == f"Bearer {api_key}"
 
-        with pytest.raises(GrowsurfError):
-            with update_env(**{"GROWSURF_API_KEY": Omit()}):
-                client2 = Growsurf(base_url=base_url, api_key=None, _strict_response_validation=True)
-            _ = client2
+        with update_env(**{"GROWSURF_API_KEY": Omit()}):
+            client2 = Growsurf(base_url=base_url, api_key=None, _strict_response_validation=True)
+        keyless_request = client2._build_request(FinalRequestOptions(method="get", url="/foo"))
+        assert keyless_request.headers.get("Authorization") is None
+        client.close()
+        client2.close()
 
     def test_default_query_option(self) -> None:
         client = Growsurf(
@@ -1326,7 +1328,7 @@ class TestAsyncGrowsurf:
         await test_client2.close()
 
     def test_mutating_requests_include_a_retry_stable_idempotency_key(self, client: AsyncGrowsurf) -> None:
-        options = FinalRequestOptions(method="post", url="/account/api-key")
+        options = FinalRequestOptions(method="post", url="/api-key/rotate")
         options.idempotency_key = client._idempotency_key()
         request = client._build_request(options)
 
@@ -1336,15 +1338,17 @@ class TestAsyncGrowsurf:
         assert idempotency_key.startswith("stainless-python-retry-")
         assert options.idempotency_key == idempotency_key
 
-    def test_validate_headers(self) -> None:
+    async def test_auth_headers_allow_keyless_client(self) -> None:
         client = AsyncGrowsurf(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("Authorization") == f"Bearer {api_key}"
 
-        with pytest.raises(GrowsurfError):
-            with update_env(**{"GROWSURF_API_KEY": Omit()}):
-                client2 = AsyncGrowsurf(base_url=base_url, api_key=None, _strict_response_validation=True)
-            _ = client2
+        with update_env(**{"GROWSURF_API_KEY": Omit()}):
+            client2 = AsyncGrowsurf(base_url=base_url, api_key=None, _strict_response_validation=True)
+        keyless_request = client2._build_request(FinalRequestOptions(method="get", url="/foo"))
+        assert keyless_request.headers.get("Authorization") is None
+        await client.close()
+        await client2.close()
 
     async def test_default_query_option(self) -> None:
         client = AsyncGrowsurf(

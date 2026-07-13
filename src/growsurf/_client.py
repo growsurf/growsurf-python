@@ -28,7 +28,7 @@ from ._compat import cached_property
 from ._models import SecurityOptions
 from ._version import __version__
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
-from ._exceptions import GrowsurfError, APIStatusError
+from ._exceptions import APIStatusError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
@@ -36,7 +36,8 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import account, campaign
+    from .resources import team, account, campaign
+    from .resources.team import TeamResource, AsyncTeamResource
     from .resources.account import AccountResource, AsyncAccountResource
     from .resources.campaign.campaign import CampaignResource, AsyncCampaignResource
 
@@ -86,9 +87,7 @@ class Growsurf(SyncAPIClient):
         if api_key is None:
             api_key = os.environ.get("GROWSURF_API_KEY")
         if api_key is None:
-            raise GrowsurfError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the GROWSURF_API_KEY environment variable"
-            )
+            api_key = ""
         self.api_key = api_key
 
         if base_url is None:
@@ -124,6 +123,12 @@ class Growsurf(SyncAPIClient):
         return AccountResource(self)
 
     @cached_property
+    def team(self) -> TeamResource:
+        from .resources.team import TeamResource
+
+        return TeamResource(self)
+
+    @cached_property
     def campaign(self) -> CampaignResource:
         from .resources.campaign import CampaignResource
 
@@ -153,6 +158,8 @@ class Growsurf(SyncAPIClient):
     @property
     def _api_key_auth(self) -> dict[str, str]:
         api_key = self.api_key
+        if not api_key:
+            return {}
         return {"Authorization": f"Bearer {api_key}"}
 
     @property
@@ -283,9 +290,7 @@ class AsyncGrowsurf(AsyncAPIClient):
         if api_key is None:
             api_key = os.environ.get("GROWSURF_API_KEY")
         if api_key is None:
-            raise GrowsurfError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the GROWSURF_API_KEY environment variable"
-            )
+            api_key = ""
         self.api_key = api_key
 
         if base_url is None:
@@ -321,6 +326,12 @@ class AsyncGrowsurf(AsyncAPIClient):
         return AsyncAccountResource(self)
 
     @cached_property
+    def team(self) -> AsyncTeamResource:
+        from .resources.team import AsyncTeamResource
+
+        return AsyncTeamResource(self)
+
+    @cached_property
     def campaign(self) -> AsyncCampaignResource:
         from .resources.campaign import AsyncCampaignResource
 
@@ -350,6 +361,8 @@ class AsyncGrowsurf(AsyncAPIClient):
     @property
     def _api_key_auth(self) -> dict[str, str]:
         api_key = self.api_key
+        if not api_key:
+            return {}
         return {"Authorization": f"Bearer {api_key}"}
 
     @property
@@ -459,6 +472,12 @@ class GrowsurfWithRawResponse:
         return AccountResourceWithRawResponse(self._client.account)
 
     @cached_property
+    def team(self) -> team.TeamResourceWithRawResponse:
+        from .resources.team import TeamResourceWithRawResponse
+
+        return TeamResourceWithRawResponse(self._client.team)
+
+    @cached_property
     def campaign(self) -> campaign.CampaignResourceWithRawResponse:
         from .resources.campaign import CampaignResourceWithRawResponse
 
@@ -476,6 +495,12 @@ class AsyncGrowsurfWithRawResponse:
         from .resources.account import AsyncAccountResourceWithRawResponse
 
         return AsyncAccountResourceWithRawResponse(self._client.account)
+
+    @cached_property
+    def team(self) -> team.AsyncTeamResourceWithRawResponse:
+        from .resources.team import AsyncTeamResourceWithRawResponse
+
+        return AsyncTeamResourceWithRawResponse(self._client.team)
 
     @cached_property
     def campaign(self) -> campaign.AsyncCampaignResourceWithRawResponse:
@@ -497,6 +522,12 @@ class GrowsurfWithStreamedResponse:
         return AccountResourceWithStreamingResponse(self._client.account)
 
     @cached_property
+    def team(self) -> team.TeamResourceWithStreamingResponse:
+        from .resources.team import TeamResourceWithStreamingResponse
+
+        return TeamResourceWithStreamingResponse(self._client.team)
+
+    @cached_property
     def campaign(self) -> campaign.CampaignResourceWithStreamingResponse:
         from .resources.campaign import CampaignResourceWithStreamingResponse
 
@@ -514,6 +545,12 @@ class AsyncGrowsurfWithStreamedResponse:
         from .resources.account import AsyncAccountResourceWithStreamingResponse
 
         return AsyncAccountResourceWithStreamingResponse(self._client.account)
+
+    @cached_property
+    def team(self) -> team.AsyncTeamResourceWithStreamingResponse:
+        from .resources.team import AsyncTeamResourceWithStreamingResponse
+
+        return AsyncTeamResourceWithStreamingResponse(self._client.team)
 
     @cached_property
     def campaign(self) -> campaign.AsyncCampaignResourceWithStreamingResponse:

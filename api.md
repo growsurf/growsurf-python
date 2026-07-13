@@ -4,8 +4,21 @@ Types:
 
 ```python
 from growsurf.types import (
-    Account,
     CreateAccountResponse,
+)
+```
+
+Methods:
+
+- <code title="post /accounts">client.account.<a href="./src/growsurf/resources/account.py">create</a>(\*\*<a href="src/growsurf/types/account_create_params.py">params</a>) -> <a href="./src/growsurf/types/create_account_response.py">CreateAccountResponse</a></code>
+
+# Team
+
+Types:
+
+```python
+from growsurf.types import (
+    Team,
     RotateApiKeyResponse,
     VerificationEmailResponse,
 )
@@ -13,12 +26,11 @@ from growsurf.types import (
 
 Methods:
 
-- <code title="post /accounts">client.account.<a href="./src/growsurf/resources/account.py">create</a>(\*\*<a href="src/growsurf/types/account_create_params.py">params</a>) -> <a href="./src/growsurf/types/create_account_response.py">CreateAccountResponse</a></code>
-- <code title="get /account">client.account.<a href="./src/growsurf/resources/account.py">retrieve</a>() -> <a href="./src/growsurf/types/account.py">Account</a></code>
-- <code title="patch /account">client.account.<a href="./src/growsurf/resources/account.py">update</a>(\*\*<a href="src/growsurf/types/account_update_params.py">params</a>) -> <a href="./src/growsurf/types/account.py">Account</a></code>
-- <code title="post /account/api-key">client.account.<a href="./src/growsurf/resources/account.py">rotate_api_key</a>() -> <a href="./src/growsurf/types/rotate_api_key_response.py">RotateApiKeyResponse</a></code>
-- <code title="post /account/verification-request">client.account.<a href="./src/growsurf/resources/account.py">request_verification</a>() -> <a href="./src/growsurf/types/account.py">Account</a></code>
-- <code title="post /account/verification-email">client.account.<a href="./src/growsurf/resources/account.py">resend_verification_email</a>() -> <a href="./src/growsurf/types/verification_email_response.py">VerificationEmailResponse</a></code>
+- <code title="get /team">client.team.<a href="./src/growsurf/resources/team.py">retrieve</a>() -> <a href="./src/growsurf/types/team.py">Team</a></code>
+- <code title="patch /team">client.team.<a href="./src/growsurf/resources/team.py">update</a>(\*\*<a href="src/growsurf/types/team_update_params.py">params</a>) -> <a href="./src/growsurf/types/team.py">Team</a></code>
+- <code title="post /api-key/rotate">client.team.<a href="./src/growsurf/resources/team.py">rotate_api_key</a>() -> <a href="./src/growsurf/types/rotate_api_key_response.py">RotateApiKeyResponse</a></code>
+- <code title="post /team/verification-request">client.team.<a href="./src/growsurf/resources/team.py">request_verification</a>() -> <a href="./src/growsurf/types/team.py">Team</a></code>
+- <code title="post /team/owner/verification-email">client.team.<a href="./src/growsurf/resources/team.py">resend_owner_verification_email</a>() -> <a href="./src/growsurf/types/verification_email_response.py">VerificationEmailResponse</a></code>
 
 # Campaign
 
@@ -134,7 +146,12 @@ Methods:
 Types:
 
 ```python
-from growsurf.types.campaign import Reward, RewardTaxValuation, CampaignRewardListResponse, DeleteRewardResponse
+from growsurf.types.campaign import (
+    Reward,
+    RewardTaxValuation,
+    CampaignRewardListResponse,
+    DeleteRewardResponse,
+)
 ```
 
 Methods:

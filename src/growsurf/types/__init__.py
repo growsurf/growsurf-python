@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from .account import Account as Account
+from .team import Team as Team
 from .campaign import Campaign as Campaign
 from .referral_list import ReferralList as ReferralList
 from .participant_list import ParticipantList as ParticipantList
+from .team_update_params import TeamUpdateParams as TeamUpdateParams
 from .commission_structure import CommissionStructure as CommissionStructure
 from .account_create_params import AccountCreateParams as AccountCreateParams
-from .account_update_params import AccountUpdateParams as AccountUpdateParams
 from .campaign_create_params import CampaignCreateParams as CampaignCreateParams
 from .campaign_list_response import CampaignListResponse as CampaignListResponse
 from .campaign_update_params import CampaignUpdateParams as CampaignUpdateParams
