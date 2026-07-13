@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/growsurf/growsurf-python/compare/v1.1.2...v1.2.0) (2026-07-13)
+
+
+### Features
+
+* **api:** add Team resource ([9efbfbd](https://github.com/growsurf/growsurf-python/commit/9efbfbdfec10336d473f9266a033d93c3e98bb9e))
+
 ## [1.1.2](https://github.com/growsurf/growsurf-python/compare/v1.1.1...v1.1.2) (2026-07-11)
 
 
