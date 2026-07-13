@@ -44,11 +44,7 @@ class TeamResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Team:
-        """Retrieve the team bound to the API key or OAuth connection.
-
-        A credential that can act across multiple teams cannot use this operation because
-        it has no single Team resource.
-        """
+        """Retrieve the team bound to the API key or OAuth connection."""
         return self._get(
             "/team",
             options=make_request_options(
@@ -174,11 +170,7 @@ class AsyncTeamResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Team:
-        """Retrieve the team bound to the API key or OAuth connection.
-
-        A credential that can act across multiple teams cannot use this operation because
-        it has no single Team resource.
-        """
+        """Retrieve the team bound to the API key or OAuth connection."""
         return await self._get(
             "/team",
             options=make_request_options(
