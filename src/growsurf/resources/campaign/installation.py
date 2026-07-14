@@ -56,10 +56,10 @@ class InstallationResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignInstallation:
         """
-        Retrieves a program's installation configuration — the same surface as the dashboard
-        Program Editor's **Installation** tab. This is a large object whose available fields
-        depend on the program type; the response includes every field and its current
-        value, which is the same shape you send back on `PATCH`.
+        Retrieves a program's installation configuration — the same surface as the
+        dashboard Program Editor's **Installation** tab (plus the Mobile SDK settings).
+        Includes the referral trigger (referral programs only), signup tracking method,
+        share URL and whitelist, custom-form signup settings, and mobile SDK settings.
 
         Args:
           extra_headers: Send extra headers
@@ -95,10 +95,10 @@ class InstallationResource(SyncAPIResource):
         """
         Updates a program's installation configuration. Only the fields you send are
         changed; omitted fields are left untouched. `referralTrigger` is only available
-        for referral programs. `mobile.publicKey` is read-only (server-generated). URLs
-        must include an explicit `http://` or `https://` scheme. To see the full
-        `CampaignInstallation` object with every field and its current value, `GET` this
-        resource first, then `PATCH` back only the fields you want to change.
+        for referral programs. `mobile.publicKey` is read-only; if no key exists yet,
+        enabling `mobile.isEnabled` creates one. Changing `shareUrl` re-resolves its
+        redirect destinations, which may take a moment to complete. URLs must include an
+        explicit `http://` or `https://` scheme.
 
         Args:
           body: A partial `CampaignInstallation` object — only the fields you send are changed.
@@ -157,10 +157,10 @@ class AsyncInstallationResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignInstallation:
         """
-        Retrieves a program's installation configuration — the same surface as the dashboard
-        Program Editor's **Installation** tab. This is a large object whose available fields
-        depend on the program type; the response includes every field and its current
-        value, which is the same shape you send back on `PATCH`.
+        Retrieves a program's installation configuration — the same surface as the
+        dashboard Program Editor's **Installation** tab (plus the Mobile SDK settings).
+        Includes the referral trigger (referral programs only), signup tracking method,
+        share URL and whitelist, custom-form signup settings, and mobile SDK settings.
 
         Args:
           extra_headers: Send extra headers
@@ -196,10 +196,10 @@ class AsyncInstallationResource(AsyncAPIResource):
         """
         Updates a program's installation configuration. Only the fields you send are
         changed; omitted fields are left untouched. `referralTrigger` is only available
-        for referral programs. `mobile.publicKey` is read-only (server-generated). URLs
-        must include an explicit `http://` or `https://` scheme. To see the full
-        `CampaignInstallation` object with every field and its current value, `GET` this
-        resource first, then `PATCH` back only the fields you want to change.
+        for referral programs. `mobile.publicKey` is read-only; if no key exists yet,
+        enabling `mobile.isEnabled` creates one. Changing `shareUrl` re-resolves its
+        redirect destinations, which may take a moment to complete. URLs must include an
+        explicit `http://` or `https://` scheme.
 
         Args:
           body: A partial `CampaignInstallation` object — only the fields you send are changed.

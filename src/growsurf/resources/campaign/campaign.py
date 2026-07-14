@@ -196,9 +196,8 @@ class CampaignResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Campaign:
         """
-        Creates a new program pre-populated with type-appropriate defaults, plus any
-        optional inline rewards. The new program is created in `DRAFT` status and owned
-        by the API key's bound team. Requires the team owner's verified email.
+        Creates a new program, plus any optional program rewards. The new program is
+        created in `DRAFT` status and owned by the API key's bound team.
 
         Args:
           type: The program type. Immutable after creation.
@@ -289,8 +288,8 @@ class CampaignResource(SyncAPIResource):
         Updates a program's identity and lifecycle. Only the fields you send are
         changed. `type`, `urlId`, and `currencyISO` are immutable. Editor-tab
         configuration (design, emails, options, installation) is edited via the
-        dedicated config sub-resources, not here. The program cannot be deleted via
-        this endpoint.
+        dedicated config sub-resources, not here. The program cannot be deleted via this
+        endpoint.
 
         Args:
           status: The requested program status. `IN_PROGRESS` publishes or resumes the program;
@@ -458,7 +457,8 @@ class CampaignResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantCommissionList:
         """
-        Retrieves a paged list of all participant commissions in an affiliate program.
+        **Affiliate programs only.** Retrieves a paged list of all participant
+        commissions in an affiliate program.
 
         Args:
           limit: Number of results to return. Maximum 100.
@@ -628,7 +628,8 @@ class CampaignResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantPayoutList:
         """
-        Retrieves a paged list of all participant payouts in an affiliate program.
+        **Affiliate programs only.** Retrieves a paged list of all participant payouts
+        in an affiliate program.
 
         Args:
           limit: Number of results to return. Maximum 100.
@@ -762,10 +763,9 @@ class CampaignResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignRetrieveAnalyticsResponse:
         """
-        Retrieves analytics for a program. Pass ``interval`` to also get a time-series
-        (``series``) alongside the totals, and ``include`` to add previous-period
-        totals, status breakdowns, or derived rates — useful for detecting trends over
-        time.
+        Retrieves analytics for a program. Pass `interval` to also get a time-series
+        (`series`) alongside the totals, and `include` to add previous-period totals,
+        status breakdowns, or derived rates — useful for detecting trends over time.
 
         Args:
           days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.
@@ -898,9 +898,8 @@ class AsyncCampaignResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Campaign:
         """
-        Creates a new program pre-populated with type-appropriate defaults, plus any
-        optional inline rewards. The new program is created in `DRAFT` status and owned
-        by the API key's bound team. Requires the team owner's verified email.
+        Creates a new program, plus any optional program rewards. The new program is
+        created in `DRAFT` status and owned by the API key's bound team.
 
         Args:
           type: The program type. Immutable after creation.
@@ -991,8 +990,8 @@ class AsyncCampaignResource(AsyncAPIResource):
         Updates a program's identity and lifecycle. Only the fields you send are
         changed. `type`, `urlId`, and `currencyISO` are immutable. Editor-tab
         configuration (design, emails, options, installation) is edited via the
-        dedicated config sub-resources, not here. The program cannot be deleted via
-        this endpoint.
+        dedicated config sub-resources, not here. The program cannot be deleted via this
+        endpoint.
 
         Args:
           status: The requested program status. `IN_PROGRESS` publishes or resumes the program;
@@ -1160,7 +1159,8 @@ class AsyncCampaignResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantCommissionList:
         """
-        Retrieves a paged list of all participant commissions in an affiliate program.
+        **Affiliate programs only.** Retrieves a paged list of all participant
+        commissions in an affiliate program.
 
         Args:
           limit: Number of results to return. Maximum 100.
@@ -1330,7 +1330,8 @@ class AsyncCampaignResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantPayoutList:
         """
-        Retrieves a paged list of all participant payouts in an affiliate program.
+        **Affiliate programs only.** Retrieves a paged list of all participant payouts
+        in an affiliate program.
 
         Args:
           limit: Number of results to return. Maximum 100.
@@ -1464,10 +1465,9 @@ class AsyncCampaignResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignRetrieveAnalyticsResponse:
         """
-        Retrieves analytics for a program. Pass ``interval`` to also get a time-series
-        (``series``) alongside the totals, and ``include`` to add previous-period
-        totals, status breakdowns, or derived rates — useful for detecting trends over
-        time.
+        Retrieves analytics for a program. Pass `interval` to also get a time-series
+        (`series`) alongside the totals, and `include` to add previous-period totals,
+        status breakdowns, or derived rates — useful for detecting trends over time.
 
         Args:
           days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.

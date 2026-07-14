@@ -56,10 +56,11 @@ class OptionsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignOptions:
         """
-        Retrieves a program's options configuration — the same surface as the dashboard
-        Program Editor's **Options** tab. This is a large object whose available fields
-        depend on the program type; the response includes every field and its current
-        value, which is the same shape you send back on `PATCH`.
+        Retrieves a program's options — the same surface as the dashboard Program
+        Editor's **Options** tab. Includes reward/fraud approval, anti-fraud lists +
+        toggles, referral cookie/credit windows, reCAPTCHA, payout threshold + tax
+        settings (affiliate only), and notification-email settings.
+        `fraud.recaptcha.secretKey` is never returned.
 
         Args:
           extra_headers: Send extra headers
@@ -93,14 +94,12 @@ class OptionsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignOptions:
         """
-        Updates a program's options. Only the fields you send are changed. Some fields are
-        program-type specific (`requireManualRewardApproval`/`autoFulfillRewards` are
-        referral-only; `payoutThreshold`/`taxDocumentation` are affiliate-only, and
+        Updates a program's options. Only the fields you send are changed. Some fields
+        are program-type specific (`requireManualRewardApproval`/`autoFulfillRewards`
+        are referral-only; `payoutThreshold`/`taxDocumentation` are affiliate-only, and
         affiliate programs require `requireParticipantAuth: true`).
-        `fraud.recaptcha.secretKey` is write-only. `referralCreditWindowDays: null` means
-        "never expires". To see the full `CampaignOptions` object with every field and its
-        current value, `GET` this resource first, then `PATCH` back only the fields you
-        want to change.
+        `fraud.recaptcha.secretKey` is write-only. `referralCreditWindowDays: null`
+        means "never expires".
 
         Args:
           body: A partial `CampaignOptions` object — only the fields you send are changed.
@@ -159,10 +158,11 @@ class AsyncOptionsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignOptions:
         """
-        Retrieves a program's options configuration — the same surface as the dashboard
-        Program Editor's **Options** tab. This is a large object whose available fields
-        depend on the program type; the response includes every field and its current
-        value, which is the same shape you send back on `PATCH`.
+        Retrieves a program's options — the same surface as the dashboard Program
+        Editor's **Options** tab. Includes reward/fraud approval, anti-fraud lists +
+        toggles, referral cookie/credit windows, reCAPTCHA, payout threshold + tax
+        settings (affiliate only), and notification-email settings.
+        `fraud.recaptcha.secretKey` is never returned.
 
         Args:
           extra_headers: Send extra headers
@@ -196,14 +196,12 @@ class AsyncOptionsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignOptions:
         """
-        Updates a program's options. Only the fields you send are changed. Some fields are
-        program-type specific (`requireManualRewardApproval`/`autoFulfillRewards` are
-        referral-only; `payoutThreshold`/`taxDocumentation` are affiliate-only, and
+        Updates a program's options. Only the fields you send are changed. Some fields
+        are program-type specific (`requireManualRewardApproval`/`autoFulfillRewards`
+        are referral-only; `payoutThreshold`/`taxDocumentation` are affiliate-only, and
         affiliate programs require `requireParticipantAuth: true`).
-        `fraud.recaptcha.secretKey` is write-only. `referralCreditWindowDays: null` means
-        "never expires". To see the full `CampaignOptions` object with every field and its
-        current value, `GET` this resource first, then `PATCH` back only the fields you
-        want to change.
+        `fraud.recaptcha.secretKey` is write-only. `referralCreditWindowDays: null`
+        means "never expires".
 
         Args:
           body: A partial `CampaignOptions` object — only the fields you send are changed.

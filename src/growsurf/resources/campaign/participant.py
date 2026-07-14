@@ -244,15 +244,14 @@ class ParticipantResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantBulkDeleteResponse:
-        """Deletes a list of participants from a program in one request.
-
-        Each entry in
-        `participants` is a GrowSurf participant ID or an email address (mixed lists
-        are allowed). Up to `200` entries per request — chunk larger lists across
-        multiple calls. The response reports a per-row `status` for every submitted
-        entry, so a `200` can include rows that were `NOT_FOUND` or failed. Deletion
-        is permanent and removes the participants' referrals, rewards, commissions,
-        and payout records.
+        """
+        Deletes a list of participants from a program in one request. Each entry in
+        `participants` is a GrowSurf participant ID or an email address (mixed lists are
+        allowed). Up to `200` entries per request — chunk larger lists across multiple
+        calls. The response reports a per-row `status` for every submitted entry, so a
+        `200` can include rows that were `NOT_FOUND` or failed. Deletion is permanent
+        and removes the participants' referrals, rewards, commissions, and payout
+        records.
 
         Args:
           participants: GrowSurf participant IDs and/or email addresses to delete. Mixed entries are
@@ -299,9 +298,8 @@ class ParticipantResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Participant:
-        """Adds a new participant to the program.
-
-        If the email already exists, the existing
+        """
+        Adds a new participant to the program. If the email already exists, the existing
         participant is returned.
 
         Args:
@@ -366,7 +364,8 @@ class ParticipantResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantCommissionList:
         """
-        Retrieves a paged list of commissions earned by a participant.
+        **Affiliate programs only.** Retrieves a paged list of commissions earned by a
+        participant.
 
         Args:
           limit: Number of results to return. Maximum 100.
@@ -428,7 +427,8 @@ class ParticipantResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantPayoutList:
         """
-        Retrieves a paged list of payouts that belong to a participant.
+        **Affiliate programs only.** Retrieves a paged list of payouts that belong to a
+        participant.
 
         Args:
           limit: Number of results to return. Maximum 100.
@@ -655,16 +655,12 @@ class ParticipantResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantRecordTransactionResponse:
         """
-        Records a sale made by a referred customer and generates affiliate commissions
-        for their referrer when applicable.
-
-        At least one transaction identifier is required: one of ``external_id``,
-        ``transaction_id``, ``order_id``, ``payment_id``, ``invoice_id``,
-        ``payment_intent_id``, or ``charge_id``. ``customer_id`` and ``subscription_id``
-        do not count, since they identify the customer or subscription rather than the
-        specific transaction. Without an identifier, resending the same sale creates a
-        duplicate commission and double-pays the referrer; the server rejects such
-        requests with HTTP 400.
+        **Affiliate programs only.** Records a sale made by a referred customer and
+        generates affiliate commissions for their referrer when applicable. Requires at
+        least one transaction identifier (externalId, transactionId, orderId, paymentId,
+        invoiceId, paymentIntentId, or chargeId) so repeated requests can be
+        de-duplicated — without one, a resent sale would create a second commission.
+        Reuse the same identifier(s) when refunding.
 
         Args:
           extra_headers: Send extra headers
@@ -754,11 +750,12 @@ class ParticipantResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantRefundTransactionResponse:
         """
-        Records an amendment (refund, partial refund, refund cancellation, or
-        chargeback) against a previously recorded transaction and reverses or adjusts
-        the referrer's commission. The inverse of Record Affiliate Transaction.
-        Commissions already paid out are not clawed back; the amendment is recorded for
-        tax reporting only.
+        **Affiliate programs only.** Records an amendment (refund, partial refund,
+        refund cancellation, or chargeback) against a previously recorded transaction
+        and reverses or adjusts the referrer's commission. The inverse of Record
+        Affiliate Transaction. Identify the original transaction with the same
+        identifier(s) you sent when recording it. Commissions already paid out to the
+        affiliate are not clawed back; the amendment is recorded for tax reporting only.
 
         Args:
           extra_headers: Send extra headers
@@ -824,8 +821,7 @@ class ParticipantResource(SyncAPIResource):
     ) -> ParticipantSendInvitesResponse:
         """
         Sends email invites on behalf of a participant to a list of email addresses.
-
-        Sending invites via the API requires a verified custom email domain on the
+        Sending invites via the API requires a **verified custom email domain** on the
         program; the request fails until one is verified.
 
         Args:
@@ -878,7 +874,10 @@ class ParticipantResource(SyncAPIResource):
     ) -> ParticipantTriggerReferralResponse:
         """
         Triggers referral credit for an existing referred participant by GrowSurf
-        participant ID or email address.
+        participant ID or email address. Optionally pass `delayInDays` to hold the
+        credit for a number of days before it is awarded (for example, to cover your own
+        refund window). A delayed trigger can be cancelled before it is awarded with the
+        Cancel delayed referral trigger request (DELETE on this same path).
 
         Args:
           delay_in_days: Number of whole days to hold referral credit before it is awarded. Useful for
@@ -929,8 +928,11 @@ class ParticipantResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantTriggerReferralResponse:
         """
-        Cancels a pending delayed referral trigger for a participant by GrowSurf
-        participant ID or email address.
+        Cancels a pending delayed referral trigger for a participant (the companion to a
+        delayed Trigger referral request). Use this to undo a scheduled referral credit
+        before it is awarded, for example when a refund occurs inside your refund
+        window. If the participant has no pending delayed trigger, `success` is returned
+        as `false`.
 
         Args:
           extra_headers: Send extra headers
@@ -976,14 +978,14 @@ class ParticipantResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> EmailParticipantResponse:
         """
-        Sends an email to a participant. Provide EITHER ``email_type`` to trigger one of
-        the program's configured email templates, OR ``subject`` + ``body`` for a
-        free-form email. Free-form emails are sent with the same compliance handling
-        (company name, postal address, and an unsubscribe link are added automatically,
-        and unsubscribed participants are suppressed). Sending requires the team to be
-        verified by GrowSurf. Requires a verified custom email domain on the
-        program (set up in Campaign Editor > 3. Emails > Email Settings). Returns `400`
-        until one is verified. The email is accepted for delivery.
+        Sends an email to a participant. Provide EITHER `emailType` to trigger one of
+        the program's configured email templates, OR `subject` + `body` for a free-form
+        email. Free-form emails are sent with the same compliance handling (company
+        name, postal address, and an unsubscribe link are added automatically, and
+        unsubscribed participants are suppressed). Sending requires the team to be
+        verified by GrowSurf. Requires a **verified custom email domain** on the program
+        (which can be completed in *Campaign Editor > 3. Emails > Email Settings*).
+        Returns `400` until one is verified. The email is accepted for delivery.
 
         Args:
           email_type: The program email template to trigger (template mode). The valid values depend on
@@ -1115,9 +1117,9 @@ class ParticipantResource(SyncAPIResource):
     ) -> ParticipantAnalyticsResponse:
         """
         Retrieves analytics for a single participant — all-time engagement counters,
-        leaderboard ranks, and per-channel share counts (plus affiliate money metrics for
-        affiliate programs). Useful for segmenting and re-engaging participants. Pass
-        ``include=series`` to also get this participant's own activity over time.
+        leaderboard ranks, and per-channel share counts (plus affiliate money metrics
+        for affiliate programs). Useful for segmenting and re-engaging participants.
+        Pass `include=series` to also get this participant's own activity over time.
 
         Args:
           days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.
@@ -1363,15 +1365,14 @@ class AsyncParticipantResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantBulkDeleteResponse:
-        """Deletes a list of participants from a program in one request.
-
-        Each entry in
-        `participants` is a GrowSurf participant ID or an email address (mixed lists
-        are allowed). Up to `200` entries per request — chunk larger lists across
-        multiple calls. The response reports a per-row `status` for every submitted
-        entry, so a `200` can include rows that were `NOT_FOUND` or failed. Deletion
-        is permanent and removes the participants' referrals, rewards, commissions,
-        and payout records.
+        """
+        Deletes a list of participants from a program in one request. Each entry in
+        `participants` is a GrowSurf participant ID or an email address (mixed lists are
+        allowed). Up to `200` entries per request — chunk larger lists across multiple
+        calls. The response reports a per-row `status` for every submitted entry, so a
+        `200` can include rows that were `NOT_FOUND` or failed. Deletion is permanent
+        and removes the participants' referrals, rewards, commissions, and payout
+        records.
 
         Args:
           participants: GrowSurf participant IDs and/or email addresses to delete. Mixed entries are
@@ -1418,9 +1419,8 @@ class AsyncParticipantResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Participant:
-        """Adds a new participant to the program.
-
-        If the email already exists, the existing
+        """
+        Adds a new participant to the program. If the email already exists, the existing
         participant is returned.
 
         Args:
@@ -1485,7 +1485,8 @@ class AsyncParticipantResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantCommissionList:
         """
-        Retrieves a paged list of commissions earned by a participant.
+        **Affiliate programs only.** Retrieves a paged list of commissions earned by a
+        participant.
 
         Args:
           limit: Number of results to return. Maximum 100.
@@ -1547,7 +1548,8 @@ class AsyncParticipantResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantPayoutList:
         """
-        Retrieves a paged list of payouts that belong to a participant.
+        **Affiliate programs only.** Retrieves a paged list of payouts that belong to a
+        participant.
 
         Args:
           limit: Number of results to return. Maximum 100.
@@ -1774,16 +1776,12 @@ class AsyncParticipantResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantRecordTransactionResponse:
         """
-        Records a sale made by a referred customer and generates affiliate commissions
-        for their referrer when applicable.
-
-        At least one transaction identifier is required: one of ``external_id``,
-        ``transaction_id``, ``order_id``, ``payment_id``, ``invoice_id``,
-        ``payment_intent_id``, or ``charge_id``. ``customer_id`` and ``subscription_id``
-        do not count, since they identify the customer or subscription rather than the
-        specific transaction. Without an identifier, resending the same sale creates a
-        duplicate commission and double-pays the referrer; the server rejects such
-        requests with HTTP 400.
+        **Affiliate programs only.** Records a sale made by a referred customer and
+        generates affiliate commissions for their referrer when applicable. Requires at
+        least one transaction identifier (externalId, transactionId, orderId, paymentId,
+        invoiceId, paymentIntentId, or chargeId) so repeated requests can be
+        de-duplicated — without one, a resent sale would create a second commission.
+        Reuse the same identifier(s) when refunding.
 
         Args:
           extra_headers: Send extra headers
@@ -1873,11 +1871,12 @@ class AsyncParticipantResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantRefundTransactionResponse:
         """
-        Records an amendment (refund, partial refund, refund cancellation, or
-        chargeback) against a previously recorded transaction and reverses or adjusts
-        the referrer's commission. The inverse of Record Affiliate Transaction.
-        Commissions already paid out are not clawed back; the amendment is recorded for
-        tax reporting only.
+        **Affiliate programs only.** Records an amendment (refund, partial refund,
+        refund cancellation, or chargeback) against a previously recorded transaction
+        and reverses or adjusts the referrer's commission. The inverse of Record
+        Affiliate Transaction. Identify the original transaction with the same
+        identifier(s) you sent when recording it. Commissions already paid out to the
+        affiliate are not clawed back; the amendment is recorded for tax reporting only.
 
         Args:
           extra_headers: Send extra headers
@@ -1943,8 +1942,7 @@ class AsyncParticipantResource(AsyncAPIResource):
     ) -> ParticipantSendInvitesResponse:
         """
         Sends email invites on behalf of a participant to a list of email addresses.
-
-        Sending invites via the API requires a verified custom email domain on the
+        Sending invites via the API requires a **verified custom email domain** on the
         program; the request fails until one is verified.
 
         Args:
@@ -1997,7 +1995,10 @@ class AsyncParticipantResource(AsyncAPIResource):
     ) -> ParticipantTriggerReferralResponse:
         """
         Triggers referral credit for an existing referred participant by GrowSurf
-        participant ID or email address.
+        participant ID or email address. Optionally pass `delayInDays` to hold the
+        credit for a number of days before it is awarded (for example, to cover your own
+        refund window). A delayed trigger can be cancelled before it is awarded with the
+        Cancel delayed referral trigger request (DELETE on this same path).
 
         Args:
           delay_in_days: Number of whole days to hold referral credit before it is awarded. Useful for
@@ -2048,8 +2049,11 @@ class AsyncParticipantResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantTriggerReferralResponse:
         """
-        Cancels a pending delayed referral trigger for a participant by GrowSurf
-        participant ID or email address.
+        Cancels a pending delayed referral trigger for a participant (the companion to a
+        delayed Trigger referral request). Use this to undo a scheduled referral credit
+        before it is awarded, for example when a refund occurs inside your refund
+        window. If the participant has no pending delayed trigger, `success` is returned
+        as `false`.
 
         Args:
           extra_headers: Send extra headers
@@ -2095,14 +2099,14 @@ class AsyncParticipantResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> EmailParticipantResponse:
         """
-        Sends an email to a participant. Provide EITHER ``email_type`` to trigger one of
-        the program's configured email templates, OR ``subject`` + ``body`` for a
-        free-form email. Free-form emails are sent with the same compliance handling
-        (company name, postal address, and an unsubscribe link are added automatically,
-        and unsubscribed participants are suppressed). Sending requires the team to be
-        verified by GrowSurf. Requires a verified custom email domain on the
-        program (set up in Campaign Editor > 3. Emails > Email Settings). Returns `400`
-        until one is verified. The email is accepted for delivery.
+        Sends an email to a participant. Provide EITHER `emailType` to trigger one of
+        the program's configured email templates, OR `subject` + `body` for a free-form
+        email. Free-form emails are sent with the same compliance handling (company
+        name, postal address, and an unsubscribe link are added automatically, and
+        unsubscribed participants are suppressed). Sending requires the team to be
+        verified by GrowSurf. Requires a **verified custom email domain** on the program
+        (which can be completed in *Campaign Editor > 3. Emails > Email Settings*).
+        Returns `400` until one is verified. The email is accepted for delivery.
 
         Args:
           email_type: The program email template to trigger (template mode). The valid values depend on
@@ -2234,9 +2238,9 @@ class AsyncParticipantResource(AsyncAPIResource):
     ) -> ParticipantAnalyticsResponse:
         """
         Retrieves analytics for a single participant — all-time engagement counters,
-        leaderboard ranks, and per-channel share counts (plus affiliate money metrics for
-        affiliate programs). Useful for segmenting and re-engaging participants. Pass
-        ``include=series`` to also get this participant's own activity over time.
+        leaderboard ranks, and per-channel share counts (plus affiliate money metrics
+        for affiliate programs). Useful for segmenting and re-engaging participants.
+        Pass `include=series` to also get this participant's own activity over time.
 
         Args:
           days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.

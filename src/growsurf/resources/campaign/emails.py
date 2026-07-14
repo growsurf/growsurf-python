@@ -56,10 +56,11 @@ class EmailsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignEmails:
         """
-        Retrieves a program's emails configuration — the same surface as the dashboard
-        Program Editor's **Emails** tab. This is a large object whose available fields
-        depend on the program type; the response includes every field and its current
-        value, which is the same shape you send back on `PATCH`.
+        Retrieves a program's email configuration — the same surface as the dashboard
+        Program Editor's **Emails** tab. Returns each editable email template
+        (`subject`, `preheader`, `body`, `isEnabled`) plus the `settings` block (sender,
+        contact, and design). The set of email templates returned depends on the program
+        type (referral vs affiliate).
 
         Args:
           extra_headers: Send extra headers
@@ -95,12 +96,10 @@ class EmailsResource(SyncAPIResource):
         """
         Updates a program's email configuration. Only the fields you send are changed;
         omitted fields are left untouched. You may only write the email templates the
-        dashboard exposes for the program type — writing a template that is not available
-        for the program type returns a `400`. Some fields are read-only
+        dashboard exposes for the program type — writing a template that is not
+        available for the program type returns a `400`. Some fields are read-only
         (`settings.sender.fromEmail`, whose custom value requires dashboard domain
-        verification). To see the full `CampaignEmails` object with every field and its
-        current value, `GET` this resource first, then `PATCH` back only the fields you
-        want to change.
+        verification).
 
         Args:
           body: A partial `CampaignEmails` object — only the fields you send are changed.
@@ -159,10 +158,11 @@ class AsyncEmailsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignEmails:
         """
-        Retrieves a program's emails configuration — the same surface as the dashboard
-        Program Editor's **Emails** tab. This is a large object whose available fields
-        depend on the program type; the response includes every field and its current
-        value, which is the same shape you send back on `PATCH`.
+        Retrieves a program's email configuration — the same surface as the dashboard
+        Program Editor's **Emails** tab. Returns each editable email template
+        (`subject`, `preheader`, `body`, `isEnabled`) plus the `settings` block (sender,
+        contact, and design). The set of email templates returned depends on the program
+        type (referral vs affiliate).
 
         Args:
           extra_headers: Send extra headers
@@ -198,12 +198,10 @@ class AsyncEmailsResource(AsyncAPIResource):
         """
         Updates a program's email configuration. Only the fields you send are changed;
         omitted fields are left untouched. You may only write the email templates the
-        dashboard exposes for the program type — writing a template that is not available
-        for the program type returns a `400`. Some fields are read-only
+        dashboard exposes for the program type — writing a template that is not
+        available for the program type returns a `400`. Some fields are read-only
         (`settings.sender.fromEmail`, whose custom value requires dashboard domain
-        verification). To see the full `CampaignEmails` object with every field and its
-        current value, `GET` this resource first, then `PATCH` back only the fields you
-        want to change.
+        verification).
 
         Args:
           body: A partial `CampaignEmails` object — only the fields you send are changed.

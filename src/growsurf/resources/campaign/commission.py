@@ -56,7 +56,7 @@ class CommissionResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CommissionDeleteResponse:
         """
-        Removes a pending participant commission.
+        **Affiliate programs only.** Removes a pending participant commission.
 
         Args:
           extra_headers: Send extra headers
@@ -92,7 +92,8 @@ class CommissionResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CommissionApproveResponse:
         """
-        Approves a pending participant commission so it can become eligible for payout.
+        **Affiliate programs only.** Approves a pending participant commission so it can
+        become eligible for payout.
 
         Args:
           extra_headers: Send extra headers
@@ -151,7 +152,7 @@ class AsyncCommissionResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CommissionDeleteResponse:
         """
-        Removes a pending participant commission.
+        **Affiliate programs only.** Removes a pending participant commission.
 
         Args:
           extra_headers: Send extra headers
@@ -187,7 +188,8 @@ class AsyncCommissionResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CommissionApproveResponse:
         """
-        Approves a pending participant commission so it can become eligible for payout.
+        **Affiliate programs only.** Approves a pending participant commission so it can
+        become eligible for payout.
 
         Args:
           extra_headers: Send extra headers
