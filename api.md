@@ -39,6 +39,11 @@ Types:
 ```python
 from growsurf.types import (
     Campaign,
+    AffiliateInvite,
+    AffiliateApplication,
+    AffiliateApplicationAnswer,
+    AffiliateInviteListResponse,
+    AffiliateApplicationListResponse,
     CommissionStructure,
     ParticipantCommissionList,
     ParticipantList,
@@ -64,6 +69,13 @@ Methods:
 - <code title="get /campaign/{id}/payouts">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">list_payouts</a>(id, \*\*<a href="src/growsurf/types/campaign_list_payouts_params.py">params</a>) -> <a href="./src/growsurf/types/participant_payout_list.py">ParticipantPayoutList</a></code>
 - <code title="get /campaign/{id}/referrals">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">list_referrals</a>(id, \*\*<a href="src/growsurf/types/campaign_list_referrals_params.py">params</a>) -> <a href="./src/growsurf/types/referral_list.py">ReferralList</a></code>
 - <code title="get /campaign/{id}/analytics">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">retrieve_analytics</a>(id, \*\*<a href="src/growsurf/types/campaign_retrieve_analytics_params.py">params</a>) -> <a href="./src/growsurf/types/campaign_retrieve_analytics_response.py">CampaignRetrieveAnalyticsResponse</a></code>
+- <code title="get /campaign/{id}/affiliate-applications">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">list_affiliate_applications</a>(id, \*\*<a href="src/growsurf/types/campaign_list_affiliate_applications_params.py">params</a>) -> <a href="./src/growsurf/types/affiliate_application_list_response.py">AffiliateApplicationListResponse</a></code>
+- <code title="get /campaign/{id}/affiliate-applications/{applicationId}">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">retrieve_affiliate_application</a>(application_id, \*, id) -> <a href="./src/growsurf/types/affiliate_application.py">AffiliateApplication</a></code>
+- <code title="patch /campaign/{id}/affiliate-applications/{applicationId}">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">review_affiliate_application</a>(application_id, \*, id, \*\*<a href="src/growsurf/types/campaign_review_affiliate_application_params.py">params</a>) -> <a href="./src/growsurf/types/affiliate_application.py">AffiliateApplication</a></code>
+- <code title="get /campaign/{id}/affiliate-invites">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">list_affiliate_invites</a>(id, \*\*<a href="src/growsurf/types/campaign_list_affiliate_invites_params.py">params</a>) -> <a href="./src/growsurf/types/affiliate_invite_list_response.py">AffiliateInviteListResponse</a></code>
+- <code title="post /campaign/{id}/affiliate-invites">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">create_affiliate_invite</a>(id, \*\*<a href="src/growsurf/types/campaign_create_affiliate_invite_params.py">params</a>) -> <a href="./src/growsurf/types/affiliate_invite.py">AffiliateInvite</a></code>
+- <code title="delete /campaign/{id}/affiliate-invites/{inviteId}">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">revoke_affiliate_invite</a>(invite_id, \*, id) -> <a href="./src/growsurf/types/affiliate_invite.py">AffiliateInvite</a></code>
+- <code title="post /campaign/{id}/affiliate-invites/{inviteId}/resend">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">resend_affiliate_invite</a>(invite_id, \*, id) -> <a href="./src/growsurf/types/affiliate_invite.py">AffiliateInvite</a></code>
 
 ## Participant
 
@@ -71,7 +83,6 @@ Types:
 
 ```python
 from growsurf.types.campaign import (
-    Create,
     FraudRiskLevel,
     Participant,
     ParticipantReward,
@@ -87,6 +98,8 @@ from growsurf.types.campaign import (
     ParticipantRefundTransactionResponse,
     ParticipantSendInvitesResponse,
     ParticipantTriggerReferralResponse,
+    ParticipantGetPayoutDestinationResponse,
+    ParticipantRequestPayoutDestinationConfirmationResponse,
 )
 ```
 
@@ -109,6 +122,8 @@ Methods:
 - <code title="post /campaign/{id}/participant/{participantIdOrEmail}/email">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">email</a>(participant_id_or_email, \*, id, \*\*<a href="src/growsurf/types/campaign/participant_email_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/email_participant_response.py">EmailParticipantResponse</a></code>
 - <code title="get /campaign/{id}/participant/{participantIdOrEmail}/activity-logs">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">list_activity_logs</a>(participant_id_or_email, \*, id, \*\*<a href="src/growsurf/types/campaign/participant_list_activity_logs_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/participant_activity_logs_response.py">ParticipantActivityLogsResponse</a></code>
 - <code title="get /campaign/{id}/participant/{participantIdOrEmail}/analytics">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">retrieve_analytics</a>(participant_id_or_email, \*, id, \*\*<a href="src/growsurf/types/campaign/participant_analytics_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/participant_analytics_response.py">ParticipantAnalyticsResponse</a></code>
+- <code title="get /campaign/{id}/participant/{participantIdOrEmail}/payout-destination">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">get_payout_destination</a>(participant_id_or_email, \*, id) -> <a href="./src/growsurf/types/campaign/participant_get_payout_destination_response.py">ParticipantGetPayoutDestinationResponse</a></code>
+- <code title="post /campaign/{id}/participant/{participantIdOrEmail}/payout-destination/request-confirmation">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">request_payout_destination_confirmation</a>(participant_id_or_email, \*, id, \*\*<a href="src/growsurf/types/campaign/participant_request_payout_destination_confirmation_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/participant_request_payout_destination_confirmation_response.py">ParticipantRequestPayoutDestinationConfirmationResponse</a></code>
 
 ## Reward
 

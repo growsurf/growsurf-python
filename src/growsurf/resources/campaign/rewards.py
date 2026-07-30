@@ -124,8 +124,7 @@ class RewardsResource(SyncAPIResource):
           referred_reward_upfront: For double-sided rewards, deliver the referred friend's reward upfront as a
               discount.
 
-          referred_value: Tax valuation for the referred friend's side of a double-sided reward.
-              Defaults to not tax-reportable (a purchase rebate).
+          referred_value: Tax treatment override for the referred friend's side of a double-sided reward. Null inherits the program's confirmed default.
 
           title: The reward title (internal label).
 
@@ -248,8 +247,7 @@ class RewardsResource(SyncAPIResource):
           referred_reward_upfront: For double-sided rewards, deliver the referred friend's reward upfront as a
               discount.
 
-          referred_value: Tax valuation for the referred friend's side of a double-sided reward.
-              Defaults to not tax-reportable (a purchase rebate).
+          referred_value: Tax treatment override for the referred friend's side of a double-sided reward. Null inherits the program's confirmed default.
 
           title: The reward title (internal label).
 
@@ -269,7 +267,9 @@ class RewardsResource(SyncAPIResource):
         if not campaign_reward_id:
             raise ValueError(f"Expected a non-empty value for `campaign_reward_id` but received {campaign_reward_id!r}")
         return self._patch(
-            path_template("/campaign/{id}/reward-configs/{campaign_reward_id}", id=id, campaign_reward_id=campaign_reward_id),
+            path_template(
+                "/campaign/{id}/reward-configs/{campaign_reward_id}", id=id, campaign_reward_id=campaign_reward_id
+            ),
             body=maybe_transform(
                 {
                     "commission_structure": commission_structure,
@@ -369,7 +369,9 @@ class RewardsResource(SyncAPIResource):
         if not campaign_reward_id:
             raise ValueError(f"Expected a non-empty value for `campaign_reward_id` but received {campaign_reward_id!r}")
         return self._delete(
-            path_template("/campaign/{id}/reward-configs/{campaign_reward_id}", id=id, campaign_reward_id=campaign_reward_id),
+            path_template(
+                "/campaign/{id}/reward-configs/{campaign_reward_id}", id=id, campaign_reward_id=campaign_reward_id
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -473,8 +475,7 @@ class AsyncRewardsResource(AsyncAPIResource):
           referred_reward_upfront: For double-sided rewards, deliver the referred friend's reward upfront as a
               discount.
 
-          referred_value: Tax valuation for the referred friend's side of a double-sided reward.
-              Defaults to not tax-reportable (a purchase rebate).
+          referred_value: Tax treatment override for the referred friend's side of a double-sided reward. Null inherits the program's confirmed default.
 
           title: The reward title (internal label).
 
@@ -597,8 +598,7 @@ class AsyncRewardsResource(AsyncAPIResource):
           referred_reward_upfront: For double-sided rewards, deliver the referred friend's reward upfront as a
               discount.
 
-          referred_value: Tax valuation for the referred friend's side of a double-sided reward.
-              Defaults to not tax-reportable (a purchase rebate).
+          referred_value: Tax treatment override for the referred friend's side of a double-sided reward. Null inherits the program's confirmed default.
 
           title: The reward title (internal label).
 
@@ -618,7 +618,9 @@ class AsyncRewardsResource(AsyncAPIResource):
         if not campaign_reward_id:
             raise ValueError(f"Expected a non-empty value for `campaign_reward_id` but received {campaign_reward_id!r}")
         return await self._patch(
-            path_template("/campaign/{id}/reward-configs/{campaign_reward_id}", id=id, campaign_reward_id=campaign_reward_id),
+            path_template(
+                "/campaign/{id}/reward-configs/{campaign_reward_id}", id=id, campaign_reward_id=campaign_reward_id
+            ),
             body=await async_maybe_transform(
                 {
                     "commission_structure": commission_structure,
@@ -718,7 +720,9 @@ class AsyncRewardsResource(AsyncAPIResource):
         if not campaign_reward_id:
             raise ValueError(f"Expected a non-empty value for `campaign_reward_id` but received {campaign_reward_id!r}")
         return await self._delete(
-            path_template("/campaign/{id}/reward-configs/{campaign_reward_id}", id=id, campaign_reward_id=campaign_reward_id),
+            path_template(
+                "/campaign/{id}/reward-configs/{campaign_reward_id}", id=id, campaign_reward_id=campaign_reward_id
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),

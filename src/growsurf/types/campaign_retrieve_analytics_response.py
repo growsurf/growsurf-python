@@ -5,6 +5,7 @@ from typing import Dict, List, Optional
 from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
+from .email_analytics import EmailAnalytics, EmailAnalyticsCounts
 
 __all__ = [
     "CampaignRetrieveAnalyticsResponse",
@@ -18,6 +19,8 @@ __all__ = [
     "StatusCountsPayoutStatus",
     "StatusCountsPayoutStatusMetric",
     "Rates",
+    "EmailAnalytics",
+    "EmailAnalyticsCounts",
 ]
 
 
@@ -86,6 +89,9 @@ class Analytics(BaseModel):
 
 
 class Series(Analytics):
+    email: Optional[EmailAnalyticsCounts] = None
+    """Per-period email counts. Present only when `include` contains `email`."""
+
     period_start: Optional[int] = FieldInfo(alias="periodStart", default=None)
     """Start of the period, as a Unix timestamp in milliseconds (UTC)."""
 
@@ -94,6 +100,9 @@ class PreviousPeriod(BaseModel):
     """Totals for the equal-length window immediately preceding the requested one."""
 
     analytics: Optional[Analytics] = None
+
+    email: Optional[EmailAnalytics] = None
+    """Present when the parent request includes both `previousPeriod` and `email`."""
 
     end_date: Optional[int] = FieldInfo(alias="endDate", default=None)
 
@@ -145,6 +154,8 @@ class StatusCountsPayoutStatus(BaseModel):
 
     queued: Optional[StatusCountsPayoutStatusMetric] = None
 
+    reversed: Optional[StatusCountsPayoutStatusMetric] = None
+
     upcoming: Optional[StatusCountsPayoutStatusMetric] = None
 
 
@@ -189,6 +200,9 @@ class CampaignRetrieveAnalyticsResponse(BaseModel):
     end_date: int = FieldInfo(alias="endDate")
 
     start_date: int = FieldInfo(alias="startDate")
+
+    email: Optional[EmailAnalytics] = None
+    """Present only when `include` contains `email`."""
 
     previous_period: Optional[PreviousPeriod] = FieldInfo(alias="previousPeriod", default=None)
     """Present only when `include` contains `previousPeriod`."""

@@ -16,10 +16,10 @@ __all__ = ["Participant", "PayoutSettings", "Referrer"]
 
 class PayoutSettings(BaseModel):
     """
-    Payout-related actions the participant must complete before a payout can be released (e.g. confirming a PayPal email or submitting a W-9/W-8 tax form). Always present; the requiredActions array is empty when no action is required.
+    Payout-related actions the participant must complete before a payout can be released (e.g. configuring a payout destination or submitting a W-9/W-8 tax form). Always present; the requiredActions array is empty when no action is required.
     """
 
-    required_actions: Optional[List[Literal["PAYPAL_EMAIL", "TAX_INFO"]]] = FieldInfo(
+    required_actions: Optional[List[Literal["PAYOUT_DESTINATION", "TAX_INFO"]]] = FieldInfo(
         alias="requiredActions", default=None
     )
 
@@ -96,7 +96,24 @@ class Participant(BaseModel):
 
     rewards: List[ParticipantReward]
 
-    share_url: str = FieldInfo(alias="shareUrl")
+    share_url: Optional[str] = FieldInfo(alias="shareUrl", default=None)
+    """
+    The unique share URL of the participant. Omitted for affiliate program participants
+    who are not approved affiliates.
+    """
+
+    affiliate_enrollment_source: Optional[str] = FieldInfo(alias="affiliateEnrollmentSource", default=None)
+    """
+    Affiliate programs only. How the affiliate enrolled (`OPEN_ENROLLMENT`,
+    `APPLICATION`, `PARTICIPANT_AUTH`, `INVITE`, `REST_API`, `CSV`, or `DASHBOARD`).
+    `null` when not recorded.
+    """
+
+    affiliate_status: Optional[str] = FieldInfo(alias="affiliateStatus", default=None)
+    """
+    Affiliate programs only. The enrolled affiliate's status (`APPROVED`, `SUSPENDED`,
+    or `BANNED`). `null` for participants who are not affiliates.
+    """
 
     all_matching_fraudsters: Optional[List[Dict[str, object]]] = FieldInfo(alias="allMatchingFraudsters", default=None)
 
@@ -115,6 +132,12 @@ class Participant(BaseModel):
     invite_count: Optional[int] = FieldInfo(alias="inviteCount", default=None)
 
     ip_address: Optional[str] = FieldInfo(alias="ipAddress", default=None)
+
+    is_affiliate: Optional[bool] = FieldInfo(alias="isAffiliate", default=None)
+    """
+    Affiliate programs only. Whether this participant is an enrolled affiliate. A
+    referred customer who has not joined the program is `false`.
+    """
 
     is_new: Optional[bool] = FieldInfo(alias="isNew", default=None)
 
@@ -139,7 +162,7 @@ class Participant(BaseModel):
     payout_settings: Optional[PayoutSettings] = FieldInfo(alias="payoutSettings", default=None)
     """
     Payout-related actions the participant must complete before a payout can be
-    released (e.g. confirming a PayPal email or submitting a W-9/W-8 tax form).
+    released (e.g. configuring a payout destination or submitting a W-9/W-8 tax form).
     Always present; the requiredActions array is empty when no action is required.
     """
 

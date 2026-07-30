@@ -68,3 +68,12 @@ from .participant_record_transaction_response import (
 from .participant_refund_transaction_response import (
     ParticipantRefundTransactionResponse as ParticipantRefundTransactionResponse,
 )
+from .participant_get_payout_destination_response import (
+    ParticipantGetPayoutDestinationResponse as ParticipantGetPayoutDestinationResponse,
+)
+from .participant_request_payout_destination_confirmation_params import (
+    ParticipantRequestPayoutDestinationConfirmationParams as ParticipantRequestPayoutDestinationConfirmationParams,
+)
+from .participant_request_payout_destination_confirmation_response import (
+    ParticipantRequestPayoutDestinationConfirmationResponse as ParticipantRequestPayoutDestinationConfirmationResponse,
+)

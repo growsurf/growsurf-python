@@ -40,6 +40,10 @@ from ...types import (
     campaign_list_leaderboard_params,
     campaign_list_participants_params,
     campaign_retrieve_analytics_params,
+    campaign_list_affiliate_invites_params,
+    campaign_create_affiliate_invite_params,
+    campaign_list_affiliate_applications_params,
+    campaign_review_affiliate_application_params,
     campaign_create_mobile_participant_token_params,
 )
 from .options import (
@@ -103,12 +107,16 @@ from .installation import (
 from ..._base_client import make_request_options
 from ...types.campaign import ReferralStatus, reward_create_params
 from ...types.referral_list import ReferralList
+from ...types.affiliate_invite import AffiliateInvite
 from ...types.participant_list import ParticipantList
 from ...types.campaign.campaign import Campaign
+from ...types.affiliate_application import AffiliateApplication
 from ...types.campaign_list_response import CampaignListResponse
 from ...types.participant_payout_list import ParticipantPayoutList
 from ...types.campaign.referral_status import ReferralStatus
 from ...types.participant_commission_list import ParticipantCommissionList
+from ...types.affiliate_invite_list_response import AffiliateInviteListResponse
+from ...types.affiliate_application_list_response import AffiliateApplicationListResponse
 from ...types.campaign_retrieve_analytics_response import CampaignRetrieveAnalyticsResponse
 from ...types.campaign_create_mobile_participant_token_response import CampaignCreateMobileParticipantTokenResponse
 
@@ -196,7 +204,7 @@ class CampaignResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Campaign:
         """
-        Creates a new program, plus any optional program rewards. The new program is
+        Creates a new program, plus any optional campaign rewards. The new program is
         created in `DRAFT` status and owned by the API key's bound team.
 
         Args:
@@ -619,7 +627,7 @@ class CampaignResource(SyncAPIResource):
         *,
         limit: int | Omit = omit,
         next_id: str | Omit = omit,
-        status: Literal["UPCOMING", "QUEUED", "ISSUED", "FAILED"] | Omit = omit,
+        status: Literal["UPCOMING", "QUEUED", "ISSUED", "FAILED", "REVERSED"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -765,7 +773,11 @@ class CampaignResource(SyncAPIResource):
         """
         Retrieves analytics for a program. Pass `interval` to also get a time-series
         (`series`) alongside the totals, and `include` to add previous-period totals,
-        status breakdowns, or derived rates — useful for detecting trends over time.
+        status breakdowns, derived rates, or email performance. Add `email` to `include`
+        for `sent` (accepted for delivery), `delivered`, `opened`, `clicked`, `bounced`,
+        and `spamComplaints` metrics plus per-email-type breakdowns. Email rates are
+        ratios from `0` to `1`, and `isPartial` identifies windows that begin before
+        complete coverage.
 
         Args:
           days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.
@@ -773,11 +785,15 @@ class CampaignResource(SyncAPIResource):
           end_date: End date of the analytics timeframe as a Unix timestamp in milliseconds.
               Required if `days` is not set.
 
-          include: Comma-separated list of optional enrichments (opt-in to keep the default
-              response lean). Any of `previousPeriod` (totals for the equal-length window
-              immediately before the requested one), `statusCounts` (reward and, for affiliate
-              programs, affiliate/commission/payout status breakdowns), and `rates` (derived
-              referral rates).
+          include: Comma-separated list of optional data to include: `previousPeriod` adds
+              totals for the equal-length window immediately before the requested one;
+              `statusCounts` adds reward (and, for affiliate programs,
+              affiliate/commission/payout) status breakdowns; `rates` adds derived referral
+              rates; `email` adds `sent`, `delivered`, `opened`, `clicked`, `bounced`,
+              `spamComplaints`, and per-email-type metrics. When `email` and an interval are
+              both requested, each `series` item also contains counts for emails sent during
+              that period. Combine `email` with `previousPeriod` to include the same email
+              metrics in both windows.
 
           interval: When set to `day`, `week`, or `month`, the response also includes a `series`
               array with per-period totals. Defaults to `total` (no series).
@@ -814,6 +830,366 @@ class CampaignResource(SyncAPIResource):
                 ),
             ),
             cast_to=CampaignRetrieveAnalyticsResponse,
+        )
+
+    def list_affiliate_applications(
+        self,
+        id: str,
+        *,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        status: Literal["PENDING", "APPROVED", "DENIED"] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateApplicationListResponse:
+        """
+        Lists an affiliate program's applications, newest first. Applications exist on
+        programs that review public signups (an `affiliateApplicationMode` of
+        `MANUAL_REVIEW` or `AUTO_APPROVE`). A pending applicant is not a participant
+        until their application is approved.
+
+        Args:
+          limit: How many applications to return per page (1-100).
+
+          offset: Offset number used to skip through a result set.
+
+          status: Only return applications with this status.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._get(
+            path_template("/campaign/{id}/affiliate-applications", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "limit": limit,
+                        "offset": offset,
+                        "status": status,
+                    },
+                    campaign_list_affiliate_applications_params.CampaignListAffiliateApplicationsParams,
+                ),
+            ),
+            cast_to=AffiliateApplicationListResponse,
+        )
+
+    def retrieve_affiliate_application(
+        self,
+        application_id: str,
+        *,
+        id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateApplication:
+        """
+        Returns one affiliate application, including its submitted form answers.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not application_id:
+            raise ValueError(f"Expected a non-empty value for `application_id` but received {application_id!r}")
+        return self._get(
+            path_template(
+                "/campaign/{id}/affiliate-applications/{application_id}",
+                id=id,
+                application_id=application_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AffiliateApplication,
+        )
+
+    def review_affiliate_application(
+        self,
+        application_id: str,
+        *,
+        id: str,
+        allow_immediate_reapply: bool | Omit = omit,
+        reapply_allowed_at: int | Omit = omit,
+        rejection_reason: str | Omit = omit,
+        review_note: str | Omit = omit,
+        status: Literal["APPROVED", "DENIED"] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateApplication:
+        """
+        Decides a pending application. Set `status` to `APPROVED` to enroll the applicant
+        (this creates the participant, or upgrades an existing participant with the same
+        email), or to `DENIED` with an optional `rejectionReason`. A denied applicant may
+        reapply after the program's reapplication cooldown; send an earlier
+        `reapplyAllowedAt` (without `status`) to shorten that wait for one applicant.
+        Provide exactly one of `status` or `reapplyAllowedAt`. Denial-only fields are
+        only valid with `status` set to `DENIED`. Approval is idempotent: repeating it
+        returns the same participant.
+
+        Args:
+          allow_immediate_reapply: When denying, let the applicant reapply right away instead of waiting out the
+              program's reapplication cooldown. Only valid when `status` is `DENIED`.
+
+          reapply_allowed_at: For an already-denied application, move the reapplication window to this earlier
+              time, in Unix milliseconds. Send without `status`.
+
+          rejection_reason: Short reason recorded with a denial. Only valid when `status` is `DENIED`.
+              Maximum 255 characters.
+
+          review_note: Private note recorded with a denial. Only valid when `status` is `DENIED`;
+              never shown to the applicant. Maximum 500 characters.
+
+          status: The decision. `APPROVED` enrolls the applicant as an affiliate; `DENIED` closes
+              the application.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not application_id:
+            raise ValueError(f"Expected a non-empty value for `application_id` but received {application_id!r}")
+        return self._patch(
+            path_template(
+                "/campaign/{id}/affiliate-applications/{application_id}",
+                id=id,
+                application_id=application_id,
+            ),
+            body=maybe_transform(
+                {
+                    "allow_immediate_reapply": allow_immediate_reapply,
+                    "reapply_allowed_at": reapply_allowed_at,
+                    "rejection_reason": rejection_reason,
+                    "review_note": review_note,
+                    "status": status,
+                },
+                campaign_review_affiliate_application_params.CampaignReviewAffiliateApplicationParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AffiliateApplication,
+        )
+
+    def list_affiliate_invites(
+        self,
+        id: str,
+        *,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        status: Literal["PENDING", "ACCEPTED", "EXPIRED", "REVOKED"] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateInviteListResponse:
+        """
+        Lists an affiliate program's enrollment invites, newest first.
+
+        Args:
+          limit: How many invites to return per page (1-100).
+
+          offset: Offset number used to skip through a result set.
+
+          status: Only return invites with this status.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._get(
+            path_template("/campaign/{id}/affiliate-invites", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "limit": limit,
+                        "offset": offset,
+                        "status": status,
+                    },
+                    campaign_list_affiliate_invites_params.CampaignListAffiliateInvitesParams,
+                ),
+            ),
+            cast_to=AffiliateInviteListResponse,
+        )
+
+    def create_affiliate_invite(
+        self,
+        id: str,
+        *,
+        email: str,
+        first_name: str | Omit = omit,
+        last_name: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateInvite:
+        """
+        Invites someone to join the affiliate program. GrowSurf emails them a single-use
+        accept link; accepting it enrolls them as an approved affiliate without going
+        through the public application. One active invite can exist per email address.
+
+        Args:
+          email: Valid email address to invite. Maximum 255 characters.
+
+          first_name: Invitee first name, used in the invite email. Maximum 255 characters.
+
+          last_name: Invitee last name. Maximum 255 characters.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._post(
+            path_template("/campaign/{id}/affiliate-invites", id=id),
+            body=maybe_transform(
+                {
+                    "email": email,
+                    "first_name": first_name,
+                    "last_name": last_name,
+                },
+                campaign_create_affiliate_invite_params.CampaignCreateAffiliateInviteParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AffiliateInvite,
+        )
+
+    def revoke_affiliate_invite(
+        self,
+        invite_id: str,
+        *,
+        id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateInvite:
+        """
+        Revokes a pending invite. Its emailed accept link stops working immediately.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not invite_id:
+            raise ValueError(f"Expected a non-empty value for `invite_id` but received {invite_id!r}")
+        return self._delete(
+            path_template(
+                "/campaign/{id}/affiliate-invites/{invite_id}",
+                id=id,
+                invite_id=invite_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AffiliateInvite,
+        )
+
+    def resend_affiliate_invite(
+        self,
+        invite_id: str,
+        *,
+        id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateInvite:
+        """
+        Re-sends a pending invite with a fresh accept link (the previous link stops
+        working). Resends are rate limited per invite; retry after a few minutes if a
+        resend was just sent.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not invite_id:
+            raise ValueError(f"Expected a non-empty value for `invite_id` but received {invite_id!r}")
+        return self._post(
+            path_template(
+                "/campaign/{id}/affiliate-invites/{invite_id}/resend",
+                id=id,
+                invite_id=invite_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AffiliateInvite,
         )
 
 
@@ -898,7 +1274,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Campaign:
         """
-        Creates a new program, plus any optional program rewards. The new program is
+        Creates a new program, plus any optional campaign rewards. The new program is
         created in `DRAFT` status and owned by the API key's bound team.
 
         Args:
@@ -1321,7 +1697,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         *,
         limit: int | Omit = omit,
         next_id: str | Omit = omit,
-        status: Literal["UPCOMING", "QUEUED", "ISSUED", "FAILED"] | Omit = omit,
+        status: Literal["UPCOMING", "QUEUED", "ISSUED", "FAILED", "REVERSED"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1467,7 +1843,11 @@ class AsyncCampaignResource(AsyncAPIResource):
         """
         Retrieves analytics for a program. Pass `interval` to also get a time-series
         (`series`) alongside the totals, and `include` to add previous-period totals,
-        status breakdowns, or derived rates — useful for detecting trends over time.
+        status breakdowns, derived rates, or email performance. Add `email` to `include`
+        for `sent` (accepted for delivery), `delivered`, `opened`, `clicked`, `bounced`,
+        and `spamComplaints` metrics plus per-email-type breakdowns. Email rates are
+        ratios from `0` to `1`, and `isPartial` identifies windows that begin before
+        complete coverage.
 
         Args:
           days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.
@@ -1475,11 +1855,15 @@ class AsyncCampaignResource(AsyncAPIResource):
           end_date: End date of the analytics timeframe as a Unix timestamp in milliseconds.
               Required if `days` is not set.
 
-          include: Comma-separated list of optional enrichments (opt-in to keep the default
-              response lean). Any of `previousPeriod` (totals for the equal-length window
-              immediately before the requested one), `statusCounts` (reward and, for affiliate
-              programs, affiliate/commission/payout status breakdowns), and `rates` (derived
-              referral rates).
+          include: Comma-separated list of optional data to include: `previousPeriod` adds
+              totals for the equal-length window immediately before the requested one;
+              `statusCounts` adds reward (and, for affiliate programs,
+              affiliate/commission/payout) status breakdowns; `rates` adds derived referral
+              rates; `email` adds `sent`, `delivered`, `opened`, `clicked`, `bounced`,
+              `spamComplaints`, and per-email-type metrics. When `email` and an interval are
+              both requested, each `series` item also contains counts for emails sent during
+              that period. Combine `email` with `previousPeriod` to include the same email
+              metrics in both windows.
 
           interval: When set to `day`, `week`, or `month`, the response also includes a `series`
               array with per-period totals. Defaults to `total` (no series).
@@ -1516,6 +1900,366 @@ class AsyncCampaignResource(AsyncAPIResource):
                 ),
             ),
             cast_to=CampaignRetrieveAnalyticsResponse,
+        )
+
+    async def list_affiliate_applications(
+        self,
+        id: str,
+        *,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        status: Literal["PENDING", "APPROVED", "DENIED"] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateApplicationListResponse:
+        """
+        Lists an affiliate program's applications, newest first. Applications exist on
+        programs that review public signups (an `affiliateApplicationMode` of
+        `MANUAL_REVIEW` or `AUTO_APPROVE`). A pending applicant is not a participant
+        until their application is approved.
+
+        Args:
+          limit: How many applications to return per page (1-100).
+
+          offset: Offset number used to skip through a result set.
+
+          status: Only return applications with this status.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._get(
+            path_template("/campaign/{id}/affiliate-applications", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {
+                        "limit": limit,
+                        "offset": offset,
+                        "status": status,
+                    },
+                    campaign_list_affiliate_applications_params.CampaignListAffiliateApplicationsParams,
+                ),
+            ),
+            cast_to=AffiliateApplicationListResponse,
+        )
+
+    async def retrieve_affiliate_application(
+        self,
+        application_id: str,
+        *,
+        id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateApplication:
+        """
+        Returns one affiliate application, including its submitted form answers.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not application_id:
+            raise ValueError(f"Expected a non-empty value for `application_id` but received {application_id!r}")
+        return await self._get(
+            path_template(
+                "/campaign/{id}/affiliate-applications/{application_id}",
+                id=id,
+                application_id=application_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AffiliateApplication,
+        )
+
+    async def review_affiliate_application(
+        self,
+        application_id: str,
+        *,
+        id: str,
+        allow_immediate_reapply: bool | Omit = omit,
+        reapply_allowed_at: int | Omit = omit,
+        rejection_reason: str | Omit = omit,
+        review_note: str | Omit = omit,
+        status: Literal["APPROVED", "DENIED"] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateApplication:
+        """
+        Decides a pending application. Set `status` to `APPROVED` to enroll the applicant
+        (this creates the participant, or upgrades an existing participant with the same
+        email), or to `DENIED` with an optional `rejectionReason`. A denied applicant may
+        reapply after the program's reapplication cooldown; send an earlier
+        `reapplyAllowedAt` (without `status`) to shorten that wait for one applicant.
+        Provide exactly one of `status` or `reapplyAllowedAt`. Denial-only fields are
+        only valid with `status` set to `DENIED`. Approval is idempotent: repeating it
+        returns the same participant.
+
+        Args:
+          allow_immediate_reapply: When denying, let the applicant reapply right away instead of waiting out the
+              program's reapplication cooldown. Only valid when `status` is `DENIED`.
+
+          reapply_allowed_at: For an already-denied application, move the reapplication window to this earlier
+              time, in Unix milliseconds. Send without `status`.
+
+          rejection_reason: Short reason recorded with a denial. Only valid when `status` is `DENIED`.
+              Maximum 255 characters.
+
+          review_note: Private note recorded with a denial. Only valid when `status` is `DENIED`;
+              never shown to the applicant. Maximum 500 characters.
+
+          status: The decision. `APPROVED` enrolls the applicant as an affiliate; `DENIED` closes
+              the application.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not application_id:
+            raise ValueError(f"Expected a non-empty value for `application_id` but received {application_id!r}")
+        return await self._patch(
+            path_template(
+                "/campaign/{id}/affiliate-applications/{application_id}",
+                id=id,
+                application_id=application_id,
+            ),
+            body=await async_maybe_transform(
+                {
+                    "allow_immediate_reapply": allow_immediate_reapply,
+                    "reapply_allowed_at": reapply_allowed_at,
+                    "rejection_reason": rejection_reason,
+                    "review_note": review_note,
+                    "status": status,
+                },
+                campaign_review_affiliate_application_params.CampaignReviewAffiliateApplicationParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AffiliateApplication,
+        )
+
+    async def list_affiliate_invites(
+        self,
+        id: str,
+        *,
+        limit: int | Omit = omit,
+        offset: int | Omit = omit,
+        status: Literal["PENDING", "ACCEPTED", "EXPIRED", "REVOKED"] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateInviteListResponse:
+        """
+        Lists an affiliate program's enrollment invites, newest first.
+
+        Args:
+          limit: How many invites to return per page (1-100).
+
+          offset: Offset number used to skip through a result set.
+
+          status: Only return invites with this status.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._get(
+            path_template("/campaign/{id}/affiliate-invites", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {
+                        "limit": limit,
+                        "offset": offset,
+                        "status": status,
+                    },
+                    campaign_list_affiliate_invites_params.CampaignListAffiliateInvitesParams,
+                ),
+            ),
+            cast_to=AffiliateInviteListResponse,
+        )
+
+    async def create_affiliate_invite(
+        self,
+        id: str,
+        *,
+        email: str,
+        first_name: str | Omit = omit,
+        last_name: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateInvite:
+        """
+        Invites someone to join the affiliate program. GrowSurf emails them a single-use
+        accept link; accepting it enrolls them as an approved affiliate without going
+        through the public application. One active invite can exist per email address.
+
+        Args:
+          email: Valid email address to invite. Maximum 255 characters.
+
+          first_name: Invitee first name, used in the invite email. Maximum 255 characters.
+
+          last_name: Invitee last name. Maximum 255 characters.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._post(
+            path_template("/campaign/{id}/affiliate-invites", id=id),
+            body=await async_maybe_transform(
+                {
+                    "email": email,
+                    "first_name": first_name,
+                    "last_name": last_name,
+                },
+                campaign_create_affiliate_invite_params.CampaignCreateAffiliateInviteParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AffiliateInvite,
+        )
+
+    async def revoke_affiliate_invite(
+        self,
+        invite_id: str,
+        *,
+        id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateInvite:
+        """
+        Revokes a pending invite. Its emailed accept link stops working immediately.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not invite_id:
+            raise ValueError(f"Expected a non-empty value for `invite_id` but received {invite_id!r}")
+        return await self._delete(
+            path_template(
+                "/campaign/{id}/affiliate-invites/{invite_id}",
+                id=id,
+                invite_id=invite_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AffiliateInvite,
+        )
+
+    async def resend_affiliate_invite(
+        self,
+        invite_id: str,
+        *,
+        id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AffiliateInvite:
+        """
+        Re-sends a pending invite with a fresh accept link (the previous link stops
+        working). Resends are rate limited per invite; retry after a few minutes if a
+        resend was just sent.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not invite_id:
+            raise ValueError(f"Expected a non-empty value for `invite_id` but received {invite_id!r}")
+        return await self._post(
+            path_template(
+                "/campaign/{id}/affiliate-invites/{invite_id}/resend",
+                id=id,
+                invite_id=invite_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AffiliateInvite,
         )
 
 
@@ -1558,6 +2302,27 @@ class CampaignResourceWithRawResponse:
         )
         self.retrieve_analytics = to_raw_response_wrapper(
             campaign.retrieve_analytics,
+        )
+        self.list_affiliate_applications = to_raw_response_wrapper(
+            campaign.list_affiliate_applications,
+        )
+        self.retrieve_affiliate_application = to_raw_response_wrapper(
+            campaign.retrieve_affiliate_application,
+        )
+        self.review_affiliate_application = to_raw_response_wrapper(
+            campaign.review_affiliate_application,
+        )
+        self.list_affiliate_invites = to_raw_response_wrapper(
+            campaign.list_affiliate_invites,
+        )
+        self.create_affiliate_invite = to_raw_response_wrapper(
+            campaign.create_affiliate_invite,
+        )
+        self.revoke_affiliate_invite = to_raw_response_wrapper(
+            campaign.revoke_affiliate_invite,
+        )
+        self.resend_affiliate_invite = to_raw_response_wrapper(
+            campaign.resend_affiliate_invite,
         )
 
     @cached_property
@@ -1645,6 +2410,27 @@ class AsyncCampaignResourceWithRawResponse:
         self.retrieve_analytics = async_to_raw_response_wrapper(
             campaign.retrieve_analytics,
         )
+        self.list_affiliate_applications = async_to_raw_response_wrapper(
+            campaign.list_affiliate_applications,
+        )
+        self.retrieve_affiliate_application = async_to_raw_response_wrapper(
+            campaign.retrieve_affiliate_application,
+        )
+        self.review_affiliate_application = async_to_raw_response_wrapper(
+            campaign.review_affiliate_application,
+        )
+        self.list_affiliate_invites = async_to_raw_response_wrapper(
+            campaign.list_affiliate_invites,
+        )
+        self.create_affiliate_invite = async_to_raw_response_wrapper(
+            campaign.create_affiliate_invite,
+        )
+        self.revoke_affiliate_invite = async_to_raw_response_wrapper(
+            campaign.revoke_affiliate_invite,
+        )
+        self.resend_affiliate_invite = async_to_raw_response_wrapper(
+            campaign.resend_affiliate_invite,
+        )
 
     @cached_property
     def participant(self) -> AsyncParticipantResourceWithRawResponse:
@@ -1731,6 +2517,27 @@ class CampaignResourceWithStreamingResponse:
         self.retrieve_analytics = to_streamed_response_wrapper(
             campaign.retrieve_analytics,
         )
+        self.list_affiliate_applications = to_streamed_response_wrapper(
+            campaign.list_affiliate_applications,
+        )
+        self.retrieve_affiliate_application = to_streamed_response_wrapper(
+            campaign.retrieve_affiliate_application,
+        )
+        self.review_affiliate_application = to_streamed_response_wrapper(
+            campaign.review_affiliate_application,
+        )
+        self.list_affiliate_invites = to_streamed_response_wrapper(
+            campaign.list_affiliate_invites,
+        )
+        self.create_affiliate_invite = to_streamed_response_wrapper(
+            campaign.create_affiliate_invite,
+        )
+        self.revoke_affiliate_invite = to_streamed_response_wrapper(
+            campaign.revoke_affiliate_invite,
+        )
+        self.resend_affiliate_invite = to_streamed_response_wrapper(
+            campaign.resend_affiliate_invite,
+        )
 
     @cached_property
     def participant(self) -> ParticipantResourceWithStreamingResponse:
@@ -1816,6 +2623,27 @@ class AsyncCampaignResourceWithStreamingResponse:
         )
         self.retrieve_analytics = async_to_streamed_response_wrapper(
             campaign.retrieve_analytics,
+        )
+        self.list_affiliate_applications = async_to_streamed_response_wrapper(
+            campaign.list_affiliate_applications,
+        )
+        self.retrieve_affiliate_application = async_to_streamed_response_wrapper(
+            campaign.retrieve_affiliate_application,
+        )
+        self.review_affiliate_application = async_to_streamed_response_wrapper(
+            campaign.review_affiliate_application,
+        )
+        self.list_affiliate_invites = async_to_streamed_response_wrapper(
+            campaign.list_affiliate_invites,
+        )
+        self.create_affiliate_invite = async_to_streamed_response_wrapper(
+            campaign.create_affiliate_invite,
+        )
+        self.revoke_affiliate_invite = async_to_streamed_response_wrapper(
+            campaign.revoke_affiliate_invite,
+        )
+        self.resend_affiliate_invite = async_to_streamed_response_wrapper(
+            campaign.resend_affiliate_invite,
         )
 
     @cached_property

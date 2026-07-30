@@ -32,10 +32,19 @@ class Reward(BaseModel):
 
     image_url: Optional[str] = FieldInfo(alias="imageUrl", default=None)
 
+    is_visible: Optional[bool] = FieldInfo(alias="isVisible", default=None)
+    """Whether the reward is enabled.
+
+    When `false`, the reward is disabled: hidden from participants (including those who
+    already earned it) and no longer awarded. Set `true` to make it visible and awardable.
+    """
+
     limit: Optional[int] = None
     """`-1` represents an unlimited reward in REST responses."""
 
-    limit_duration: Optional[Literal["IN_TOTAL", "PER_MONTH"]] = FieldInfo(alias="limitDuration", default=None)
+    limit_duration: Optional[Literal["IN_TOTAL", "PER_MONTH", "PER_YEAR"]] = FieldInfo(
+        alias="limitDuration", default=None
+    )
 
     next_milestone_prefix: Optional[str] = FieldInfo(alias="nextMilestonePrefix", default=None)
 
@@ -57,10 +66,11 @@ class Reward(BaseModel):
     referred_reward_upfront: Optional[bool] = FieldInfo(alias="referredRewardUpfront", default=None)
 
     referred_value: Optional[RewardTaxValuation] = FieldInfo(alias="referredValue", default=None)
-    """Tax valuation for the referred friend's side of a double-sided reward.
-
-    Defaults to not tax-reportable (a purchase rebate).
+    """Tax treatment override for the referred friend's side of a double-sided reward. Null inherits the program's confirmed default.
     """
+
+    title: Optional[str] = None
+    """The reward title (internal label)."""
 
     value: Optional[RewardTaxValuation] = None
     """Tax valuation for the reward (the referrer's side of a double-sided reward).

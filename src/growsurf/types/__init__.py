@@ -5,10 +5,17 @@ from __future__ import annotations
 from .team import Team as Team
 from .campaign import Campaign as Campaign
 from .referral_list import ReferralList as ReferralList
+from .email_analytics import (
+    EmailAnalytics as EmailAnalytics,
+    EmailAnalyticsByType as EmailAnalyticsByType,
+    EmailAnalyticsCounts as EmailAnalyticsCounts,
+)
+from .affiliate_invite import AffiliateInvite as AffiliateInvite
 from .participant_list import ParticipantList as ParticipantList
 from .team_update_params import TeamUpdateParams as TeamUpdateParams
 from .commission_structure import CommissionStructure as CommissionStructure
 from .account_create_params import AccountCreateParams as AccountCreateParams
+from .affiliate_application import AffiliateApplication as AffiliateApplication
 from .campaign_create_params import CampaignCreateParams as CampaignCreateParams
 from .campaign_list_response import CampaignListResponse as CampaignListResponse
 from .campaign_update_params import CampaignUpdateParams as CampaignUpdateParams
@@ -17,13 +24,28 @@ from .participant_payout_list import ParticipantPayoutList as ParticipantPayoutL
 from .rotate_api_key_response import RotateApiKeyResponse as RotateApiKeyResponse
 from .participant_commission_list import ParticipantCommissionList as ParticipantCommissionList
 from .verification_email_response import VerificationEmailResponse as VerificationEmailResponse
+from .affiliate_application_answer import AffiliateApplicationAnswer as AffiliateApplicationAnswer
 from .campaign_list_payouts_params import CampaignListPayoutsParams as CampaignListPayoutsParams
+from .affiliate_invite_list_response import AffiliateInviteListResponse as AffiliateInviteListResponse
 from .campaign_list_referrals_params import CampaignListReferralsParams as CampaignListReferralsParams
 from .campaign_list_commissions_params import CampaignListCommissionsParams as CampaignListCommissionsParams
 from .campaign_list_leaderboard_params import CampaignListLeaderboardParams as CampaignListLeaderboardParams
 from .campaign_list_participants_params import CampaignListParticipantsParams as CampaignListParticipantsParams
 from .campaign_retrieve_analytics_params import CampaignRetrieveAnalyticsParams as CampaignRetrieveAnalyticsParams
+from .affiliate_application_list_response import AffiliateApplicationListResponse as AffiliateApplicationListResponse
 from .campaign_retrieve_analytics_response import CampaignRetrieveAnalyticsResponse as CampaignRetrieveAnalyticsResponse
+from .campaign_list_affiliate_invites_params import (
+    CampaignListAffiliateInvitesParams as CampaignListAffiliateInvitesParams,
+)
+from .campaign_create_affiliate_invite_params import (
+    CampaignCreateAffiliateInviteParams as CampaignCreateAffiliateInviteParams,
+)
+from .campaign_list_affiliate_applications_params import (
+    CampaignListAffiliateApplicationsParams as CampaignListAffiliateApplicationsParams,
+)
+from .campaign_review_affiliate_application_params import (
+    CampaignReviewAffiliateApplicationParams as CampaignReviewAffiliateApplicationParams,
+)
 from .campaign_create_mobile_participant_token_params import (
     CampaignCreateMobileParticipantTokenParams as CampaignCreateMobileParticipantTokenParams,
 )

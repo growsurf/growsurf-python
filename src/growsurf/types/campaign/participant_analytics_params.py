@@ -21,11 +21,19 @@ class ParticipantAnalyticsParams(TypedDict, total=False):
     Required if `days` is not set.
     """
 
-    include: Literal["series"]
-    """Set to `series` to also return this participant's own activity per period."""
+    include: str
+    """Comma-separated optional data.
+
+    `series` returns this participant's own activity per period; `email` returns
+    `sent`, `delivered`, `opened`, `clicked`, `bounced`, `spamComplaints`, and
+    per-email-type metrics attributed to the participant for the requested analytics
+    window (including invitations they sent). Request both in either order to add
+    email counts to every series item for emails sent during that period. Only
+    documented tokens are accepted; an unknown token returns `400`.
+    """
 
     interval: Literal["day", "week", "month"]
-    """Bucket size for the `series` (only used with `include=series`).
+    """Bucket size for the `series` (only used when `include` contains `series`).
 
     Defaults to `day`.
     """

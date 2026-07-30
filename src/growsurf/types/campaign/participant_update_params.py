@@ -14,6 +14,15 @@ __all__ = ["ParticipantUpdateParams"]
 class ParticipantUpdateParams(TypedDict, total=False):
     id: Required[str]
 
+    affiliate_status: Annotated[
+        Literal["APPROVED", "SUSPENDED", "BANNED"], PropertyInfo(alias="affiliateStatus")
+    ]
+    """Affiliate programs only. Sets the affiliate status.
+
+    `APPROVED` also enrolls a participant who is not yet an affiliate. `SUSPENDED` and
+    `BANNED` are rejected for non-affiliates.
+    """
+
     email: str
 
     first_name: Annotated[str, PropertyInfo(alias="firstName")]
@@ -26,9 +35,6 @@ class ParticipantUpdateParams(TypedDict, total=False):
     notes: str
     """Freeform internal notes about the participant (internal only, never exposed to
     participants)."""
-
-    paypal_email: Annotated[str, PropertyInfo(alias="paypalEmail")]
-    """The participant's PayPal email address, used for affiliate payouts."""
 
     referral_status: Annotated[
         Literal["CREDIT_PENDING", "CREDIT_AWARDED", "CREDIT_EXPIRED"], PropertyInfo(alias="referralStatus")
