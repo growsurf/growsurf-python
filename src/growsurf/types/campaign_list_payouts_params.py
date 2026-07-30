@@ -16,5 +16,5 @@ class CampaignListPayoutsParams(TypedDict, total=False):
     next_id: Annotated[str, PropertyInfo(alias="nextId")]
     """ID to start the next paged result set with."""
 
-    status: Literal["UPCOMING", "QUEUED", "ISSUED", "FAILED"]
+    status: Literal["UPCOMING", "QUEUED", "ISSUED", "FAILED", "REVERSED"]
     """Participant payout status."""

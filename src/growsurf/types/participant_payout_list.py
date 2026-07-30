@@ -23,7 +23,7 @@ class Payout(BaseModel):
 
     participant_id: str = FieldInfo(alias="participantId")
 
-    status: Literal["UPCOMING", "QUEUED", "ISSUED", "FAILED"]
+    status: Literal["UPCOMING", "QUEUED", "ISSUED", "FAILED", "REVERSED"]
 
     amount_in_campaign_currency: Optional[int] = FieldInfo(alias="amountInCampaignCurrency", default=None)
 
@@ -42,6 +42,8 @@ class Payout(BaseModel):
     provider: Optional[str] = None
 
     queued_at: Optional[int] = FieldInfo(alias="queuedAt", default=None)
+
+    reversed_at: Optional[int] = FieldInfo(alias="reversedAt", default=None)
 
 
 class ParticipantPayoutList(BaseModel):

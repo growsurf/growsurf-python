@@ -64,7 +64,10 @@ class TestDesign:
     def test_method_update(self, client: Growsurf) -> None:
         design = client.campaign.design.update(
             id="id",
-            body={"foo": "bar"},
+            body={
+                "login": {"heading": "Sign in", "buttonText": "Send sign-in link", "successHeading": "Check your email"},
+                "payoutDestinationConfirmation": {"headline": "Confirm your {{payoutProvider}} payout email"},
+            },
         )
         assert_matches_type(CampaignDesign, design, path=["response"])
 
@@ -158,7 +161,10 @@ class TestAsyncDesign:
     async def test_method_update(self, async_client: AsyncGrowsurf) -> None:
         design = await async_client.campaign.design.update(
             id="id",
-            body={"foo": "bar"},
+            body={
+                "login": {"heading": "Sign in", "buttonText": "Send sign-in link", "successHeading": "Check your email"},
+                "payoutDestinationConfirmation": {"headline": "Confirm your {{payoutProvider}} payout email"},
+            },
         )
         assert_matches_type(CampaignDesign, design, path=["response"])
 

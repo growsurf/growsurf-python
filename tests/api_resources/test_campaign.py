@@ -11,10 +11,14 @@ from growsurf import Growsurf, AsyncGrowsurf
 from tests.utils import assert_matches_type
 from growsurf.types import (
     ReferralList,
+    AffiliateInvite,
     ParticipantList,
+    AffiliateApplication,
     CampaignListResponse,
     ParticipantPayoutList,
     ParticipantCommissionList,
+    AffiliateInviteListResponse,
+    AffiliateApplicationListResponse,
     CampaignRetrieveAnalyticsResponse,
     CampaignCreateMobileParticipantTokenResponse,
 )
@@ -628,6 +632,391 @@ class TestCampaign:
                 id="",
             )
 
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_list_affiliate_applications(self, client: Growsurf) -> None:
+        campaign = client.campaign.list_affiliate_applications(
+            id="id",
+        )
+        assert_matches_type(AffiliateApplicationListResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_list_affiliate_applications_with_all_params(self, client: Growsurf) -> None:
+        campaign = client.campaign.list_affiliate_applications(
+            id="id",
+            limit=1,
+            offset=0,
+            status="PENDING",
+        )
+        assert_matches_type(AffiliateApplicationListResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_list_affiliate_applications(self, client: Growsurf) -> None:
+        response = client.campaign.with_raw_response.list_affiliate_applications(
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = response.parse()
+        assert_matches_type(AffiliateApplicationListResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_list_affiliate_applications(self, client: Growsurf) -> None:
+        with client.campaign.with_streaming_response.list_affiliate_applications(
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = response.parse()
+            assert_matches_type(AffiliateApplicationListResponse, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_list_affiliate_applications(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.with_raw_response.list_affiliate_applications(
+                id="",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_retrieve_affiliate_application(self, client: Growsurf) -> None:
+        campaign = client.campaign.retrieve_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+        )
+        assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_retrieve_affiliate_application(self, client: Growsurf) -> None:
+        response = client.campaign.with_raw_response.retrieve_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = response.parse()
+        assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_retrieve_affiliate_application(self, client: Growsurf) -> None:
+        with client.campaign.with_streaming_response.retrieve_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = response.parse()
+            assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_retrieve_affiliate_application(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.with_raw_response.retrieve_affiliate_application(
+                application_id="applicationId",
+                id="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `application_id` but received ''"):
+            client.campaign.with_raw_response.retrieve_affiliate_application(
+                application_id="",
+                id="campaignId",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_review_affiliate_application(self, client: Growsurf) -> None:
+        campaign = client.campaign.review_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+        )
+        assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_review_affiliate_application_with_all_params(self, client: Growsurf) -> None:
+        campaign = client.campaign.review_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+            allow_immediate_reapply=True,
+            reapply_allowed_at=0,
+            rejection_reason="rejectionReason",
+            review_note="reviewNote",
+            status="APPROVED",
+        )
+        assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_review_affiliate_application(self, client: Growsurf) -> None:
+        response = client.campaign.with_raw_response.review_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = response.parse()
+        assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_review_affiliate_application(self, client: Growsurf) -> None:
+        with client.campaign.with_streaming_response.review_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = response.parse()
+            assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_review_affiliate_application(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.with_raw_response.review_affiliate_application(
+                application_id="applicationId",
+                id="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `application_id` but received ''"):
+            client.campaign.with_raw_response.review_affiliate_application(
+                application_id="",
+                id="campaignId",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_list_affiliate_invites(self, client: Growsurf) -> None:
+        campaign = client.campaign.list_affiliate_invites(
+            id="id",
+        )
+        assert_matches_type(AffiliateInviteListResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_list_affiliate_invites_with_all_params(self, client: Growsurf) -> None:
+        campaign = client.campaign.list_affiliate_invites(
+            id="id",
+            limit=1,
+            offset=0,
+            status="PENDING",
+        )
+        assert_matches_type(AffiliateInviteListResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_list_affiliate_invites(self, client: Growsurf) -> None:
+        response = client.campaign.with_raw_response.list_affiliate_invites(
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = response.parse()
+        assert_matches_type(AffiliateInviteListResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_list_affiliate_invites(self, client: Growsurf) -> None:
+        with client.campaign.with_streaming_response.list_affiliate_invites(
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = response.parse()
+            assert_matches_type(AffiliateInviteListResponse, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_list_affiliate_invites(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.with_raw_response.list_affiliate_invites(
+                id="",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_create_affiliate_invite(self, client: Growsurf) -> None:
+        campaign = client.campaign.create_affiliate_invite(
+            id="id",
+            email="dev@stainless.com",
+        )
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_create_affiliate_invite_with_all_params(self, client: Growsurf) -> None:
+        campaign = client.campaign.create_affiliate_invite(
+            id="id",
+            email="dev@stainless.com",
+            first_name="firstName",
+            last_name="lastName",
+        )
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_create_affiliate_invite(self, client: Growsurf) -> None:
+        response = client.campaign.with_raw_response.create_affiliate_invite(
+            id="id",
+            email="dev@stainless.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = response.parse()
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_create_affiliate_invite(self, client: Growsurf) -> None:
+        with client.campaign.with_streaming_response.create_affiliate_invite(
+            id="id",
+            email="dev@stainless.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = response.parse()
+            assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_create_affiliate_invite(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.with_raw_response.create_affiliate_invite(
+                id="",
+                email="dev@stainless.com",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_revoke_affiliate_invite(self, client: Growsurf) -> None:
+        campaign = client.campaign.revoke_affiliate_invite(
+            invite_id="inviteId",
+            id="campaignId",
+        )
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_revoke_affiliate_invite(self, client: Growsurf) -> None:
+        response = client.campaign.with_raw_response.revoke_affiliate_invite(
+            invite_id="inviteId",
+            id="campaignId",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = response.parse()
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_revoke_affiliate_invite(self, client: Growsurf) -> None:
+        with client.campaign.with_streaming_response.revoke_affiliate_invite(
+            invite_id="inviteId",
+            id="campaignId",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = response.parse()
+            assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_revoke_affiliate_invite(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.with_raw_response.revoke_affiliate_invite(
+                invite_id="inviteId",
+                id="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `invite_id` but received ''"):
+            client.campaign.with_raw_response.revoke_affiliate_invite(
+                invite_id="",
+                id="campaignId",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_resend_affiliate_invite(self, client: Growsurf) -> None:
+        campaign = client.campaign.resend_affiliate_invite(
+            invite_id="inviteId",
+            id="campaignId",
+        )
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_resend_affiliate_invite(self, client: Growsurf) -> None:
+        response = client.campaign.with_raw_response.resend_affiliate_invite(
+            invite_id="inviteId",
+            id="campaignId",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = response.parse()
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_resend_affiliate_invite(self, client: Growsurf) -> None:
+        with client.campaign.with_streaming_response.resend_affiliate_invite(
+            invite_id="inviteId",
+            id="campaignId",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = response.parse()
+            assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_resend_affiliate_invite(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.with_raw_response.resend_affiliate_invite(
+                invite_id="inviteId",
+                id="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `invite_id` but received ''"):
+            client.campaign.with_raw_response.resend_affiliate_invite(
+                invite_id="",
+                id="campaignId",
+            )
+
 
 class TestAsyncCampaign:
     parametrize = pytest.mark.parametrize(
@@ -1234,4 +1623,389 @@ class TestAsyncCampaign:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.campaign.with_raw_response.retrieve_analytics(
                 id="",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_list_affiliate_applications(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.list_affiliate_applications(
+            id="id",
+        )
+        assert_matches_type(AffiliateApplicationListResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_list_affiliate_applications_with_all_params(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.list_affiliate_applications(
+            id="id",
+            limit=1,
+            offset=0,
+            status="PENDING",
+        )
+        assert_matches_type(AffiliateApplicationListResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_list_affiliate_applications(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.with_raw_response.list_affiliate_applications(
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = await response.parse()
+        assert_matches_type(AffiliateApplicationListResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_list_affiliate_applications(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.with_streaming_response.list_affiliate_applications(
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = await response.parse()
+            assert_matches_type(AffiliateApplicationListResponse, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_list_affiliate_applications(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.with_raw_response.list_affiliate_applications(
+                id="",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_retrieve_affiliate_application(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.retrieve_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+        )
+        assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_retrieve_affiliate_application(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.with_raw_response.retrieve_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = await response.parse()
+        assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_retrieve_affiliate_application(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.with_streaming_response.retrieve_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = await response.parse()
+            assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_retrieve_affiliate_application(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.with_raw_response.retrieve_affiliate_application(
+                application_id="applicationId",
+                id="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `application_id` but received ''"):
+            await async_client.campaign.with_raw_response.retrieve_affiliate_application(
+                application_id="",
+                id="campaignId",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_review_affiliate_application(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.review_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+        )
+        assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_review_affiliate_application_with_all_params(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.review_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+            allow_immediate_reapply=True,
+            reapply_allowed_at=0,
+            rejection_reason="rejectionReason",
+            review_note="reviewNote",
+            status="APPROVED",
+        )
+        assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_review_affiliate_application(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.with_raw_response.review_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = await response.parse()
+        assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_review_affiliate_application(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.with_streaming_response.review_affiliate_application(
+            application_id="applicationId",
+            id="campaignId",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = await response.parse()
+            assert_matches_type(AffiliateApplication, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_review_affiliate_application(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.with_raw_response.review_affiliate_application(
+                application_id="applicationId",
+                id="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `application_id` but received ''"):
+            await async_client.campaign.with_raw_response.review_affiliate_application(
+                application_id="",
+                id="campaignId",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_list_affiliate_invites(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.list_affiliate_invites(
+            id="id",
+        )
+        assert_matches_type(AffiliateInviteListResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_list_affiliate_invites_with_all_params(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.list_affiliate_invites(
+            id="id",
+            limit=1,
+            offset=0,
+            status="PENDING",
+        )
+        assert_matches_type(AffiliateInviteListResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_list_affiliate_invites(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.with_raw_response.list_affiliate_invites(
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = await response.parse()
+        assert_matches_type(AffiliateInviteListResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_list_affiliate_invites(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.with_streaming_response.list_affiliate_invites(
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = await response.parse()
+            assert_matches_type(AffiliateInviteListResponse, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_list_affiliate_invites(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.with_raw_response.list_affiliate_invites(
+                id="",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_create_affiliate_invite(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.create_affiliate_invite(
+            id="id",
+            email="dev@stainless.com",
+        )
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_create_affiliate_invite_with_all_params(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.create_affiliate_invite(
+            id="id",
+            email="dev@stainless.com",
+            first_name="firstName",
+            last_name="lastName",
+        )
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_create_affiliate_invite(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.with_raw_response.create_affiliate_invite(
+            id="id",
+            email="dev@stainless.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = await response.parse()
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_create_affiliate_invite(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.with_streaming_response.create_affiliate_invite(
+            id="id",
+            email="dev@stainless.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = await response.parse()
+            assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_create_affiliate_invite(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.with_raw_response.create_affiliate_invite(
+                id="",
+                email="dev@stainless.com",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_revoke_affiliate_invite(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.revoke_affiliate_invite(
+            invite_id="inviteId",
+            id="campaignId",
+        )
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_revoke_affiliate_invite(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.with_raw_response.revoke_affiliate_invite(
+            invite_id="inviteId",
+            id="campaignId",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = await response.parse()
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_revoke_affiliate_invite(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.with_streaming_response.revoke_affiliate_invite(
+            invite_id="inviteId",
+            id="campaignId",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = await response.parse()
+            assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_revoke_affiliate_invite(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.with_raw_response.revoke_affiliate_invite(
+                invite_id="inviteId",
+                id="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `invite_id` but received ''"):
+            await async_client.campaign.with_raw_response.revoke_affiliate_invite(
+                invite_id="",
+                id="campaignId",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_resend_affiliate_invite(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.resend_affiliate_invite(
+            invite_id="inviteId",
+            id="campaignId",
+        )
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_resend_affiliate_invite(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.with_raw_response.resend_affiliate_invite(
+            invite_id="inviteId",
+            id="campaignId",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = await response.parse()
+        assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_resend_affiliate_invite(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.with_streaming_response.resend_affiliate_invite(
+            invite_id="inviteId",
+            id="campaignId",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = await response.parse()
+            assert_matches_type(AffiliateInvite, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_resend_affiliate_invite(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.with_raw_response.resend_affiliate_invite(
+                invite_id="inviteId",
+                id="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `invite_id` but received ''"):
+            await async_client.campaign.with_raw_response.resend_affiliate_invite(
+                invite_id="",
+                id="campaignId",
             )

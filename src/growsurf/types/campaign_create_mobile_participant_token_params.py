@@ -19,6 +19,14 @@ class CampaignCreateMobileParticipantTokenParams(TypedDict, total=False):
 
     ip_address: Annotated[str, PropertyInfo(alias="ipAddress")]
 
+    is_affiliate: Annotated[bool, PropertyInfo(alias="isAffiliate")]
+    """Affiliate programs only. Controls affiliate enrollment for a new participant.
+
+    `true` enrolls the participant with `affiliateStatus: APPROVED`; `false` creates a
+    non-affiliate without `affiliateStatus`. Existing participants are returned
+    unchanged.
+    """
+
     last_name: Annotated[str, PropertyInfo(alias="lastName")]
 
     metadata: Dict[str, object]

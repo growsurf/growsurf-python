@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import Field as FieldInfo
 
@@ -22,8 +22,17 @@ class RewardTaxValuation(BaseModel):
     `None` = no manual value.
     """
 
-    is_tax_reportable: Optional[bool] = FieldInfo(alias="isTaxReportable", default=None)
-    """Whether the reward's value counts toward 1099 thresholds/totals.
+    tax_character: Optional[
+        Literal[
+            "NONEMPLOYEE_SERVICES",
+            "PRIZE_OR_AWARD",
+            "PURCHASE_REBATE",
+            "OTHER_INCOME",
+            "REVIEW_REQUIRED",
+        ]
+    ] = FieldInfo(alias="taxCharacter", default=None)
+    """The reason the recipient earns this reward.
 
-    `None` = use the smart default for the reward's source.
+    `None` inherits the program's confirmed tax treatment for configurable non-commission
+    rewards. Commission rewards always use `NONEMPLOYEE_SERVICES`.
     """

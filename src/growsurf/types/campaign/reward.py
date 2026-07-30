@@ -44,6 +44,13 @@ class Reward(BaseModel):
     image_url: Optional[str] = FieldInfo(alias="imageUrl", default=None)
     """The reward image URL."""
 
+    is_visible: Optional[bool] = FieldInfo(alias="isVisible", default=None)
+    """Whether the reward is enabled.
+
+    When `false`, the reward is disabled: hidden from participants (including those who
+    already earned it) and no longer awarded. Set `true` to make it visible and awardable.
+    """
+
     limit: Optional[int] = None
     """The number of times a participant can earn this reward (overridden when `isUnlimited` is `true`).
 
@@ -95,10 +102,11 @@ class Reward(BaseModel):
     """
 
     referred_value: Optional[RewardTaxValuation] = FieldInfo(alias="referredValue", default=None)
-    """Tax valuation for the referred friend's side of a double-sided reward.
-
-    Defaults to not tax-reportable (a purchase rebate).
+    """Tax treatment override for the referred friend's side of a double-sided reward. Null inherits the program's confirmed default.
     """
+
+    title: Optional[str] = None
+    """The reward title (internal label)."""
 
     value: Optional[RewardTaxValuation] = None
     """Tax valuation for the reward (the referrer's side of a double-sided reward).

@@ -34,6 +34,7 @@ from ...types.campaign import (
     participant_list_activity_logs_params,
     participant_record_transaction_params,
     participant_refund_transaction_params,
+    participant_request_payout_destination_confirmation_params,
 )
 from ...types.referral_list import ReferralList
 from ...types.campaign.participant import Participant
@@ -50,6 +51,10 @@ from ...types.campaign.participant_activity_logs_response import ParticipantActi
 from ...types.campaign.participant_trigger_referral_response import ParticipantTriggerReferralResponse
 from ...types.campaign.participant_record_transaction_response import ParticipantRecordTransactionResponse
 from ...types.campaign.participant_refund_transaction_response import ParticipantRefundTransactionResponse
+from ...types.campaign.participant_get_payout_destination_response import ParticipantGetPayoutDestinationResponse
+from ...types.campaign.participant_request_payout_destination_confirmation_response import (
+    ParticipantRequestPayoutDestinationConfirmationResponse,
+)
 
 __all__ = ["ParticipantResource", "AsyncParticipantResource"]
 
@@ -121,12 +126,12 @@ class ParticipantResource(SyncAPIResource):
         participant_id_or_email: str,
         *,
         id: str,
+        affiliate_status: Literal["APPROVED", "SUSPENDED", "BANNED"] | Omit = omit,
         email: str | Omit = omit,
         first_name: str | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
         notes: str | Omit = omit,
-        paypal_email: str | Omit = omit,
         referral_status: Literal["CREDIT_PENDING", "CREDIT_AWARDED", "CREDIT_EXPIRED"] | Omit = omit,
         referred_by: str | Omit = omit,
         unsubscribed: bool | Omit = omit,
@@ -139,15 +144,21 @@ class ParticipantResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Participant:
         """
-        Updates a participant by GrowSurf participant ID or email address.
+        Updates a participant by GrowSurf participant ID or email address. For affiliate
+        programs, set `affiliateStatus` to `APPROVED`, `SUSPENDED`, or `BANNED`.
+        `APPROVED` enrolls the participant as an affiliate. `SUSPENDED` and `BANNED`
+        require an existing affiliate. This endpoint does not accept `isAffiliate`, and
+        affiliate enrollment cannot be removed through REST.
 
         Args:
+          affiliate_status: Affiliate programs only. Sets the affiliate status. `APPROVED` also enrolls a
+              participant who is not yet an affiliate. `SUSPENDED` and `BANNED` are rejected for
+              non-affiliates.
+
           metadata: Shallow custom metadata object.
 
           notes: Freeform internal notes about the participant (internal only, never exposed to
               participants).
-
-          paypal_email: The participant's PayPal email address, used for affiliate payouts.
 
           extra_headers: Send extra headers
 
@@ -171,12 +182,12 @@ class ParticipantResource(SyncAPIResource):
             ),
             body=maybe_transform(
                 {
+                    "affiliate_status": affiliate_status,
                     "email": email,
                     "first_name": first_name,
                     "last_name": last_name,
                     "metadata": metadata,
                     "notes": notes,
-                    "paypal_email": paypal_email,
                     "referral_status": referral_status,
                     "referred_by": referred_by,
                     "unsubscribed": unsubscribed,
@@ -286,6 +297,7 @@ class ParticipantResource(SyncAPIResource):
         fingerprint: str | Omit = omit,
         first_name: str | Omit = omit,
         ip_address: str | Omit = omit,
+        is_affiliate: bool | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
         mobile_instance_id: str | Omit = omit,
@@ -300,9 +312,20 @@ class ParticipantResource(SyncAPIResource):
     ) -> Participant:
         """
         Adds a new participant to the program. If the email already exists, the existing
-        participant is returned.
+        participant is returned unchanged. For affiliate programs, set `isAffiliate` to
+        `true` to enroll a new participant as an approved affiliate or `false` to create
+        a non-affiliate. If you omit `isAffiliate`, a valid `referredBy` creates a
+        referred non-affiliate; without a valid referrer, the new participant is enrolled
+        as an approved affiliate. You can send a valid `referredBy` with
+        `isAffiliate: true` to keep the referral attribution and enroll the participant
+        as an affiliate.
 
         Args:
+          is_affiliate: Affiliate programs only. Controls affiliate enrollment for a new participant.
+              `true` enrolls the participant with `affiliateStatus: APPROVED`; `false` creates a
+              non-affiliate without `affiliateStatus`. Existing participants are returned
+              unchanged.
+
           metadata: Shallow custom metadata object.
 
           mobile_instance_id: Optional app-install scoped identifier for native mobile anti-fraud. Recommended
@@ -334,6 +357,7 @@ class ParticipantResource(SyncAPIResource):
                     "fingerprint": fingerprint,
                     "first_name": first_name,
                     "ip_address": ip_address,
+                    "is_affiliate": is_affiliate,
                     "last_name": last_name,
                     "metadata": metadata,
                     "mobile_instance_id": mobile_instance_id,
@@ -418,7 +442,7 @@ class ParticipantResource(SyncAPIResource):
         id: str,
         limit: int | Omit = omit,
         next_id: str | Omit = omit,
-        status: Literal["UPCOMING", "QUEUED", "ISSUED", "FAILED"] | Omit = omit,
+        status: Literal["UPCOMING", "QUEUED", "ISSUED", "FAILED", "REVERSED"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1105,7 +1129,7 @@ class ParticipantResource(SyncAPIResource):
         id: str,
         days: int | Omit = omit,
         end_date: int | Omit = omit,
-        include: Literal["series"] | Omit = omit,
+        include: str | Omit = omit,
         interval: Literal["day", "week", "month"] | Omit = omit,
         start_date: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1117,9 +1141,12 @@ class ParticipantResource(SyncAPIResource):
     ) -> ParticipantAnalyticsResponse:
         """
         Retrieves analytics for a single participant — all-time engagement counters,
-        leaderboard ranks, and per-channel share counts (plus affiliate money metrics
-        for affiliate programs). Useful for segmenting and re-engaging participants.
-        Pass `include=series` to also get this participant's own activity over time.
+        leaderboard ranks, and per-channel share counts (plus affiliate revenue,
+        commission, and payout metrics for affiliate programs). Pass `include=email`
+        for `sent` (accepted for delivery), `delivered`, `opened`, `clicked`,
+        `bounced`, and `spamComplaints` metrics attributed to this participant,
+        including invitations they sent. Use `include=email,series` to include the
+        same counts in each UTC series bucket.
 
         Args:
           days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.
@@ -1127,10 +1154,16 @@ class ParticipantResource(SyncAPIResource):
           end_date: End date of the analytics timeframe as a Unix timestamp in milliseconds.
               Required if `days` is not set.
 
-          include: Set to `series` to also return this participant's own activity per period.
+          include: Comma-separated optional data. `series` returns this participant's own
+              activity per period; `email` returns `sent`, `delivered`, `opened`, `clicked`,
+              `bounced`, `spamComplaints`, and per-email-type metrics attributed to the
+              participant for the requested analytics window (including invitations they
+              sent). Request both in either order to add email counts to every series item
+              for emails sent during that period. Only documented tokens are accepted; an
+              unknown token returns `400`.
 
-          interval: Bucket size for the `series` (only used with `include=series`). Defaults to
-              `day`.
+          interval: Bucket size for the `series` (only used when `include` contains `series`).
+              Defaults to `day`.
 
           start_date: Start date of the analytics timeframe as a Unix timestamp in milliseconds.
               Required if `days` is not set.
@@ -1172,6 +1205,104 @@ class ParticipantResource(SyncAPIResource):
                 ),
             ),
             cast_to=ParticipantAnalyticsResponse,
+        )
+
+    def get_payout_destination(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantGetPayoutDestinationResponse:
+        """
+        Returns a participant's payout-destination status across every payout provider
+        enabled for the program (PayPal and/or Wise). For each provider it reports the
+        current status, the confirmed claim email, the legal recipient type, and — when a
+        delivery bounced or a recipient was invalidated — the repair reason.
+        `activeProvider` is the provider that currently gets paid, or `null` until the
+        participant confirms one.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return self._get(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/payout-destination",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ParticipantGetPayoutDestinationResponse,
+        )
+
+    def request_payout_destination_confirmation(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        provider: Literal["PAYPAL", "WISECOM"],
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantRequestPayoutDestinationConfirmationResponse:
+        """
+        Sends the participant a one-time link to confirm their payout destination for the
+        chosen provider. Only the participant can open the link and confirm — this
+        endpoint just triggers the message. The provider must be enabled for the program.
+
+        Args:
+          provider: The payout provider the participant should confirm a destination for.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return self._post(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/payout-destination/request-confirmation",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            body=maybe_transform(
+                {"provider": provider},
+                participant_request_payout_destination_confirmation_params.ParticipantRequestPayoutDestinationConfirmationParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ParticipantRequestPayoutDestinationConfirmationResponse,
         )
 
 
@@ -1242,12 +1373,12 @@ class AsyncParticipantResource(AsyncAPIResource):
         participant_id_or_email: str,
         *,
         id: str,
+        affiliate_status: Literal["APPROVED", "SUSPENDED", "BANNED"] | Omit = omit,
         email: str | Omit = omit,
         first_name: str | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
         notes: str | Omit = omit,
-        paypal_email: str | Omit = omit,
         referral_status: Literal["CREDIT_PENDING", "CREDIT_AWARDED", "CREDIT_EXPIRED"] | Omit = omit,
         referred_by: str | Omit = omit,
         unsubscribed: bool | Omit = omit,
@@ -1260,15 +1391,21 @@ class AsyncParticipantResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Participant:
         """
-        Updates a participant by GrowSurf participant ID or email address.
+        Updates a participant by GrowSurf participant ID or email address. For affiliate
+        programs, set `affiliateStatus` to `APPROVED`, `SUSPENDED`, or `BANNED`.
+        `APPROVED` enrolls the participant as an affiliate. `SUSPENDED` and `BANNED`
+        require an existing affiliate. This endpoint does not accept `isAffiliate`, and
+        affiliate enrollment cannot be removed through REST.
 
         Args:
+          affiliate_status: Affiliate programs only. Sets the affiliate status. `APPROVED` also enrolls a
+              participant who is not yet an affiliate. `SUSPENDED` and `BANNED` are rejected for
+              non-affiliates.
+
           metadata: Shallow custom metadata object.
 
           notes: Freeform internal notes about the participant (internal only, never exposed to
               participants).
-
-          paypal_email: The participant's PayPal email address, used for affiliate payouts.
 
           extra_headers: Send extra headers
 
@@ -1292,12 +1429,12 @@ class AsyncParticipantResource(AsyncAPIResource):
             ),
             body=await async_maybe_transform(
                 {
+                    "affiliate_status": affiliate_status,
                     "email": email,
                     "first_name": first_name,
                     "last_name": last_name,
                     "metadata": metadata,
                     "notes": notes,
-                    "paypal_email": paypal_email,
                     "referral_status": referral_status,
                     "referred_by": referred_by,
                     "unsubscribed": unsubscribed,
@@ -1407,6 +1544,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         fingerprint: str | Omit = omit,
         first_name: str | Omit = omit,
         ip_address: str | Omit = omit,
+        is_affiliate: bool | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
         mobile_instance_id: str | Omit = omit,
@@ -1421,9 +1559,20 @@ class AsyncParticipantResource(AsyncAPIResource):
     ) -> Participant:
         """
         Adds a new participant to the program. If the email already exists, the existing
-        participant is returned.
+        participant is returned unchanged. For affiliate programs, set `isAffiliate` to
+        `true` to enroll a new participant as an approved affiliate or `false` to create
+        a non-affiliate. If you omit `isAffiliate`, a valid `referredBy` creates a
+        referred non-affiliate; without a valid referrer, the new participant is enrolled
+        as an approved affiliate. You can send a valid `referredBy` with
+        `isAffiliate: true` to keep the referral attribution and enroll the participant
+        as an affiliate.
 
         Args:
+          is_affiliate: Affiliate programs only. Controls affiliate enrollment for a new participant.
+              `true` enrolls the participant with `affiliateStatus: APPROVED`; `false` creates a
+              non-affiliate without `affiliateStatus`. Existing participants are returned
+              unchanged.
+
           metadata: Shallow custom metadata object.
 
           mobile_instance_id: Optional app-install scoped identifier for native mobile anti-fraud. Recommended
@@ -1455,6 +1604,7 @@ class AsyncParticipantResource(AsyncAPIResource):
                     "fingerprint": fingerprint,
                     "first_name": first_name,
                     "ip_address": ip_address,
+                    "is_affiliate": is_affiliate,
                     "last_name": last_name,
                     "metadata": metadata,
                     "mobile_instance_id": mobile_instance_id,
@@ -1539,7 +1689,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         id: str,
         limit: int | Omit = omit,
         next_id: str | Omit = omit,
-        status: Literal["UPCOMING", "QUEUED", "ISSUED", "FAILED"] | Omit = omit,
+        status: Literal["UPCOMING", "QUEUED", "ISSUED", "FAILED", "REVERSED"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -2226,7 +2376,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         id: str,
         days: int | Omit = omit,
         end_date: int | Omit = omit,
-        include: Literal["series"] | Omit = omit,
+        include: str | Omit = omit,
         interval: Literal["day", "week", "month"] | Omit = omit,
         start_date: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -2238,9 +2388,12 @@ class AsyncParticipantResource(AsyncAPIResource):
     ) -> ParticipantAnalyticsResponse:
         """
         Retrieves analytics for a single participant — all-time engagement counters,
-        leaderboard ranks, and per-channel share counts (plus affiliate money metrics
-        for affiliate programs). Useful for segmenting and re-engaging participants.
-        Pass `include=series` to also get this participant's own activity over time.
+        leaderboard ranks, and per-channel share counts (plus affiliate revenue,
+        commission, and payout metrics for affiliate programs). Pass `include=email`
+        for `sent` (accepted for delivery), `delivered`, `opened`, `clicked`,
+        `bounced`, and `spamComplaints` metrics attributed to this participant,
+        including invitations they sent. Use `include=email,series` to include the
+        same counts in each UTC series bucket.
 
         Args:
           days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.
@@ -2248,10 +2401,16 @@ class AsyncParticipantResource(AsyncAPIResource):
           end_date: End date of the analytics timeframe as a Unix timestamp in milliseconds.
               Required if `days` is not set.
 
-          include: Set to `series` to also return this participant's own activity per period.
+          include: Comma-separated optional data. `series` returns this participant's own
+              activity per period; `email` returns `sent`, `delivered`, `opened`, `clicked`,
+              `bounced`, `spamComplaints`, and per-email-type metrics attributed to the
+              participant for the requested analytics window (including invitations they
+              sent). Request both in either order to add email counts to every series item
+              for emails sent during that period. Only documented tokens are accepted; an
+              unknown token returns `400`.
 
-          interval: Bucket size for the `series` (only used with `include=series`). Defaults to
-              `day`.
+          interval: Bucket size for the `series` (only used when `include` contains `series`).
+              Defaults to `day`.
 
           start_date: Start date of the analytics timeframe as a Unix timestamp in milliseconds.
               Required if `days` is not set.
@@ -2293,6 +2452,104 @@ class AsyncParticipantResource(AsyncAPIResource):
                 ),
             ),
             cast_to=ParticipantAnalyticsResponse,
+        )
+
+    async def get_payout_destination(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantGetPayoutDestinationResponse:
+        """
+        Returns a participant's payout-destination status across every payout provider
+        enabled for the program (PayPal and/or Wise). For each provider it reports the
+        current status, the confirmed claim email, the legal recipient type, and — when a
+        delivery bounced or a recipient was invalidated — the repair reason.
+        `activeProvider` is the provider that currently gets paid, or `null` until the
+        participant confirms one.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return await self._get(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/payout-destination",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ParticipantGetPayoutDestinationResponse,
+        )
+
+    async def request_payout_destination_confirmation(
+        self,
+        participant_id_or_email: str,
+        *,
+        id: str,
+        provider: Literal["PAYPAL", "WISECOM"],
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantRequestPayoutDestinationConfirmationResponse:
+        """
+        Sends the participant a one-time link to confirm their payout destination for the
+        chosen provider. Only the participant can open the link and confirm — this
+        endpoint just triggers the message. The provider must be enabled for the program.
+
+        Args:
+          provider: The payout provider the participant should confirm a destination for.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not participant_id_or_email:
+            raise ValueError(
+                f"Expected a non-empty value for `participant_id_or_email` but received {participant_id_or_email!r}"
+            )
+        return await self._post(
+            path_template(
+                "/campaign/{id}/participant/{participant_id_or_email}/payout-destination/request-confirmation",
+                id=id,
+                participant_id_or_email=participant_id_or_email,
+            ),
+            body=await async_maybe_transform(
+                {"provider": provider},
+                participant_request_payout_destination_confirmation_params.ParticipantRequestPayoutDestinationConfirmationParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ParticipantRequestPayoutDestinationConfirmationResponse,
         )
 
 
@@ -2351,6 +2608,12 @@ class ParticipantResourceWithRawResponse:
         self.retrieve_analytics = to_raw_response_wrapper(
             participant.retrieve_analytics,
         )
+        self.get_payout_destination = to_raw_response_wrapper(
+            participant.get_payout_destination,
+        )
+        self.request_payout_destination_confirmation = to_raw_response_wrapper(
+            participant.request_payout_destination_confirmation,
+        )
 
 
 class AsyncParticipantResourceWithRawResponse:
@@ -2407,6 +2670,12 @@ class AsyncParticipantResourceWithRawResponse:
         )
         self.retrieve_analytics = async_to_raw_response_wrapper(
             participant.retrieve_analytics,
+        )
+        self.get_payout_destination = async_to_raw_response_wrapper(
+            participant.get_payout_destination,
+        )
+        self.request_payout_destination_confirmation = async_to_raw_response_wrapper(
+            participant.request_payout_destination_confirmation,
         )
 
 
@@ -2465,6 +2734,12 @@ class ParticipantResourceWithStreamingResponse:
         self.retrieve_analytics = to_streamed_response_wrapper(
             participant.retrieve_analytics,
         )
+        self.get_payout_destination = to_streamed_response_wrapper(
+            participant.get_payout_destination,
+        )
+        self.request_payout_destination_confirmation = to_streamed_response_wrapper(
+            participant.request_payout_destination_confirmation,
+        )
 
 
 class AsyncParticipantResourceWithStreamingResponse:
@@ -2521,4 +2796,10 @@ class AsyncParticipantResourceWithStreamingResponse:
         )
         self.retrieve_analytics = async_to_streamed_response_wrapper(
             participant.retrieve_analytics,
+        )
+        self.get_payout_destination = async_to_streamed_response_wrapper(
+            participant.get_payout_destination,
+        )
+        self.request_payout_destination_confirmation = async_to_streamed_response_wrapper(
+            participant.request_payout_destination_confirmation,
         )

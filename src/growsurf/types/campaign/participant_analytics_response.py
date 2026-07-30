@@ -5,8 +5,9 @@ from typing import Dict, List, Optional
 from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
+from ..email_analytics import EmailAnalytics, EmailAnalyticsCounts
 
-__all__ = ["ParticipantAnalyticsResponse", "Analytics", "Ranks", "Series"]
+__all__ = ["ParticipantAnalyticsResponse", "Analytics", "Ranks", "Series", "EmailAnalytics", "EmailAnalyticsCounts"]
 
 
 class Analytics(BaseModel):
@@ -63,6 +64,9 @@ class Series(BaseModel):
     copy_ref_link_shares: Optional[int] = FieldInfo(alias="copyRefLinkShares", default=None)
 
     email_shares: Optional[int] = FieldInfo(alias="emailShares", default=None)
+
+    email: Optional[EmailAnalyticsCounts] = None
+    """Per-period email counts when both `series` and `email` are requested."""
 
     facebook_shares: Optional[int] = FieldInfo(alias="facebookShares", default=None)
 
@@ -130,8 +134,11 @@ class ParticipantAnalyticsResponse(BaseModel):
     share_count: Dict[str, int] = FieldInfo(alias="shareCount")
     """Per-channel share counts (e.g. `email`, `facebook`, `twitter`, ...)."""
 
+    email: Optional[EmailAnalytics] = None
+    """Present only when `include` contains `email`."""
+
     end_date: Optional[int] = FieldInfo(alias="endDate", default=None)
-    """Present only with `include=series`. Window end (Unix ms)."""
+    """Present only when `include` contains `series` or `email`. Window end (Unix ms)."""
 
     series: Optional[List[Series]] = None
     """Present only when `include=series`.
@@ -141,4 +148,4 @@ class ParticipantAnalyticsResponse(BaseModel):
     """
 
     start_date: Optional[int] = FieldInfo(alias="startDate", default=None)
-    """Present only with `include=series`. Window start (Unix ms)."""
+    """Present only when `include` contains `series` or `email`. Window start (Unix ms)."""

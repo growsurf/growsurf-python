@@ -22,6 +22,8 @@ from growsurf.types.campaign import (
     ParticipantTriggerReferralResponse,
     ParticipantRecordTransactionResponse,
     ParticipantRefundTransactionResponse,
+    ParticipantGetPayoutDestinationResponse,
+    ParticipantRequestPayoutDestinationConfirmationResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -90,6 +92,7 @@ class TestParticipant:
         participant = client.campaign.participant.update(
             participant_id_or_email="participantIdOrEmail",
             id="id",
+            affiliate_status="APPROVED",
         )
         assert_matches_type(Participant, participant, path=["response"])
 
@@ -104,7 +107,6 @@ class TestParticipant:
             last_name="Belson",
             metadata={"company": "bar"},
             notes="notes",
-            paypal_email="dev@stainless.com",
             referral_status="CREDIT_PENDING",
             referred_by="referredBy",
             unsubscribed=False,
@@ -275,6 +277,7 @@ class TestParticipant:
             fingerprint="fingerprint",
             first_name="firstName",
             ip_address="ipAddress",
+            is_affiliate=True,
             last_name="lastName",
             metadata={"foo": "bar"},
             mobile_instance_id="mobileInstanceId",
@@ -1150,6 +1153,119 @@ class TestParticipant:
                 id="id",
             )
 
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_get_payout_destination(self, client: Growsurf) -> None:
+        participant = client.campaign.participant.get_payout_destination(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+        assert_matches_type(ParticipantGetPayoutDestinationResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_get_payout_destination(self, client: Growsurf) -> None:
+        response = client.campaign.participant.with_raw_response.get_payout_destination(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = response.parse()
+        assert_matches_type(ParticipantGetPayoutDestinationResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_get_payout_destination(self, client: Growsurf) -> None:
+        with client.campaign.participant.with_streaming_response.get_payout_destination(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = response.parse()
+            assert_matches_type(ParticipantGetPayoutDestinationResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_get_payout_destination(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.participant.with_raw_response.get_payout_destination(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            client.campaign.participant.with_raw_response.get_payout_destination(
+                participant_id_or_email="",
+                id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_request_payout_destination_confirmation(self, client: Growsurf) -> None:
+        participant = client.campaign.participant.request_payout_destination_confirmation(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            provider="PAYPAL",
+        )
+        assert_matches_type(ParticipantRequestPayoutDestinationConfirmationResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_request_payout_destination_confirmation(self, client: Growsurf) -> None:
+        response = client.campaign.participant.with_raw_response.request_payout_destination_confirmation(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            provider="PAYPAL",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = response.parse()
+        assert_matches_type(ParticipantRequestPayoutDestinationConfirmationResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_request_payout_destination_confirmation(self, client: Growsurf) -> None:
+        with client.campaign.participant.with_streaming_response.request_payout_destination_confirmation(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            provider="PAYPAL",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = response.parse()
+            assert_matches_type(ParticipantRequestPayoutDestinationConfirmationResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_request_payout_destination_confirmation(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.participant.with_raw_response.request_payout_destination_confirmation(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+                provider="PAYPAL",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            client.campaign.participant.with_raw_response.request_payout_destination_confirmation(
+                participant_id_or_email="",
+                id="id",
+                provider="PAYPAL",
+            )
+
 
 class TestAsyncParticipant:
     parametrize = pytest.mark.parametrize(
@@ -1216,6 +1332,7 @@ class TestAsyncParticipant:
         participant = await async_client.campaign.participant.update(
             participant_id_or_email="participantIdOrEmail",
             id="id",
+            affiliate_status="APPROVED",
         )
         assert_matches_type(Participant, participant, path=["response"])
 
@@ -1230,7 +1347,6 @@ class TestAsyncParticipant:
             last_name="Belson",
             metadata={"company": "bar"},
             notes="notes",
-            paypal_email="dev@stainless.com",
             referral_status="CREDIT_PENDING",
             referred_by="referredBy",
             unsubscribed=False,
@@ -1401,6 +1517,7 @@ class TestAsyncParticipant:
             fingerprint="fingerprint",
             first_name="firstName",
             ip_address="ipAddress",
+            is_affiliate=True,
             last_name="lastName",
             metadata={"foo": "bar"},
             mobile_instance_id="mobileInstanceId",
@@ -2274,4 +2391,119 @@ class TestAsyncParticipant:
             await async_client.campaign.participant.with_raw_response.retrieve_analytics(
                 participant_id_or_email="",
                 id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_get_payout_destination(self, async_client: AsyncGrowsurf) -> None:
+        participant = await async_client.campaign.participant.get_payout_destination(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+        assert_matches_type(ParticipantGetPayoutDestinationResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_get_payout_destination(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.participant.with_raw_response.get_payout_destination(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = await response.parse()
+        assert_matches_type(ParticipantGetPayoutDestinationResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_get_payout_destination(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.participant.with_streaming_response.get_payout_destination(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = await response.parse()
+            assert_matches_type(ParticipantGetPayoutDestinationResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_get_payout_destination(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.participant.with_raw_response.get_payout_destination(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            await async_client.campaign.participant.with_raw_response.get_payout_destination(
+                participant_id_or_email="",
+                id="id",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_request_payout_destination_confirmation(self, async_client: AsyncGrowsurf) -> None:
+        participant = await async_client.campaign.participant.request_payout_destination_confirmation(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            provider="PAYPAL",
+        )
+        assert_matches_type(ParticipantRequestPayoutDestinationConfirmationResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_request_payout_destination_confirmation(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.participant.with_raw_response.request_payout_destination_confirmation(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            provider="PAYPAL",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        participant = await response.parse()
+        assert_matches_type(ParticipantRequestPayoutDestinationConfirmationResponse, participant, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_request_payout_destination_confirmation(
+        self, async_client: AsyncGrowsurf
+    ) -> None:
+        async with async_client.campaign.participant.with_streaming_response.request_payout_destination_confirmation(
+            participant_id_or_email="participantIdOrEmail",
+            id="id",
+            provider="PAYPAL",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            participant = await response.parse()
+            assert_matches_type(ParticipantRequestPayoutDestinationConfirmationResponse, participant, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_request_payout_destination_confirmation(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.participant.with_raw_response.request_payout_destination_confirmation(
+                participant_id_or_email="participantIdOrEmail",
+                id="",
+                provider="PAYPAL",
+            )
+
+        with pytest.raises(
+            ValueError, match=r"Expected a non-empty value for `participant_id_or_email` but received ''"
+        ):
+            await async_client.campaign.participant.with_raw_response.request_payout_destination_confirmation(
+                participant_id_or_email="",
+                id="id",
+                provider="PAYPAL",
             )
