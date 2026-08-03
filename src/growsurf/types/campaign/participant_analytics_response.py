@@ -6,6 +6,7 @@ from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
 from ..email_analytics import EmailAnalytics, EmailAnalyticsCounts
+from ..campaign_retrieve_analytics_response import StatusCountsRewardStatus
 
 __all__ = ["ParticipantAnalyticsResponse", "Analytics", "Ranks", "Series", "EmailAnalytics", "EmailAnalyticsCounts"]
 
@@ -23,7 +24,7 @@ class Analytics(BaseModel):
 
     monthly_referrals: Optional[int] = FieldInfo(alias="monthlyReferrals", default=None)
 
-    pending_rewards: Optional[int] = FieldInfo(alias="pendingRewards", default=None)
+    reward_status: Optional[StatusCountsRewardStatus] = FieldInfo(alias="rewardStatus", default=None)
 
     referral_revenue: Optional[int] = FieldInfo(alias="referralRevenue", default=None)
     """Affiliate only.
@@ -32,8 +33,6 @@ class Analytics(BaseModel):
     """
 
     referrals: Optional[int] = None
-
-    rewards_earned: Optional[int] = FieldInfo(alias="rewardsEarned", default=None)
 
     total_commissions: Optional[int] = FieldInfo(alias="totalCommissions", default=None)
     """Affiliate only. Total commissions earned, in minor currency units."""

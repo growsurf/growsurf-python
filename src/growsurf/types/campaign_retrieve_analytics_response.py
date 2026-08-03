@@ -110,10 +110,14 @@ class PreviousPeriod(BaseModel):
 
 
 class StatusCountsRewardStatus(BaseModel):
-    approved: Optional[int] = None
+    completed: Optional[int] = None
+    """Approved rewards that are fulfilled."""
 
-    pending: Optional[int] = None
-    """Unapproved rewards awaiting fulfillment."""
+    unapproved: Optional[int] = None
+    """Unapproved rewards awaiting review."""
+
+    unfulfilled: Optional[int] = None
+    """Rewards that are approved but not fulfilled."""
 
 
 class StatusCountsCommissionStatusMetric(BaseModel):
