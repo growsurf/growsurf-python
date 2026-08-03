@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/growsurf/growsurf-python/compare/v1.2.0...v1.2.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* align method docs with the REST v2 contract ([57e44e9](https://github.com/growsurf/growsurf-python/commit/57e44e906100c23d85d5dfbfabcd3821ef14d629))
+
 ## [1.2.0](https://github.com/growsurf/growsurf-python/compare/v1.1.2...v1.2.0) (2026-07-13)
 
 
