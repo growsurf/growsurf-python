@@ -4,4 +4,4 @@ from typing_extensions import Literal, TypeAlias
 
 __all__ = ["ReferralSource"]
 
-ReferralSource: TypeAlias = Literal["DIRECT", "PARTICIPANT"]
+ReferralSource: TypeAlias = Literal["DIRECT", "PARTICIPANT", "DELETED_PARTICIPANT", "IMPORT", "MANUAL"]

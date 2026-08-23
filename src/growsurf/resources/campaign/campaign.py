@@ -213,7 +213,7 @@ class CampaignResource(SyncAPIResource):
           currency_iso: ISO 4217 currency code. Defaults to USD. Chosen when the program is
               created and immutable afterward — it cannot be changed on update.
 
-          name: The program name. Defaults to "Untitled Program".
+          name: The program name. Defaults to a generated friendly label plus the creation date.
 
           rewards: Optional inline rewards to create with the program.
 
@@ -1283,7 +1283,7 @@ class AsyncCampaignResource(AsyncAPIResource):
           currency_iso: ISO 4217 currency code. Defaults to USD. Chosen when the program is
               created and immutable afterward — it cannot be changed on update.
 
-          name: The program name. Defaults to "Untitled Program".
+          name: The program name. Defaults to a generated friendly label plus the creation date.
 
           rewards: Optional inline rewards to create with the program.
 

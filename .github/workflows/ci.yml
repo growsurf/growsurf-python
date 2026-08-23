@@ -93,3 +93,6 @@ jobs:
 
       - name: Run tests
         run: ./scripts/test
+
+      - name: Audit runtime dependencies
+        run: uvx pip-audit --no-deps --disable-pip --skip-editable --requirement <(uv export --all-extras --no-dev --format requirements-txt --no-hashes)

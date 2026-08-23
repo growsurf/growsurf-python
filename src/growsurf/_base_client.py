@@ -789,6 +789,15 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
         timeout = sleep_seconds * jitter
         return timeout if timeout >= 0 else 0
 
+    def _request_is_retry_safe(self, options: FinalRequestOptions) -> bool:
+        """Return whether replaying the request cannot duplicate a customer-visible mutation."""
+        method = options.method.lower()
+        url = URL(str(options.url))
+        path = url.path.rstrip("/")
+        return method in {"get", "head"} or (
+            method == "post" and url.is_relative_url and path == "/api-key/rotate"
+        )
+
     def _should_retry(self, response: httpx.Response) -> bool:
         # Note: this is not a standard header
         should_retry_header = response.headers.get("x-should-retry")
@@ -994,9 +1003,10 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
         # options are mutated later & we then retry, the retries are
         # given the original options
         input_options = model_copy(options)
-        if input_options.idempotency_key is None and input_options.method.lower() != "get":
+        if input_options.idempotency_key is None and self._request_is_retry_safe(input_options):
             # ensure the idempotency key is reused between requests
-            input_options.idempotency_key = self._idempotency_key()
+            if input_options.method.lower() == "post":
+                input_options.idempotency_key = self._idempotency_key()
 
         response: httpx.Response | None = None
         max_retries = input_options.get_max_retries(self.max_retries)
@@ -1030,7 +1040,7 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
             except httpx.TimeoutException as err:
                 log.debug("Encountered httpx.TimeoutException", exc_info=True)
 
-                if remaining_retries > 0:
+                if remaining_retries > 0 and self._request_is_retry_safe(input_options):
                     self._sleep_for_retry(
                         retries_taken=retries_taken,
                         max_retries=max_retries,
@@ -1044,7 +1054,7 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
             except Exception as err:
                 log.debug("Encountered Exception", exc_info=True)
 
-                if remaining_retries > 0:
+                if remaining_retries > 0 and self._request_is_retry_safe(input_options):
                     self._sleep_for_retry(
                         retries_taken=retries_taken,
                         max_retries=max_retries,
@@ -1070,7 +1080,11 @@ class SyncAPIClient(BaseClient[httpx.Client, Stream[Any]]):
             except httpx.HTTPStatusError as err:  # thrown on 4xx and 5xx status code
                 log.debug("Encountered httpx.HTTPStatusError", exc_info=True)
 
-                if remaining_retries > 0 and self._should_retry(err.response):
+                if (
+                    remaining_retries > 0
+                    and self._request_is_retry_safe(input_options)
+                    and self._should_retry(err.response)
+                ):
                     err.response.close()
                     self._sleep_for_retry(
                         retries_taken=retries_taken,
@@ -1579,9 +1593,10 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
         # options are mutated later & we then retry, the retries are
         # given the original options
         input_options = model_copy(options)
-        if input_options.idempotency_key is None and input_options.method.lower() != "get":
+        if input_options.idempotency_key is None and self._request_is_retry_safe(input_options):
             # ensure the idempotency key is reused between requests
-            input_options.idempotency_key = self._idempotency_key()
+            if input_options.method.lower() == "post":
+                input_options.idempotency_key = self._idempotency_key()
 
         response: httpx.Response | None = None
         max_retries = input_options.get_max_retries(self.max_retries)
@@ -1614,7 +1629,7 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
             except httpx.TimeoutException as err:
                 log.debug("Encountered httpx.TimeoutException", exc_info=True)
 
-                if remaining_retries > 0:
+                if remaining_retries > 0 and self._request_is_retry_safe(input_options):
                     await self._sleep_for_retry(
                         retries_taken=retries_taken,
                         max_retries=max_retries,
@@ -1628,7 +1643,7 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
             except Exception as err:
                 log.debug("Encountered Exception", exc_info=True)
 
-                if remaining_retries > 0:
+                if remaining_retries > 0 and self._request_is_retry_safe(input_options):
                     await self._sleep_for_retry(
                         retries_taken=retries_taken,
                         max_retries=max_retries,
@@ -1654,7 +1669,11 @@ class AsyncAPIClient(BaseClient[httpx.AsyncClient, AsyncStream[Any]]):
             except httpx.HTTPStatusError as err:  # thrown on 4xx and 5xx status code
                 log.debug("Encountered httpx.HTTPStatusError", exc_info=True)
 
-                if remaining_retries > 0 and self._should_retry(err.response):
+                if (
+                    remaining_retries > 0
+                    and self._request_is_retry_safe(input_options)
+                    and self._should_retry(err.response)
+                ):
                     await err.response.aclose()
                     await self._sleep_for_retry(
                         retries_taken=retries_taken,

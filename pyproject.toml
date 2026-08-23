@@ -1,6 +1,6 @@
 [project]
 name = "growsurf-python"
-version = "1.2.1"
+version = "1.3.0"
 description = "The official Python library for the growsurf API"
 dynamic = ["readme"]
 license = "Apache-2.0"
@@ -17,11 +17,10 @@ dependencies = [
   "sniffio",
 ]
 
-requires-python = ">= 3.9"
+requires-python = ">= 3.10"
 classifiers = [
   "Typing :: Typed",
   "Intended Audience :: Developers",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -41,7 +40,7 @@ Homepage = "https://github.com/growsurf/growsurf-python"
 Repository = "https://github.com/growsurf/growsurf-python"
 
 [project.optional-dependencies]
-aiohttp = ["aiohttp", "httpx_aiohttp>=0.1.9"]
+aiohttp = ["aiohttp>=3.14.3,<4", "httpx_aiohttp>=0.1.9"]
 
 [tool.uv]
 managed = true
@@ -129,7 +128,7 @@ filterwarnings = [
 # there are a couple of flags that are still disabled by
 # default in strict mode as they are experimental and niche.
 typeCheckingMode = "strict"
-pythonVersion = "3.9"
+pythonVersion = "3.10"
 
 exclude = [
     "_dev",

@@ -23,7 +23,7 @@ from growsurf import Growsurf, AsyncGrowsurf, APIResponseValidationError
 from growsurf._types import Omit
 from growsurf._utils import asyncify
 from growsurf._models import BaseModel, FinalRequestOptions
-from growsurf._exceptions import APIStatusError, APITimeoutError, APIResponseValidationError
+from growsurf._exceptions import APIStatusError, APITimeoutError, APIConnectionError, APIResponseValidationError
 from growsurf._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
@@ -409,6 +409,42 @@ class TestGrowsurf:
         assert idempotency_key is not None
         assert idempotency_key.startswith("stainless-python-retry-")
         assert options.idempotency_key == idempotency_key
+
+    def test_other_mutating_requests_do_not_include_an_idempotency_key(self, client: Growsurf) -> None:
+        request = client._build_request(FinalRequestOptions(method="post", url="/campaign/p36rol/participant/email"))
+        assert request.headers.get("Idempotency-Key") is None
+
+    @pytest.mark.respx(base_url=base_url)
+    def test_non_idempotent_mutation_is_not_retried_after_a_lost_response(
+        self, respx_mock: MockRouter, client: Growsurf
+    ) -> None:
+        route = respx_mock.post("/campaign/p36rol/participant/email").mock(
+            side_effect=httpx.ConnectError("response lost after the mutation completed")
+        )
+
+        with pytest.raises(APIConnectionError):
+            client.post("/campaign/p36rol/participant/email", cast_to=httpx.Response)
+
+        assert route.call_count == 1
+
+    @mock.patch("growsurf._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @pytest.mark.respx(base_url=base_url)
+    def test_absolute_rotate_url_is_not_retry_safe(self, respx_mock: MockRouter, client: Growsurf) -> None:
+        idempotency_keys: list[str | None] = []
+
+        def fail_request(request: httpx.Request) -> httpx.Response:
+            idempotency_keys.append(request.headers.get("Idempotency-Key"))
+            raise httpx.ConnectError("response lost after the mutation completed")
+
+        route = respx_mock.post("https://other.example/api-key/rotate").mock(
+            side_effect=fail_request
+        )
+
+        with pytest.raises(APIConnectionError):
+            client.post("https://other.example/api-key/rotate", cast_to=httpx.Response)
+
+        assert route.call_count == 1
+        assert idempotency_keys == [None]
 
     def test_auth_headers_allow_keyless_client(self) -> None:
         client = Growsurf(base_url=base_url, api_key=api_key, _strict_response_validation=True)
@@ -1337,6 +1373,44 @@ class TestAsyncGrowsurf:
         assert idempotency_key is not None
         assert idempotency_key.startswith("stainless-python-retry-")
         assert options.idempotency_key == idempotency_key
+
+    def test_other_mutating_requests_do_not_include_an_idempotency_key(self, client: AsyncGrowsurf) -> None:
+        request = client._build_request(FinalRequestOptions(method="post", url="/campaign/p36rol/participant/email"))
+        assert request.headers.get("Idempotency-Key") is None
+
+    @pytest.mark.respx(base_url=base_url)
+    async def test_non_idempotent_mutation_is_not_retried_after_a_lost_response(
+        self, respx_mock: MockRouter, async_client: AsyncGrowsurf
+    ) -> None:
+        route = respx_mock.post("/campaign/p36rol/participant/email").mock(
+            side_effect=httpx.ConnectError("response lost after the mutation completed")
+        )
+
+        with pytest.raises(APIConnectionError):
+            await async_client.post("/campaign/p36rol/participant/email", cast_to=httpx.Response)
+
+        assert route.call_count == 1
+
+    @mock.patch("growsurf._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @pytest.mark.respx(base_url=base_url)
+    async def test_absolute_rotate_url_is_not_retry_safe(
+        self, respx_mock: MockRouter, async_client: AsyncGrowsurf
+    ) -> None:
+        idempotency_keys: list[str | None] = []
+
+        def fail_request(request: httpx.Request) -> httpx.Response:
+            idempotency_keys.append(request.headers.get("Idempotency-Key"))
+            raise httpx.ConnectError("response lost after the mutation completed")
+
+        route = respx_mock.post("https://other.example/api-key/rotate").mock(
+            side_effect=fail_request
+        )
+
+        with pytest.raises(APIConnectionError):
+            await async_client.post("https://other.example/api-key/rotate", cast_to=httpx.Response)
+
+        assert route.call_count == 1
+        assert idempotency_keys == [None]
 
     async def test_auth_headers_allow_keyless_client(self) -> None:
         client = AsyncGrowsurf(base_url=base_url, api_key=api_key, _strict_response_validation=True)

@@ -25,6 +25,7 @@ class Analytics(BaseModel):
     monthly_referrals: Optional[int] = FieldInfo(alias="monthlyReferrals", default=None)
 
     reward_status: Optional[StatusCountsRewardStatus] = FieldInfo(alias="rewardStatus", default=None)
+    """This participant's reward counts grouped by review and fulfillment status."""
 
     referral_revenue: Optional[int] = FieldInfo(alias="referralRevenue", default=None)
     """Affiliate only.
@@ -117,6 +118,12 @@ class Series(BaseModel):
     tumblr_shares: Optional[int] = FieldInfo(alias="tumblrShares", default=None)
 
     twitter_shares: Optional[int] = FieldInfo(alias="twitterShares", default=None)
+
+    unique_commission_referrals: Optional[int] = FieldInfo(alias="uniqueCommissionReferrals", default=None)
+    """Affiliate programs only.
+
+    Number of unique referred participants represented by commissions in the requested timeframe.
+    """
 
     unique_impressions: Optional[int] = FieldInfo(alias="uniqueImpressions", default=None)
 

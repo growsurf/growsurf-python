@@ -81,6 +81,12 @@ class Analytics(BaseModel):
 
     twitter_shares: Optional[int] = FieldInfo(alias="twitterShares", default=None)
 
+    unique_commission_referrals: Optional[int] = FieldInfo(alias="uniqueCommissionReferrals", default=None)
+    """Affiliate programs only.
+
+    Number of unique referred participants represented by commissions in the requested timeframe.
+    """
+
     unique_impressions: Optional[int] = FieldInfo(alias="uniqueImpressions", default=None)
 
     wechat_shares: Optional[int] = FieldInfo(alias="wechatShares", default=None)
@@ -110,6 +116,8 @@ class PreviousPeriod(BaseModel):
 
 
 class StatusCountsRewardStatus(BaseModel):
+    """Reward counts grouped by review and fulfillment status."""
+
     completed: Optional[int] = None
     """Approved rewards that are fulfilled."""
 
