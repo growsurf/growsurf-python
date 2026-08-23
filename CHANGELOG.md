@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0](https://github.com/growsurf/growsurf-python/compare/v1.2.1...v1.3.0) (2026-08-23)
+
+
+### Features
+
+* **api:** add affiliate and payout destination APIs ([29fe1c8](https://github.com/growsurf/growsurf-python/commit/29fe1c87053a539fa726898c3fd1b5ff368adf9e))
+* **api:** add affiliate and payout destination APIs ([a27f73b](https://github.com/growsurf/growsurf-python/commit/a27f73b3be157f58b5f067abc08b73ef855ce2c0))
+* release 1.3.0 with Python 3.10 baseline and analytics updates ([e01d6a0](https://github.com/growsurf/growsurf-python/commit/e01d6a0ae5824065c197f54210f94cea8760d524))
+
+
+### Bug Fixes
+
+* **api:** align analytics reward status models ([ffe8879](https://github.com/growsurf/growsurf-python/commit/ffe8879481fbf8ea8f660135b65ace1cb9f463da))
+
 ## [1.2.1](https://github.com/growsurf/growsurf-python/compare/v1.2.0...v1.2.1) (2026-07-14)
 
 
