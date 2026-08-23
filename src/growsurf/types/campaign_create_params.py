@@ -27,7 +27,7 @@ class CampaignCreateParams(TypedDict, total=False):
     """
 
     name: str
-    """The program name. Defaults to "Untitled Program"."""
+    """The program name. Defaults to a generated friendly label plus the creation date."""
 
     rewards: Iterable[RewardCreateParams]
     """Optional inline rewards to create with the program."""
