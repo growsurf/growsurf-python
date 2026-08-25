@@ -31,6 +31,14 @@ class RewardUpdateParams(TypedDict, total=False):
     description: str
     """The reward description shown to the referrer."""
 
+    event: Literal["LEAD", "CONVERSION"]
+    """The event that earns this Campaign Reward.
+
+    `SINGLE_SIDED`, `DOUBLE_SIDED`, and `MILESTONE` rewards support `LEAD` or
+    `CONVERSION`. `LEAD` requires `installation.referralTrigger` to be `CUSTOM`.
+    When omitted, the Campaign Reward's current event is preserved.
+    """
+
     image_url: Annotated[Optional[str], PropertyInfo(alias="imageUrl")]
     """An image URL for the reward."""
 

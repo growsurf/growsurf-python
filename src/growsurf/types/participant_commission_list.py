@@ -19,6 +19,9 @@ class Commission(BaseModel):
 
     currency_iso: str = FieldInfo(alias="currencyISO")
 
+    event: Literal["LEAD", "SALE"]
+    """The event that generated the commission. Legacy commissions return `SALE`."""
+
     referred_id: str = FieldInfo(alias="referredId")
 
     referrer_id: str = FieldInfo(alias="referrerId")

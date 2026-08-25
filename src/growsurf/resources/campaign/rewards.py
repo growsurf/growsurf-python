@@ -59,6 +59,7 @@ class RewardsResource(SyncAPIResource):
         conversions_required: int | Omit = omit,
         coupon_code: Optional[str] | Omit = omit,
         description: str | Omit = omit,
+        event: Literal["LEAD", "CONVERSION"] | Omit = omit,
         image_url: Optional[str] | Omit = omit,
         is_unlimited: bool | Omit = omit,
         is_visible: bool | Omit = omit,
@@ -97,6 +98,11 @@ class RewardsResource(SyncAPIResource):
           conversions_required: The number of referrals required to earn the reward.
 
           description: The reward description shown to the referrer.
+
+          event: The event that earns this Campaign Reward. `SINGLE_SIDED`,
+              `DOUBLE_SIDED`, and `MILESTONE` rewards support `LEAD` or `CONVERSION`.
+              `LEAD` requires `installation.referralTrigger` to be `CUSTOM`. Omitting
+              `event` defaults to `CONVERSION`.
 
           image_url: An image URL for the reward.
 
@@ -150,6 +156,7 @@ class RewardsResource(SyncAPIResource):
                     "conversions_required": conversions_required,
                     "coupon_code": coupon_code,
                     "description": description,
+                    "event": event,
                     "image_url": image_url,
                     "is_unlimited": is_unlimited,
                     "is_visible": is_visible,
@@ -184,6 +191,7 @@ class RewardsResource(SyncAPIResource):
         conversions_required: int | Omit = omit,
         coupon_code: Optional[str] | Omit = omit,
         description: str | Omit = omit,
+        event: Literal["LEAD", "CONVERSION"] | Omit = omit,
         image_url: Optional[str] | Omit = omit,
         is_unlimited: bool | Omit = omit,
         is_visible: bool | Omit = omit,
@@ -218,6 +226,11 @@ class RewardsResource(SyncAPIResource):
           commission_structure: The affiliate commission structure (AFFILIATE rewards only).
 
           conversions_required: The number of referrals required to earn the reward.
+
+          event: The event that earns this Campaign Reward. `SINGLE_SIDED`,
+              `DOUBLE_SIDED`, and `MILESTONE` rewards support `LEAD` or `CONVERSION`.
+              `LEAD` requires `installation.referralTrigger` to be `CUSTOM`. Omitting
+              `event` preserves the Campaign Reward's current event.
 
           description: The reward description shown to the referrer.
 
@@ -276,6 +289,7 @@ class RewardsResource(SyncAPIResource):
                     "conversions_required": conversions_required,
                     "coupon_code": coupon_code,
                     "description": description,
+                    "event": event,
                     "image_url": image_url,
                     "is_unlimited": is_unlimited,
                     "is_visible": is_visible,
@@ -410,6 +424,7 @@ class AsyncRewardsResource(AsyncAPIResource):
         conversions_required: int | Omit = omit,
         coupon_code: Optional[str] | Omit = omit,
         description: str | Omit = omit,
+        event: Literal["LEAD", "CONVERSION"] | Omit = omit,
         image_url: Optional[str] | Omit = omit,
         is_unlimited: bool | Omit = omit,
         is_visible: bool | Omit = omit,
@@ -448,6 +463,11 @@ class AsyncRewardsResource(AsyncAPIResource):
           conversions_required: The number of referrals required to earn the reward.
 
           description: The reward description shown to the referrer.
+
+          event: The event that earns this Campaign Reward. `SINGLE_SIDED`,
+              `DOUBLE_SIDED`, and `MILESTONE` rewards support `LEAD` or `CONVERSION`.
+              `LEAD` requires `installation.referralTrigger` to be `CUSTOM`. Omitting
+              `event` defaults to `CONVERSION`.
 
           image_url: An image URL for the reward.
 
@@ -501,6 +521,7 @@ class AsyncRewardsResource(AsyncAPIResource):
                     "conversions_required": conversions_required,
                     "coupon_code": coupon_code,
                     "description": description,
+                    "event": event,
                     "image_url": image_url,
                     "is_unlimited": is_unlimited,
                     "is_visible": is_visible,
@@ -535,6 +556,7 @@ class AsyncRewardsResource(AsyncAPIResource):
         conversions_required: int | Omit = omit,
         coupon_code: Optional[str] | Omit = omit,
         description: str | Omit = omit,
+        event: Literal["LEAD", "CONVERSION"] | Omit = omit,
         image_url: Optional[str] | Omit = omit,
         is_unlimited: bool | Omit = omit,
         is_visible: bool | Omit = omit,
@@ -569,6 +591,11 @@ class AsyncRewardsResource(AsyncAPIResource):
           commission_structure: The affiliate commission structure (AFFILIATE rewards only).
 
           conversions_required: The number of referrals required to earn the reward.
+
+          event: The event that earns this Campaign Reward. `SINGLE_SIDED`,
+              `DOUBLE_SIDED`, and `MILESTONE` rewards support `LEAD` or `CONVERSION`.
+              `LEAD` requires `installation.referralTrigger` to be `CUSTOM`. Omitting
+              `event` preserves the Campaign Reward's current event.
 
           description: The reward description shown to the referrer.
 
@@ -627,6 +654,7 @@ class AsyncRewardsResource(AsyncAPIResource):
                     "conversions_required": conversions_required,
                     "coupon_code": coupon_code,
                     "description": description,
+                    "event": event,
                     "image_url": image_url,
                     "is_unlimited": is_unlimited,
                     "is_visible": is_visible,

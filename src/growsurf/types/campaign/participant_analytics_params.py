@@ -13,12 +13,16 @@ class ParticipantAnalyticsParams(TypedDict, total=False):
     id: Required[str]
 
     days: int
-    """Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825."""
+    """Last number of days for optional `series` and `email` analytics.
+
+    Defaults to 365. Maximum 1825. Does not filter the top-level all-time totals.
+    """
 
     end_date: Annotated[int, PropertyInfo(alias="endDate")]
-    """End date of the analytics timeframe as a Unix timestamp in milliseconds.
+    """End of a custom `series` and `email` analytics window as a Unix timestamp.
 
-    Required if `days` is not set.
+    Expressed in milliseconds. Set it together with `startDate`. Does not filter the
+    top-level all-time totals.
     """
 
     include: str
@@ -39,7 +43,8 @@ class ParticipantAnalyticsParams(TypedDict, total=False):
     """
 
     start_date: Annotated[int, PropertyInfo(alias="startDate")]
-    """Start date of the analytics timeframe as a Unix timestamp in milliseconds.
+    """Start of a custom `series` and `email` analytics window as a Unix timestamp.
 
-    Required if `days` is not set.
+    Expressed in milliseconds. Set it together with `endDate`. Does not filter the
+    top-level all-time totals.
     """

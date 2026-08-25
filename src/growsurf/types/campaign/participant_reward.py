@@ -16,7 +16,7 @@ class ParticipantReward(BaseModel):
 
     reward_id: str = FieldInfo(alias="rewardId")
 
-    status: Literal["PENDING", "FULFILLED"]
+    status: Literal["PENDING", "FULFILLED", "CANCELLED"]
 
     approved: Optional[bool] = None
 
