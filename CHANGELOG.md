@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/growsurf/growsurf-python/compare/v1.3.0...v1.4.0) (2026-08-25)
+
+
+### Features
+
+* **api:** add reward and commission event support ([a8b2506](https://github.com/growsurf/growsurf-python/commit/a8b25066fc91b7a144b4a718911f8f2123bdecb3))
+
 ## [1.3.0](https://github.com/growsurf/growsurf-python/compare/v1.2.1...v1.3.0) (2026-08-23)
 
 
