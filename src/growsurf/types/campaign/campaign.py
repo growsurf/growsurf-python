@@ -30,6 +30,13 @@ class Reward(BaseModel):
 
     description: Optional[str] = None
 
+    event: Optional[Literal["LEAD", "CONVERSION"]] = None
+    """The event that earns this Campaign Reward.
+
+    Present only for `SINGLE_SIDED`, `DOUBLE_SIDED`, and `MILESTONE` rewards. Legacy
+    Campaign Rewards return `CONVERSION`.
+    """
+
     image_url: Optional[str] = FieldInfo(alias="imageUrl", default=None)
 
     is_visible: Optional[bool] = FieldInfo(alias="isVisible", default=None)
