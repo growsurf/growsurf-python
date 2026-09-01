@@ -80,6 +80,14 @@ from .installation import (
     InstallationResourceWithStreamingResponse,
     AsyncInstallationResourceWithStreamingResponse,
 )
+from .program_resources import (
+    ProgramResourcesResource,
+    AsyncProgramResourcesResource,
+    ProgramResourcesResourceWithRawResponse,
+    AsyncProgramResourcesResourceWithRawResponse,
+    ProgramResourcesResourceWithStreamingResponse,
+    AsyncProgramResourcesResourceWithStreamingResponse,
+)
 
 __all__ = [
     "ParticipantResource",
@@ -100,6 +108,12 @@ __all__ = [
     "AsyncRewardsResourceWithRawResponse",
     "RewardsResourceWithStreamingResponse",
     "AsyncRewardsResourceWithStreamingResponse",
+    "ProgramResourcesResource",
+    "AsyncProgramResourcesResource",
+    "ProgramResourcesResourceWithRawResponse",
+    "AsyncProgramResourcesResourceWithRawResponse",
+    "ProgramResourcesResourceWithStreamingResponse",
+    "AsyncProgramResourcesResourceWithStreamingResponse",
     "WebhooksResource",
     "AsyncWebhooksResource",
     "WebhooksResourceWithRawResponse",

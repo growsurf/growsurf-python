@@ -44,6 +44,7 @@ from ...types import (
     campaign_create_affiliate_invite_params,
     campaign_list_affiliate_applications_params,
     campaign_review_affiliate_application_params,
+    campaign_retrieve_activation_analytics_params,
     campaign_create_mobile_participant_token_params,
 )
 from .options import (
@@ -106,6 +107,14 @@ from .installation import (
 )
 from ..._base_client import make_request_options
 from ...types.campaign import ReferralStatus, reward_create_params
+from .program_resources import (
+    ProgramResourcesResource,
+    AsyncProgramResourcesResource,
+    ProgramResourcesResourceWithRawResponse,
+    AsyncProgramResourcesResourceWithRawResponse,
+    ProgramResourcesResourceWithStreamingResponse,
+    AsyncProgramResourcesResourceWithStreamingResponse,
+)
 from ...types.referral_list import ReferralList
 from ...types.affiliate_invite import AffiliateInvite
 from ...types.participant_list import ParticipantList
@@ -118,6 +127,7 @@ from ...types.participant_commission_list import ParticipantCommissionList
 from ...types.affiliate_invite_list_response import AffiliateInviteListResponse
 from ...types.affiliate_application_list_response import AffiliateApplicationListResponse
 from ...types.campaign_retrieve_analytics_response import CampaignRetrieveAnalyticsResponse
+from ...types.campaign_activation_analytics_response import CampaignActivationAnalyticsResponse
 from ...types.campaign_create_mobile_participant_token_response import CampaignCreateMobileParticipantTokenResponse
 
 __all__ = ["CampaignResource", "AsyncCampaignResource"]
@@ -142,6 +152,10 @@ class CampaignResource(SyncAPIResource):
     def rewards(self) -> RewardsResource:
         """Campaign reward (`CampaignReward`) configuration operations."""
         return RewardsResource(self._client)
+
+    @cached_property
+    def resources(self) -> ProgramResourcesResource:
+        return ProgramResourcesResource(self._client)
 
     @cached_property
     def webhooks(self) -> WebhooksResource:
@@ -762,7 +776,9 @@ class CampaignResource(SyncAPIResource):
         end_date: int | Omit = omit,
         include: str | Omit = omit,
         interval: Literal["day", "week", "month", "total"] | Omit = omit,
+        platform: Literal["ALL", "WEB", "IOS", "ANDROID"] | Omit = omit,
         start_date: int | Omit = omit,
+        timezone: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -773,11 +789,13 @@ class CampaignResource(SyncAPIResource):
         """
         Retrieves analytics for a program. Pass `interval` to also get a time-series
         (`series`) alongside the totals, and `include` to add previous-period totals,
-        status breakdowns, derived rates, or email performance. Add `email` to `include`
-        for `sent` (accepted for delivery), `delivered`, `opened`, `clicked`, `bounced`,
-        and `spamComplaints` metrics plus per-email-type breakdowns. Email rates are
-        ratios from `0` to `1`, and `isPartial` identifies windows that begin before
-        complete coverage.
+        status breakdowns, derived rates, email performance, or participant engagement.
+        Add `engagement` for covered participant activity totals, comparisons, series,
+        and breakdowns. Engagement returns explicit unavailable states when coverage is
+        unknown. Add `email` for `sent` (accepted for delivery), `delivered`, `opened`,
+        `clicked`, `bounced`, and `spamComplaints` metrics plus per-email-type
+        breakdowns. Email rates are ratios from `0` to `1`, and `isPartial` identifies
+        windows that begin before complete coverage.
 
         Args:
           days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.
@@ -793,13 +811,20 @@ class CampaignResource(SyncAPIResource):
               `spamComplaints`, and per-email-type metrics. When `email` and an interval are
               both requested, each `series` item also contains counts for emails sent during
               that period. Combine `email` with `previousPeriod` to include the same email
-              metrics in both windows.
+              metrics in both windows. `engagement` adds covered participant activity totals,
+              comparisons, series, and breakdowns.
 
           interval: When set to `day`, `week`, or `month`, the response also includes a `series`
-              array with per-period totals. Defaults to `total` (no series).
+              array with per-period totals and uses the same bucket size for
+              `engagement.series`. Defaults to `total` (no legacy series);
+              `engagement.series` uses daily buckets when `interval` is `total` or omitted.
+
+          platform: Participant platform used for `engagement`. Defaults to `ALL`.
 
           start_date: Start date of the analytics timeframe as a Unix timestamp in milliseconds.
               Required if `days` is not set.
+
+          timezone: IANA timezone used for engagement periods and buckets. Defaults to `UTC`.
 
           extra_headers: Send extra headers
 
@@ -824,12 +849,80 @@ class CampaignResource(SyncAPIResource):
                         "end_date": end_date,
                         "include": include,
                         "interval": interval,
+                        "platform": platform,
                         "start_date": start_date,
+                        "timezone": timezone,
                     },
                     campaign_retrieve_analytics_params.CampaignRetrieveAnalyticsParams,
                 ),
             ),
             cast_to=CampaignRetrieveAnalyticsResponse,
+        )
+
+    def retrieve_activation_analytics(
+        self,
+        id: str,
+        *,
+        cohort_from: int | Omit = omit,
+        cohort_to: int | Omit = omit,
+        cohort_interval: Literal["day", "week", "month"] | Omit = omit,
+        observation_window_days: Literal[7, 30] | Omit = omit,
+        timezone: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CampaignActivationAnalyticsResponse:
+        """Retrieves activation cohorts for a program.
+
+        Each cohort follows eligible participants from enrollment through portal
+        views, sharing, referral visits, leads, and credited referrals. Results include
+        explicit coverage and unavailable states so an unknown value is not mistaken
+        for zero.
+
+        Args:
+          cohort_from: Inclusive cohort enrollment start as a Unix timestamp in milliseconds.
+
+          cohort_to: Exclusive cohort enrollment end as a Unix timestamp in milliseconds.
+
+          cohort_interval: Cohort bucket size. Defaults to `day`.
+
+          observation_window_days: Days after enrollment allowed for each participant to reach a stage.
+              Defaults to `30`.
+
+          timezone: IANA timezone used for cohort bounds. Defaults to `UTC`.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._get(
+            path_template("/campaign/{id}/analytics/activation", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "cohort_from": cohort_from,
+                        "cohort_to": cohort_to,
+                        "cohort_interval": cohort_interval,
+                        "observation_window_days": observation_window_days,
+                        "timezone": timezone,
+                    },
+                    campaign_retrieve_activation_analytics_params.CampaignRetrieveActivationAnalyticsParams,
+                ),
+            ),
+            cast_to=CampaignActivationAnalyticsResponse,
         )
 
     def list_affiliate_applications(
@@ -1212,6 +1305,10 @@ class AsyncCampaignResource(AsyncAPIResource):
     def rewards(self) -> AsyncRewardsResource:
         """Campaign reward (`CampaignReward`) configuration operations."""
         return AsyncRewardsResource(self._client)
+
+    @cached_property
+    def resources(self) -> AsyncProgramResourcesResource:
+        return AsyncProgramResourcesResource(self._client)
 
     @cached_property
     def webhooks(self) -> AsyncWebhooksResource:
@@ -1832,7 +1929,9 @@ class AsyncCampaignResource(AsyncAPIResource):
         end_date: int | Omit = omit,
         include: str | Omit = omit,
         interval: Literal["day", "week", "month", "total"] | Omit = omit,
+        platform: Literal["ALL", "WEB", "IOS", "ANDROID"] | Omit = omit,
         start_date: int | Omit = omit,
+        timezone: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1843,11 +1942,13 @@ class AsyncCampaignResource(AsyncAPIResource):
         """
         Retrieves analytics for a program. Pass `interval` to also get a time-series
         (`series`) alongside the totals, and `include` to add previous-period totals,
-        status breakdowns, derived rates, or email performance. Add `email` to `include`
-        for `sent` (accepted for delivery), `delivered`, `opened`, `clicked`, `bounced`,
-        and `spamComplaints` metrics plus per-email-type breakdowns. Email rates are
-        ratios from `0` to `1`, and `isPartial` identifies windows that begin before
-        complete coverage.
+        status breakdowns, derived rates, email performance, or participant engagement.
+        Add `engagement` for covered participant activity totals, comparisons, series,
+        and breakdowns. Engagement returns explicit unavailable states when coverage is
+        unknown. Add `email` for `sent` (accepted for delivery), `delivered`, `opened`,
+        `clicked`, `bounced`, and `spamComplaints` metrics plus per-email-type
+        breakdowns. Email rates are ratios from `0` to `1`, and `isPartial` identifies
+        windows that begin before complete coverage.
 
         Args:
           days: Last number of days to retrieve analytics for. Defaults to 365. Maximum 1825.
@@ -1863,13 +1964,20 @@ class AsyncCampaignResource(AsyncAPIResource):
               `spamComplaints`, and per-email-type metrics. When `email` and an interval are
               both requested, each `series` item also contains counts for emails sent during
               that period. Combine `email` with `previousPeriod` to include the same email
-              metrics in both windows.
+              metrics in both windows. `engagement` adds covered participant activity totals,
+              comparisons, series, and breakdowns.
 
           interval: When set to `day`, `week`, or `month`, the response also includes a `series`
-              array with per-period totals. Defaults to `total` (no series).
+              array with per-period totals and uses the same bucket size for
+              `engagement.series`. Defaults to `total` (no legacy series);
+              `engagement.series` uses daily buckets when `interval` is `total` or omitted.
+
+          platform: Participant platform used for `engagement`. Defaults to `ALL`.
 
           start_date: Start date of the analytics timeframe as a Unix timestamp in milliseconds.
               Required if `days` is not set.
+
+          timezone: IANA timezone used for engagement periods and buckets. Defaults to `UTC`.
 
           extra_headers: Send extra headers
 
@@ -1894,12 +2002,80 @@ class AsyncCampaignResource(AsyncAPIResource):
                         "end_date": end_date,
                         "include": include,
                         "interval": interval,
+                        "platform": platform,
                         "start_date": start_date,
+                        "timezone": timezone,
                     },
                     campaign_retrieve_analytics_params.CampaignRetrieveAnalyticsParams,
                 ),
             ),
             cast_to=CampaignRetrieveAnalyticsResponse,
+        )
+
+    async def retrieve_activation_analytics(
+        self,
+        id: str,
+        *,
+        cohort_from: int | Omit = omit,
+        cohort_to: int | Omit = omit,
+        cohort_interval: Literal["day", "week", "month"] | Omit = omit,
+        observation_window_days: Literal[7, 30] | Omit = omit,
+        timezone: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CampaignActivationAnalyticsResponse:
+        """Retrieves activation cohorts for a program.
+
+        Each cohort follows eligible participants from enrollment through portal
+        views, sharing, referral visits, leads, and credited referrals. Results include
+        explicit coverage and unavailable states so an unknown value is not mistaken
+        for zero.
+
+        Args:
+          cohort_from: Inclusive cohort enrollment start as a Unix timestamp in milliseconds.
+
+          cohort_to: Exclusive cohort enrollment end as a Unix timestamp in milliseconds.
+
+          cohort_interval: Cohort bucket size. Defaults to `day`.
+
+          observation_window_days: Days after enrollment allowed for each participant to reach a stage.
+              Defaults to `30`.
+
+          timezone: IANA timezone used for cohort bounds. Defaults to `UTC`.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._get(
+            path_template("/campaign/{id}/analytics/activation", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {
+                        "cohort_from": cohort_from,
+                        "cohort_to": cohort_to,
+                        "cohort_interval": cohort_interval,
+                        "observation_window_days": observation_window_days,
+                        "timezone": timezone,
+                    },
+                    campaign_retrieve_activation_analytics_params.CampaignRetrieveActivationAnalyticsParams,
+                ),
+            ),
+            cast_to=CampaignActivationAnalyticsResponse,
         )
 
     async def list_affiliate_applications(
@@ -2303,6 +2479,9 @@ class CampaignResourceWithRawResponse:
         self.retrieve_analytics = to_raw_response_wrapper(
             campaign.retrieve_analytics,
         )
+        self.retrieve_activation_analytics = to_raw_response_wrapper(
+            campaign.retrieve_activation_analytics,
+        )
         self.list_affiliate_applications = to_raw_response_wrapper(
             campaign.list_affiliate_applications,
         )
@@ -2343,6 +2522,10 @@ class CampaignResourceWithRawResponse:
     def rewards(self) -> RewardsResourceWithRawResponse:
         """Campaign reward (`CampaignReward`) configuration operations."""
         return RewardsResourceWithRawResponse(self._campaign.rewards)
+
+    @cached_property
+    def resources(self) -> ProgramResourcesResourceWithRawResponse:
+        return ProgramResourcesResourceWithRawResponse(self._campaign.resources)
 
     @cached_property
     def webhooks(self) -> WebhooksResourceWithRawResponse:
@@ -2410,6 +2593,9 @@ class AsyncCampaignResourceWithRawResponse:
         self.retrieve_analytics = async_to_raw_response_wrapper(
             campaign.retrieve_analytics,
         )
+        self.retrieve_activation_analytics = async_to_raw_response_wrapper(
+            campaign.retrieve_activation_analytics,
+        )
         self.list_affiliate_applications = async_to_raw_response_wrapper(
             campaign.list_affiliate_applications,
         )
@@ -2450,6 +2636,10 @@ class AsyncCampaignResourceWithRawResponse:
     def rewards(self) -> AsyncRewardsResourceWithRawResponse:
         """Campaign reward (`CampaignReward`) configuration operations."""
         return AsyncRewardsResourceWithRawResponse(self._campaign.rewards)
+
+    @cached_property
+    def resources(self) -> AsyncProgramResourcesResourceWithRawResponse:
+        return AsyncProgramResourcesResourceWithRawResponse(self._campaign.resources)
 
     @cached_property
     def webhooks(self) -> AsyncWebhooksResourceWithRawResponse:
@@ -2517,6 +2707,9 @@ class CampaignResourceWithStreamingResponse:
         self.retrieve_analytics = to_streamed_response_wrapper(
             campaign.retrieve_analytics,
         )
+        self.retrieve_activation_analytics = to_streamed_response_wrapper(
+            campaign.retrieve_activation_analytics,
+        )
         self.list_affiliate_applications = to_streamed_response_wrapper(
             campaign.list_affiliate_applications,
         )
@@ -2557,6 +2750,10 @@ class CampaignResourceWithStreamingResponse:
     def rewards(self) -> RewardsResourceWithStreamingResponse:
         """Campaign reward (`CampaignReward`) configuration operations."""
         return RewardsResourceWithStreamingResponse(self._campaign.rewards)
+
+    @cached_property
+    def resources(self) -> ProgramResourcesResourceWithStreamingResponse:
+        return ProgramResourcesResourceWithStreamingResponse(self._campaign.resources)
 
     @cached_property
     def webhooks(self) -> WebhooksResourceWithStreamingResponse:
@@ -2624,6 +2821,9 @@ class AsyncCampaignResourceWithStreamingResponse:
         self.retrieve_analytics = async_to_streamed_response_wrapper(
             campaign.retrieve_analytics,
         )
+        self.retrieve_activation_analytics = async_to_streamed_response_wrapper(
+            campaign.retrieve_activation_analytics,
+        )
         self.list_affiliate_applications = async_to_streamed_response_wrapper(
             campaign.list_affiliate_applications,
         )
@@ -2664,6 +2864,10 @@ class AsyncCampaignResourceWithStreamingResponse:
     def rewards(self) -> AsyncRewardsResourceWithStreamingResponse:
         """Campaign reward (`CampaignReward`) configuration operations."""
         return AsyncRewardsResourceWithStreamingResponse(self._campaign.rewards)
+
+    @cached_property
+    def resources(self) -> AsyncProgramResourcesResourceWithStreamingResponse:
+        return AsyncProgramResourcesResourceWithStreamingResponse(self._campaign.resources)
 
     @cached_property
     def webhooks(self) -> AsyncWebhooksResourceWithStreamingResponse:

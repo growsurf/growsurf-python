@@ -22,7 +22,12 @@ class CommissionStructure(BaseModel):
     duration_in_months: Optional[int] = FieldInfo(alias="durationInMonths", default=None)
 
     event: Optional[Literal["CLICK", "LEAD", "SALE"]] = None
-    """The event that generates a commission. Missing legacy values read as `SALE`."""
+    """The event that generates a commission.
+
+    `CLICK` and `LEAD` require `FIXED` with a positive `amount`; `amountISO` defaults
+    to the program currency when omitted. `SALE` supports `FIXED` or `PERCENT`.
+    Missing legacy values read as `SALE`.
+    """
 
     has_intro: Optional[bool] = FieldInfo(alias="hasIntro", default=None)
 

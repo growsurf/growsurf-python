@@ -203,7 +203,7 @@ Methods:
 Types:
 
 ```python
-from growsurf.types.campaign import CampaignDesign
+from growsurf.types.campaign import CampaignDesign, CampaignDesignResources, CampaignDesignResourcesIcon
 ```
 
 Methods:

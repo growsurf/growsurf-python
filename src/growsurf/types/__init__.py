@@ -16,6 +16,7 @@ from .team_update_params import TeamUpdateParams as TeamUpdateParams
 from .commission_structure import CommissionStructure as CommissionStructure
 from .account_create_params import AccountCreateParams as AccountCreateParams
 from .affiliate_application import AffiliateApplication as AffiliateApplication
+from .analytics_availability import AnalyticsAvailability as AnalyticsAvailability
 from .campaign_create_params import CampaignCreateParams as CampaignCreateParams
 from .campaign_list_response import CampaignListResponse as CampaignListResponse
 from .campaign_update_params import CampaignUpdateParams as CampaignUpdateParams
@@ -25,7 +26,9 @@ from .rotate_api_key_response import RotateApiKeyResponse as RotateApiKeyRespons
 from .participant_commission_list import ParticipantCommissionList as ParticipantCommissionList
 from .verification_email_response import VerificationEmailResponse as VerificationEmailResponse
 from .affiliate_application_answer import AffiliateApplicationAnswer as AffiliateApplicationAnswer
+from .analytics_unavailable_reason import AnalyticsUnavailableReason as AnalyticsUnavailableReason
 from .campaign_list_payouts_params import CampaignListPayoutsParams as CampaignListPayoutsParams
+from .campaign_engagement_analytics import CampaignEngagementAnalytics as CampaignEngagementAnalytics
 from .affiliate_invite_list_response import AffiliateInviteListResponse as AffiliateInviteListResponse
 from .campaign_list_referrals_params import CampaignListReferralsParams as CampaignListReferralsParams
 from .campaign_list_commissions_params import CampaignListCommissionsParams as CampaignListCommissionsParams
@@ -34,6 +37,9 @@ from .campaign_list_participants_params import CampaignListParticipantsParams as
 from .campaign_retrieve_analytics_params import CampaignRetrieveAnalyticsParams as CampaignRetrieveAnalyticsParams
 from .affiliate_application_list_response import AffiliateApplicationListResponse as AffiliateApplicationListResponse
 from .campaign_retrieve_analytics_response import CampaignRetrieveAnalyticsResponse as CampaignRetrieveAnalyticsResponse
+from .campaign_activation_analytics_response import (
+    CampaignActivationAnalyticsResponse as CampaignActivationAnalyticsResponse,
+)
 from .campaign_list_affiliate_invites_params import (
     CampaignListAffiliateInvitesParams as CampaignListAffiliateInvitesParams,
 )
@@ -45,6 +51,9 @@ from .campaign_list_affiliate_applications_params import (
 )
 from .campaign_review_affiliate_application_params import (
     CampaignReviewAffiliateApplicationParams as CampaignReviewAffiliateApplicationParams,
+)
+from .campaign_retrieve_activation_analytics_params import (
+    CampaignRetrieveActivationAnalyticsParams as CampaignRetrieveActivationAnalyticsParams,
 )
 from .campaign_create_mobile_participant_token_params import (
     CampaignCreateMobileParticipantTokenParams as CampaignCreateMobileParticipantTokenParams,

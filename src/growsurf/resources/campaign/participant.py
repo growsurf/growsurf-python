@@ -779,7 +779,8 @@ class ParticipantResource(SyncAPIResource):
         and reverses or adjusts the referrer's commission. The inverse of Record
         Affiliate Transaction. Identify the original transaction with the same
         identifier(s) you sent when recording it. Commissions already paid out to the
-        affiliate are not clawed back; the amendment is recorded for tax reporting only.
+        affiliate are not clawed back. The amendment still updates the sale revenue used
+        in program reporting; full refunds and chargebacks also update tax reporting.
 
         Args:
           extra_headers: Send extra headers
@@ -1145,10 +1146,12 @@ class ParticipantResource(SyncAPIResource):
         commission, and payout metrics for affiliate programs). Pass `include=email`
         for `sent` (accepted for delivery), `delivered`, `opened`, `clicked`,
         `bounced`, and `spamComplaints` metrics attributed to this participant,
-        including invitations they sent. Use `include=email,series` to include the
-        same counts in each UTC series bucket. `days`, `startDate`, and `endDate`
-        filter only the optional `series` and `email` data. They do not filter the
-        top-level `analytics`, `ranks`, or `shareCount` values.
+        including invitations they sent. Add `activation` for covered first milestones
+        and the cohort anchor. Use `include=activation,series` for covered portal-view
+        and share-action counts in each series bucket. Unknown history stays `null`
+        with an explicit state and reason. `days`, `startDate`, and `endDate` filter
+        only the optional `series` and `email` data. They do not filter the top-level
+        `analytics`, `ranks`, or `shareCount` values.
 
         Args:
           days: Last number of days for optional `series` and `email` analytics.
@@ -1162,9 +1165,10 @@ class ParticipantResource(SyncAPIResource):
               activity per period; `email` returns `sent`, `delivered`, `opened`, `clicked`,
               `bounced`, `spamComplaints`, and per-email-type metrics attributed to the
               participant for the requested analytics window (including invitations they
-              sent). Request both in either order to add email counts to every series item
-              for emails sent during that period. Only documented tokens are accepted; an
-              unknown token returns `400`.
+              sent); `activation` returns the cohort anchor and covered first milestones.
+              Request `activation,series` to add covered portal-view and share-action counts
+              to every series item. Only documented tokens are accepted; an unknown token
+              returns `400`.
 
           interval: Bucket size for the `series` (only used when `include` contains `series`).
               Defaults to `day`.
@@ -2031,7 +2035,8 @@ class AsyncParticipantResource(AsyncAPIResource):
         and reverses or adjusts the referrer's commission. The inverse of Record
         Affiliate Transaction. Identify the original transaction with the same
         identifier(s) you sent when recording it. Commissions already paid out to the
-        affiliate are not clawed back; the amendment is recorded for tax reporting only.
+        affiliate are not clawed back. The amendment still updates the sale revenue used
+        in program reporting; full refunds and chargebacks also update tax reporting.
 
         Args:
           extra_headers: Send extra headers
@@ -2397,10 +2402,12 @@ class AsyncParticipantResource(AsyncAPIResource):
         commission, and payout metrics for affiliate programs). Pass `include=email`
         for `sent` (accepted for delivery), `delivered`, `opened`, `clicked`,
         `bounced`, and `spamComplaints` metrics attributed to this participant,
-        including invitations they sent. Use `include=email,series` to include the
-        same counts in each UTC series bucket. `days`, `startDate`, and `endDate`
-        filter only the optional `series` and `email` data. They do not filter the
-        top-level `analytics`, `ranks`, or `shareCount` values.
+        including invitations they sent. Add `activation` for covered first milestones
+        and the cohort anchor. Use `include=activation,series` for covered portal-view
+        and share-action counts in each series bucket. Unknown history stays `null`
+        with an explicit state and reason. `days`, `startDate`, and `endDate` filter
+        only the optional `series` and `email` data. They do not filter the top-level
+        `analytics`, `ranks`, or `shareCount` values.
 
         Args:
           days: Last number of days for optional `series` and `email` analytics.
@@ -2414,9 +2421,10 @@ class AsyncParticipantResource(AsyncAPIResource):
               activity per period; `email` returns `sent`, `delivered`, `opened`, `clicked`,
               `bounced`, `spamComplaints`, and per-email-type metrics attributed to the
               participant for the requested analytics window (including invitations they
-              sent). Request both in either order to add email counts to every series item
-              for emails sent during that period. Only documented tokens are accepted; an
-              unknown token returns `400`.
+              sent); `activation` returns the cohort anchor and covered first milestones.
+              Request `activation,series` to add covered portal-view and share-action counts
+              to every series item. Only documented tokens are accepted; an unknown token
+              returns `400`.
 
           interval: Bucket size for the `series` (only used when `include` contains `series`).
               Defaults to `day`.

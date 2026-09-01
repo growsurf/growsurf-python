@@ -59,8 +59,8 @@ class DesignResource(SyncAPIResource):
         Retrieves a program's configured design fields: the dashboard Program Editor's **Design**
         tab plus the payout-destination confirmation page copy configured from payout integration
         cards. This includes the GrowSurf window layout, header, share channels and invites,
-        signup form, portal and landing pages, theme styling, and referral or affiliate summary
-        and status sections. The available fields depend on the program type.
+        signup form, Resources presentation, portal and landing pages, theme styling, and referral
+        or affiliate summary and status sections. The available fields depend on the program type.
         `payoutDestinationConfirmation` is omitted when no confirmation fields are stored. Stored
         `null` fields are returned as `null`; omitted and `null` fields use localized defaults.
 
@@ -104,6 +104,8 @@ class DesignResource(SyncAPIResource):
 
         Args:
           body: A partial `CampaignDesign` object — only the fields you send are changed.
+              `resources` accepts `CampaignDesignResources`: visibility, title, list/back/copy
+              labels, and an icon whose type is `DEFAULT`, `IMAGE`, or `NONE`.
 
           extra_headers: Send extra headers
 
@@ -162,8 +164,8 @@ class AsyncDesignResource(AsyncAPIResource):
         Retrieves a program's configured design fields: the dashboard Program Editor's **Design**
         tab plus the payout-destination confirmation page copy configured from payout integration
         cards. This includes the GrowSurf window layout, header, share channels and invites,
-        signup form, portal and landing pages, theme styling, and referral or affiliate summary
-        and status sections. The available fields depend on the program type.
+        signup form, Resources presentation, portal and landing pages, theme styling, and referral
+        or affiliate summary and status sections. The available fields depend on the program type.
         `payoutDestinationConfirmation` is omitted when no confirmation fields are stored. Stored
         `null` fields are returned as `null`; omitted and `null` fields use localized defaults.
 
@@ -207,6 +209,8 @@ class AsyncDesignResource(AsyncAPIResource):
 
         Args:
           body: A partial `CampaignDesign` object — only the fields you send are changed.
+              `resources` accepts `CampaignDesignResources`: visibility, title, list/back/copy
+              labels, and an icon whose type is `DEFAULT`, `IMAGE`, or `NONE`.
 
           extra_headers: Send extra headers
 

@@ -29,17 +29,26 @@ class CampaignRetrieveAnalyticsParams(TypedDict, total=False):
     When `email` and an interval are both requested, each `series` item also contains
     counts for emails sent during that period. Combine `email` with `previousPeriod`
     to include the same email metrics in both windows.
+    `engagement` adds covered participant activity totals, comparisons, series, and
+    breakdowns.
     """
 
     interval: Literal["day", "week", "month", "total"]
     """When set to `day`, `week`, or `month`, the response also includes a `series`
-    array with per-period totals.
+    array with per-period totals and uses the same bucket size for `engagement.series`.
 
-    Defaults to `total` (no series).
+    Defaults to `total` (no legacy series); `engagement.series` uses daily buckets when
+    `interval` is `total` or omitted.
     """
+
+    platform: Literal["ALL", "WEB", "IOS", "ANDROID"]
+    """Participant platform used for `engagement`. Defaults to `ALL`."""
 
     start_date: Annotated[int, PropertyInfo(alias="startDate")]
     """Start date of the analytics timeframe as a Unix timestamp in milliseconds.
 
     Required if `days` is not set.
     """
+
+    timezone: str
+    """IANA timezone used for engagement periods and buckets. Defaults to `UTC`."""

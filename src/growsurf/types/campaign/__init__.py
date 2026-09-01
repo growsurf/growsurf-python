@@ -7,12 +7,17 @@ from .webhook import Webhook as Webhook
 from .campaign import Campaign as Campaign
 from .participant import Participant as Participant
 from .webhook_event import WebhookEvent as WebhookEvent
-from .campaign_design import CampaignDesign as CampaignDesign
+from .campaign_design import (
+    CampaignDesign as CampaignDesign,
+    CampaignDesignResources as CampaignDesignResources,
+    CampaignDesignResourcesIcon as CampaignDesignResourcesIcon,
+)
 from .campaign_emails import CampaignEmails as CampaignEmails
 from .referral_source import ReferralSource as ReferralSource
 from .referral_status import ReferralStatus as ReferralStatus
 from .campaign_options import CampaignOptions as CampaignOptions
 from .fraud_risk_level import FraudRiskLevel as FraudRiskLevel
+from .program_resource import ProgramResource as ProgramResource, ProgramResourceFile as ProgramResourceFile
 from .participant_reward import ParticipantReward as ParticipantReward
 from .webhook_test_params import WebhookTestParams as WebhookTestParams
 from .reward_create_params import RewardCreateParams as RewardCreateParams
@@ -40,9 +45,18 @@ from .participant_analytics_params import ParticipantAnalyticsParams as Particip
 from .campaign_reward_list_response import CampaignRewardListResponse as CampaignRewardListResponse
 from .participant_analytics_response import ParticipantAnalyticsResponse as ParticipantAnalyticsResponse
 from .participant_bulk_delete_params import ParticipantBulkDeleteParams as ParticipantBulkDeleteParams
+from .program_resource_list_response import ProgramResourceListResponse as ProgramResourceListResponse
+from .program_resource_upload_result import ProgramResourceUploadResult as ProgramResourceUploadResult
+from .program_resource_upload_ticket import ProgramResourceUploadTicket as ProgramResourceUploadTicket
 from .participant_list_payouts_params import ParticipantListPayoutsParams as ParticipantListPayoutsParams
 from .participant_list_rewards_params import ParticipantListRewardsParams as ParticipantListRewardsParams
 from .participant_send_invites_params import ParticipantSendInvitesParams as ParticipantSendInvitesParams
+from .delete_program_resource_response import DeleteProgramResourceResponse as DeleteProgramResourceResponse
+from .participant_activation_analytics import (
+    ParticipantActivationCohort as ParticipantActivationCohort,
+    ParticipantActivationAnalytics as ParticipantActivationAnalytics,
+    ParticipantActivationMilestones as ParticipantActivationMilestones,
+)
 from .participant_bulk_delete_response import ParticipantBulkDeleteResponse as ParticipantBulkDeleteResponse
 from .participant_list_referrals_params import ParticipantListReferralsParams as ParticipantListReferralsParams
 from .participant_list_rewards_response import ParticipantListRewardsResponse as ParticipantListRewardsResponse

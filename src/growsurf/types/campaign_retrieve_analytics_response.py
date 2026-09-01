@@ -6,6 +6,7 @@ from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
 from .email_analytics import EmailAnalytics, EmailAnalyticsCounts
+from .campaign_engagement_analytics import CampaignEngagementAnalytics
 
 __all__ = [
     "CampaignRetrieveAnalyticsResponse",
@@ -215,6 +216,9 @@ class CampaignRetrieveAnalyticsResponse(BaseModel):
 
     email: Optional[EmailAnalytics] = None
     """Present only when `include` contains `email`."""
+
+    engagement: Optional[CampaignEngagementAnalytics] = None
+    """Present only when `include` contains `engagement`."""
 
     previous_period: Optional[PreviousPeriod] = FieldInfo(alias="previousPeriod", default=None)
     """Present only when `include` contains `previousPeriod`."""

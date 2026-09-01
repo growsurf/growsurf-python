@@ -31,9 +31,10 @@ class ParticipantAnalyticsParams(TypedDict, total=False):
     `series` returns this participant's own activity per period; `email` returns
     `sent`, `delivered`, `opened`, `clicked`, `bounced`, `spamComplaints`, and
     per-email-type metrics attributed to the participant for the requested analytics
-    window (including invitations they sent). Request both in either order to add
-    email counts to every series item for emails sent during that period. Only
-    documented tokens are accepted; an unknown token returns `400`.
+    window (including invitations they sent); `activation` returns the cohort anchor
+    and covered first milestones. Request `activation,series` to add covered
+    portal-view and share-action counts to every series item. Only documented tokens
+    are accepted; an unknown token returns `400`.
     """
 
     interval: Literal["day", "week", "month"]

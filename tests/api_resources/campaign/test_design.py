@@ -9,7 +9,7 @@ import pytest
 
 from growsurf import Growsurf, AsyncGrowsurf
 from tests.utils import assert_matches_type
-from growsurf.types.campaign import CampaignDesign
+from growsurf.types.campaign import CampaignDesign, CampaignDesignResources
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -65,7 +65,17 @@ class TestDesign:
         design = client.campaign.design.update(
             id="id",
             body={
+                "participantAvatarStyle": "CHARACTERS",
                 "login": {"heading": "Sign in", "buttonText": "Send sign-in link", "successHeading": "Check your email"},
+                "resources": {
+                    "isPublicDisplayed": True,
+                    "title": "Resources",
+                    "viewResourcesLinkText": "View resources",
+                    "backLinkText": "Back",
+                    "copyButtonText": "Copy",
+                    "copiedText": "Copied",
+                    "icon": {"type": "IMAGE", "imageUrl": "https://example.com/resources-icon.png"},
+                },
                 "payoutDestinationConfirmation": {"headline": "Confirm your {{payoutProvider}} payout email"},
             },
         )
@@ -107,6 +117,21 @@ class TestDesign:
                 id="",
                 body={"foo": "bar"},
             )
+
+    def test_campaign_design_resources_type_covers_the_public_model(self) -> None:
+        resources: CampaignDesignResources = {
+            "isPublicDisplayed": True,
+            "title": "Resources",
+            "viewResourcesLinkText": "View resources",
+            "backLinkText": "Back",
+            "copyButtonText": "Copy",
+            "copiedText": "Copied",
+            "icon": {"type": "NONE", "imageUrl": "https://example.com/resources-icon.png"},
+        }
+        design: CampaignDesign = {"resources": resources, "futureDesignSection": {"enabled": True}}
+
+        assert resources["icon"]["type"] == "NONE"
+        assert "futureDesignSection" in design
 
 
 class TestAsyncDesign:
@@ -163,6 +188,15 @@ class TestAsyncDesign:
             id="id",
             body={
                 "login": {"heading": "Sign in", "buttonText": "Send sign-in link", "successHeading": "Check your email"},
+                "resources": {
+                    "isPublicDisplayed": True,
+                    "title": "Resources",
+                    "viewResourcesLinkText": "View resources",
+                    "backLinkText": "Back",
+                    "copyButtonText": "Copy",
+                    "copiedText": "Copied",
+                    "icon": {"type": "DEFAULT"},
+                },
                 "payoutDestinationConfirmation": {"headline": "Confirm your {{payoutProvider}} payout email"},
             },
         )

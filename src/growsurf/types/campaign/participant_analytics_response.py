@@ -6,6 +6,7 @@ from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
 from ..email_analytics import EmailAnalytics, EmailAnalyticsCounts
+from .participant_activation_analytics import ParticipantActivationAnalytics
 from ..campaign_retrieve_analytics_response import StatusCountsRewardStatus
 
 __all__ = ["ParticipantAnalyticsResponse", "Analytics", "Ranks", "Series", "EmailAnalytics", "EmailAnalyticsCounts"]
@@ -87,6 +88,12 @@ class Series(BaseModel):
 
     pinterest_shares: Optional[int] = FieldInfo(alias="pinterestShares", default=None)
 
+    portal_views: Optional[int] = FieldInfo(alias="portalViews", default=None)
+    """Covered portal views when both `activation` and `series` are requested.
+
+    Unknown history is `null`.
+    """
+
     qrcode_shares: Optional[int] = FieldInfo(alias="qrcodeShares", default=None)
 
     reddit_shares: Optional[int] = FieldInfo(alias="redditShares", default=None)
@@ -98,6 +105,12 @@ class Series(BaseModel):
     referrals: Optional[int] = None
 
     sms_shares: Optional[int] = FieldInfo(alias="smsShares", default=None)
+
+    share_actions: Optional[int] = FieldInfo(alias="shareActions", default=None)
+    """Covered share actions when both `activation` and `series` are requested.
+
+    Unknown history is `null`.
+    """
 
     telegram_shares: Optional[int] = FieldInfo(alias="telegramShares", default=None)
 
@@ -139,6 +152,9 @@ class ParticipantAnalyticsResponse(BaseModel):
 
     share_count: Dict[str, int] = FieldInfo(alias="shareCount")
     """Per-channel share counts (e.g. `email`, `facebook`, `twitter`, ...)."""
+
+    activation: Optional[ParticipantActivationAnalytics] = None
+    """Present only when `include` contains `activation`."""
 
     email: Optional[EmailAnalytics] = None
     """Present only when `include` contains `email`."""
