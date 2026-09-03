@@ -13,8 +13,18 @@ def test_unknown_future_payout_provider_decodes() -> None:
         {
             "activeProvider": "TESTBANK",
             "enabledProviders": ["TESTBANK"],
-            "destinations": [{"provider": "TESTBANK"}],
-        }
+            "destinations": [
+                {
+                    "provider": "TESTBANK",
+                    "providerDisplayName": "Test Bank",
+                    "status": "ACTIVE",
+                    "claimEmail": "richard@piedpiper.com",
+                    "legalEntityType": "INDIVIDUAL",
+                    "confirmedAt": 1752000000000,
+                    "needsRepairReason": None,
+                }
+            ],
+        },
     )
 
     assert response.active_provider == "TESTBANK"
@@ -23,7 +33,12 @@ def test_unknown_future_payout_provider_decodes() -> None:
 
     confirmation = parse_obj(
         ParticipantRequestPayoutDestinationConfirmationResponse,
-        {"provider": "TESTBANK"},
+        {
+            "provider": "TESTBANK",
+            "providerDisplayName": "Test Bank",
+            "status": "CONFIRMATION_REQUESTED",
+            "expiresAt": 1752604800000,
+        },
     )
     assert confirmation.provider == "TESTBANK"
 

@@ -16,9 +16,10 @@ class CreateAccountResponse(BaseModel):
     api_key: str = FieldInfo(alias="apiKey")
     """An API key for the new account.
 
-    Use it as the `Bearer` token on subsequent requests. It is shown once, locked
-    (`403` `EMAIL_NOT_VERIFIED_ERROR`) until the account's email is verified, and
-    rotated when the account owner first signs in to the GrowSurf dashboard.
+    Use it as the `Bearer` token on subsequent requests. It is shown once and locked
+    (`403` `EMAIL_NOT_VERIFIED_ERROR`) until the account's email is verified;
+    verification unlocks this same key, so keep it and retry. It is replaced only when
+    the account owner first signs in to the GrowSurf dashboard.
     """
 
     verification_status: Literal["NOT_REQUESTED", "REQUESTED", "VERIFIED"] = FieldInfo(alias="verificationStatus")

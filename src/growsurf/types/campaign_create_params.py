@@ -26,6 +26,29 @@ class CampaignCreateParams(TypedDict, total=False):
     cannot be changed on update.
     """
 
+    goal: Literal[
+        "CUSTOMERS",
+        "USERS",
+        "SUBSCRIBERS",
+        "WAITLIST",
+        "B2B_SAAS_SELF_SERVICE",
+        "B2B_SAAS_ENTERPRISE",
+        "B2C_SUBSCRIPTIONS",
+        "FINANCIAL_SERVICES",
+        "ONLINE_EDUCATION",
+        "ONLINE_INSURANCE",
+    ]
+    """What the program is for, which seeds share settings that suit that audience.
+
+    Programs selling to businesses (`CUSTOMERS`, `USERS`, `B2B_SAAS_SELF_SERVICE`,
+    `B2B_SAAS_ENTERPRISE`) start with the LinkedIn share button visible; consumer,
+    financial, education, insurance, newsletter, and waitlist programs
+    (`B2C_SUBSCRIPTIONS`, `FINANCIAL_SERVICES`, `ONLINE_EDUCATION`,
+    `ONLINE_INSURANCE`, `SUBSCRIBERS`, `WAITLIST`) start with it hidden. Omit it and
+    every share button keeps its standard default. Set only when the program is
+    created; it is not accepted on update.
+    """
+
     name: str
     """The program name. Defaults to a generated friendly label plus the creation date."""
 

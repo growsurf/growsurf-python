@@ -11,14 +11,14 @@ __all__ = ["ParticipantRequestPayoutDestinationConfirmationResponse"]
 
 
 class ParticipantRequestPayoutDestinationConfirmationResponse(BaseModel):
-    expires_at: Optional[int] = FieldInfo(alias="expiresAt", default=None)
+    expires_at: Optional[int] = FieldInfo(alias="expiresAt")
     """When the confirmation link expires, as a Unix timestamp in milliseconds."""
 
-    provider: Optional[str] = None
+    provider: str
     """The provider the participant was asked to confirm."""
 
-    provider_display_name: Optional[str] = FieldInfo(alias="providerDisplayName", default=None)
+    provider_display_name: str = FieldInfo(alias="providerDisplayName")
     """The customer-facing provider name (e.g. "PayPal", "Wise")."""
 
-    status: Optional[Literal["CONFIRMATION_REQUESTED"]] = None
+    status: Literal["CONFIRMATION_REQUESTED"]
     """Confirms the message was requested."""

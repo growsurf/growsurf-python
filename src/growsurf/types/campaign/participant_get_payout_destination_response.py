@@ -11,25 +11,25 @@ __all__ = ["ParticipantGetPayoutDestinationResponse", "Destination"]
 
 
 class Destination(BaseModel):
-    claim_email: Optional[str] = FieldInfo(alias="claimEmail", default=None)
+    claim_email: Optional[str] = FieldInfo(alias="claimEmail")
     """The confirmed payout email for this provider."""
 
-    confirmed_at: Optional[int] = FieldInfo(alias="confirmedAt", default=None)
+    confirmed_at: Optional[int] = FieldInfo(alias="confirmedAt")
     """When the destination was confirmed, as a Unix timestamp in milliseconds."""
 
-    legal_entity_type: Optional[Literal["INDIVIDUAL", "BUSINESS"]] = FieldInfo(alias="legalEntityType", default=None)
+    legal_entity_type: Optional[Literal["INDIVIDUAL", "BUSINESS"]] = FieldInfo(alias="legalEntityType")
     """The legal recipient type the participant confirmed, if any."""
 
-    needs_repair_reason: Optional[str] = FieldInfo(alias="needsRepairReason", default=None)
+    needs_repair_reason: Optional[str] = FieldInfo(alias="needsRepairReason")
     """When status is `NEEDS_REPAIR`, why (e.g. a bounced delivery)."""
 
-    provider: Optional[str] = None
+    provider: str
     """The payout provider this entry describes."""
 
-    provider_display_name: Optional[str] = FieldInfo(alias="providerDisplayName", default=None)
+    provider_display_name: str = FieldInfo(alias="providerDisplayName")
     """The customer-facing provider name (e.g. "PayPal", "Wise")."""
 
-    status: Optional[str] = None
+    status: str
     """The destination's current status: `NONE` (not set up), `PENDING_CONFIRMATION`,
     `CONFIRMED`, `ACTIVE`, `NEEDS_REPAIR`, or `EXPIRED`.
 
@@ -38,13 +38,13 @@ class Destination(BaseModel):
 
 
 class ParticipantGetPayoutDestinationResponse(BaseModel):
-    active_provider: Optional[str] = FieldInfo(alias="activeProvider", default=None)
+    active_provider: Optional[str] = FieldInfo(alias="activeProvider")
     """The provider that currently gets paid, or null until the participant confirms one."""
 
-    destinations: Optional[List[Destination]] = None
+    destinations: List[Destination]
     """One entry per enabled payout provider describing the participant's destination for
     it.
     """
 
-    enabled_providers: Optional[List[str]] = FieldInfo(alias="enabledProviders", default=None)
+    enabled_providers: List[str] = FieldInfo(alias="enabledProviders")
     """The payout providers enabled for this program."""

@@ -37,6 +37,9 @@ class CampaignDesignResources(TypedDict, total=False):
     copiedText: str
     """TEXT resource copy confirmation. Maximum 100 characters."""
 
+    emptyState: str
+    """Shown in place of the list when no resources are published. Maximum 500 characters."""
+
     icon: CampaignDesignResourcesIcon
     """Icon configuration for the destination."""
 
