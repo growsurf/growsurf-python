@@ -794,9 +794,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
         method = options.method.lower()
         url = URL(str(options.url))
         path = url.path.rstrip("/")
-        return method in {"get", "head"} or (
-            method == "post" and url.is_relative_url and path == "/api-key/rotate"
-        )
+        return method in {"get", "head"} or (method == "post" and url.is_relative_url and path == "/api-key/rotate")
 
     def _should_retry(self, response: httpx.Response) -> bool:
         # Note: this is not a standard header

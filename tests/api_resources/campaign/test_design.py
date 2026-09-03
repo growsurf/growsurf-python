@@ -66,7 +66,11 @@ class TestDesign:
             id="id",
             body={
                 "participantAvatarStyle": "CHARACTERS",
-                "login": {"heading": "Sign in", "buttonText": "Send sign-in link", "successHeading": "Check your email"},
+                "login": {
+                    "heading": "Sign in",
+                    "buttonText": "Send sign-in link",
+                    "successHeading": "Check your email",
+                },
                 "resources": {
                     "isPublicDisplayed": True,
                     "title": "Resources",
@@ -187,7 +191,11 @@ class TestAsyncDesign:
         design = await async_client.campaign.design.update(
             id="id",
             body={
-                "login": {"heading": "Sign in", "buttonText": "Send sign-in link", "successHeading": "Check your email"},
+                "login": {
+                    "heading": "Sign in",
+                    "buttonText": "Send sign-in link",
+                    "successHeading": "Check your email",
+                },
                 "resources": {
                     "isPublicDisplayed": True,
                     "title": "Resources",

@@ -14,9 +14,7 @@ __all__ = ["ParticipantUpdateParams"]
 class ParticipantUpdateParams(TypedDict, total=False):
     id: Required[str]
 
-    affiliate_status: Annotated[
-        Literal["APPROVED", "SUSPENDED", "BANNED"], PropertyInfo(alias="affiliateStatus")
-    ]
+    affiliate_status: Annotated[Literal["APPROVED", "SUSPENDED", "BANNED"], PropertyInfo(alias="affiliateStatus")]
     """Affiliate programs only. Sets the affiliate status.
 
     `APPROVED` also enrolls a participant who is not yet an affiliate. `SUSPENDED` and

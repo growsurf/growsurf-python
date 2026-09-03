@@ -436,9 +436,7 @@ class TestGrowsurf:
             idempotency_keys.append(request.headers.get("Idempotency-Key"))
             raise httpx.ConnectError("response lost after the mutation completed")
 
-        route = respx_mock.post("https://other.example/api-key/rotate").mock(
-            side_effect=fail_request
-        )
+        route = respx_mock.post("https://other.example/api-key/rotate").mock(side_effect=fail_request)
 
         with pytest.raises(APIConnectionError):
             client.post("https://other.example/api-key/rotate", cast_to=httpx.Response)
@@ -1402,9 +1400,7 @@ class TestAsyncGrowsurf:
             idempotency_keys.append(request.headers.get("Idempotency-Key"))
             raise httpx.ConnectError("response lost after the mutation completed")
 
-        route = respx_mock.post("https://other.example/api-key/rotate").mock(
-            side_effect=fail_request
-        )
+        route = respx_mock.post("https://other.example/api-key/rotate").mock(side_effect=fail_request)
 
         with pytest.raises(APIConnectionError):
             await async_client.post("https://other.example/api-key/rotate", cast_to=httpx.Response)

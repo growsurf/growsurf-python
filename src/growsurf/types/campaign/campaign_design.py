@@ -43,6 +43,7 @@ class CampaignDesignResources(TypedDict, total=False):
     icon: CampaignDesignResourcesIcon
     """Icon configuration for the destination."""
 
+
 # A program's design configuration. It includes the dashboard Program Editor's
 # Design tab and the payout-destination confirmation page copy configured from
 # payout integration cards. The exact fields available depend on the program type
