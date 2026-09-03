@@ -136,7 +136,9 @@ class ParticipantEngagementPlatformBreakdown(BaseModel):
 
 
 class ParticipantEngagementPortalSourceBreakdown(BaseModel):
-    key: Literal["DEFAULT_LAUNCHER", "SDK_OPEN", "CSS_CLASS", "HOSTED_PORTAL", "NATIVE_WINDOW", "UNKNOWN"]
+    key: Literal[
+        "DEFAULT_LAUNCHER", "SDK_OPEN", "CSS_CLASS", "EMBEDDABLE_ELEMENT", "HOSTED_PORTAL", "NATIVE_WINDOW", "UNKNOWN"
+    ]
 
     active_participants: int = FieldInfo(alias="activeParticipants")
 
