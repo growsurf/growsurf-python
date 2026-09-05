@@ -28,7 +28,7 @@ from growsurf.types.campaign import Campaign
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
-CAMPAIGN_RESPONSE = {
+CAMPAIGN_RESPONSE: dict[str, object] = {
     "id": "campaign-id",
     "impressionCount": 0,
     "inviteCount": 0,
@@ -41,7 +41,7 @@ CAMPAIGN_RESPONSE = {
     "winnerCount": 0,
 }
 
-MOBILE_PARTICIPANT_TOKEN_RESPONSE = {
+MOBILE_PARTICIPANT_TOKEN_RESPONSE: dict[str, object] = {
     "expiresIn": 31536000,
     "isNew": True,
     "participantToken": "participant-token",
