@@ -106,14 +106,14 @@ class Series(Analytics):
 class PreviousPeriod(BaseModel):
     """Totals for the equal-length window immediately preceding the requested one."""
 
-    analytics: Optional[Analytics] = None
+    analytics: Analytics
 
     email: Optional[EmailAnalytics] = None
     """Present when the parent request includes both `previousPeriod` and `email`."""
 
-    end_date: Optional[int] = FieldInfo(alias="endDate", default=None)
+    end_date: int = FieldInfo(alias="endDate")
 
-    start_date: Optional[int] = FieldInfo(alias="startDate", default=None)
+    start_date: int = FieldInfo(alias="startDate")
 
 
 class StatusCountsRewardStatus(BaseModel):

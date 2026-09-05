@@ -59,6 +59,8 @@ def _validate_program_resource_write(values: Dict[str, object], *, creating: boo
     resource_type = values.get("type")
     if supplied_content_types and resource_type is not None and supplied_content_types[0] != resource_type:
         raise ValueError("Content fields must match the selected Program Resource type")
+    if not creating and resource_type is not None and supplied_content_types != [resource_type]:
+        raise ValueError(f"Changing a Program Resource to {resource_type} requires its replacement content")
     if creating and (not supplied_content_types or supplied_content_types[0] != resource_type):
         raise ValueError("Create requires the content fields for the selected Program Resource type")
 

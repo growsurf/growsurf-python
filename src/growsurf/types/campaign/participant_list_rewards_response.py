@@ -13,6 +13,6 @@ __all__ = ["ParticipantListRewardsResponse"]
 class ParticipantListRewardsResponse(BaseModel):
     limit: int
 
-    next_id: Optional[str] = FieldInfo(alias="nextId", default=None)
+    next_id: Optional[str] = FieldInfo(alias="nextId", default=...)
 
     rewards: List[ParticipantReward]

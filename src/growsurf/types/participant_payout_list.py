@@ -49,6 +49,6 @@ class Payout(BaseModel):
 class ParticipantPayoutList(BaseModel):
     limit: int
 
-    next_id: Optional[str] = FieldInfo(alias="nextId", default=None)
+    next_id: Optional[str] = FieldInfo(alias="nextId", default=...)
 
     payouts: List[Payout]

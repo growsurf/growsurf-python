@@ -99,14 +99,14 @@ class RewardUpdateParams(TypedDict, total=False):
     referred_reward_upfront: Annotated[bool, PropertyInfo(alias="referredRewardUpfront")]
     """For double-sided rewards, deliver the referred friend's reward upfront as a discount."""
 
-    referred_value: Annotated[RewardTaxValuation, PropertyInfo(alias="referredValue")]
+    referred_value: Annotated[Optional[RewardTaxValuation], PropertyInfo(alias="referredValue")]
     """Tax treatment override for the referred friend's side of a double-sided reward. Null inherits the program's confirmed default.
     """
 
     title: str
     """The reward title (internal label)."""
 
-    value: RewardTaxValuation
+    value: Optional[RewardTaxValuation]
     """Tax valuation for the reward (the referrer's side of a double-sided reward).
 
     Used by tax documentation / 1099 reporting.

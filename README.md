@@ -7,7 +7,7 @@ The Growsurf Python library provides convenient access to the Growsurf REST API 
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
-It is generated with [Stainless](https://www.stainless.com/).
+The library was originally generated with [Stainless](https://www.stainless.com/) and is now maintained by hand.
 
 ## Documentation
 
@@ -140,18 +140,23 @@ Error codes are as follows:
 | ----------- | -------------------------- |
 | 400         | `BadRequestError`          |
 | 401         | `AuthenticationError`      |
+| 402         | `APIStatusError`           |
 | 403         | `PermissionDeniedError`    |
 | 404         | `NotFoundError`            |
+| 406         | `APIStatusError`           |
+| 409         | `ConflictError`            |
 | 422         | `UnprocessableEntityError` |
+| 423         | `APIStatusError`           |
 | 429         | `RateLimitError`           |
 | >=500       | `InternalServerError`      |
 | N/A         | `APIConnectionError`       |
 
 ### Retries
 
-Certain errors are automatically retried 2 times by default, with a short exponential backoff.
-Connection errors (for example, due to a network connectivity problem), 408 Request Timeout, 409 Conflict,
-429 Rate Limit, and >=500 Internal errors are all retried by default.
+`GET` and `HEAD` requests are retried up to 2 times by default, with a short exponential backoff. API-key rotation is also retried because the SDK generates and reuses an `Idempotency-Key` for that request. Other `POST`, `PATCH`, and `DELETE` requests are not retried automatically.
+
+For requests that are safe to retry, the SDK retries connection errors, 408 Request Timeout, 409 Conflict,
+429 Rate Limit, and >=500 Internal errors.
 
 You can use the `max_retries` option to configure or disable retry settings:
 

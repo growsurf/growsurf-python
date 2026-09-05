@@ -1,6 +1,11 @@
+import pytest
+from pydantic import ValidationError
+
+from growsurf._compat import parse_obj
 from growsurf.types.campaign_retrieve_analytics_response import (
     Series as CampaignSeries,
     Analytics as CampaignAnalytics,
+    PreviousPeriod,
     StatusCountsRewardStatus,
 )
 from growsurf.types.campaign.participant_analytics_response import (
@@ -32,3 +37,8 @@ def test_campaign_analytics_exposes_unique_commission_referrals() -> None:
     assert analytics.to_dict() == {"uniqueCommissionReferrals": 4}
     assert campaign_series.to_dict() == {"uniqueCommissionReferrals": 3}
     assert participant_series.to_dict() == {"uniqueCommissionReferrals": 2}
+
+
+def test_previous_period_requires_analytics_and_bounds() -> None:
+    with pytest.raises(ValidationError):
+        parse_obj(PreviousPeriod, {})

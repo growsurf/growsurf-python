@@ -101,7 +101,7 @@ class Campaign(BaseModel):
 
     rewards: List[Reward]
 
-    status: Literal["DRAFT", "IN_PROGRESS", "COMPLETE", "DELETED"]
+    status: Literal["DRAFT", "PENDING", "IN_PROGRESS", "COMPLETE", "CANCELLED", "DELETED"]
 
     type: Literal["REFERRAL", "AFFILIATE"]
 

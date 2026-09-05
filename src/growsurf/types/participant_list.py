@@ -13,6 +13,6 @@ __all__ = ["ParticipantList"]
 class ParticipantList(BaseModel):
     limit: int
 
-    next_id: Optional[str] = FieldInfo(alias="nextId", default=None)
+    next_id: Optional[str] = FieldInfo(alias="nextId", default=...)
 
     participants: List[Participant]

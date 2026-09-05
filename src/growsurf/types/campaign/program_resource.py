@@ -22,11 +22,11 @@ class ProgramResource(BaseModel):
     id: str
     type: Literal["FILE", "LINK", "TEXT"]
     title: str
-    description: Optional[str] = None
-    category: Optional[str] = None
-    url: Optional[str] = None
-    text: Optional[str] = None
-    file: Optional[ProgramResourceFile] = None
+    description: Optional[str] = FieldInfo(default=...)
+    category: Optional[str] = FieldInfo(default=...)
+    url: Optional[str] = FieldInfo(default=...)
+    text: Optional[str] = FieldInfo(default=...)
+    file: Optional[ProgramResourceFile] = FieldInfo(default=...)
     is_published: bool = FieldInfo(alias="isPublished")
     position: int
     created_at: int = FieldInfo(alias="createdAt")

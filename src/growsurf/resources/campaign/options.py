@@ -60,7 +60,8 @@ class OptionsResource(SyncAPIResource):
         Editor's **Options** tab. Includes reward/fraud approval, anti-fraud lists +
         toggles, referral cookie/credit windows, reCAPTCHA, affiliate enrollment +
         application review, payout threshold + tax settings (affiliate only), and
-        notification-email settings. `fraud.recaptcha.secretKey` is never returned.
+        notification-email settings, and `attributionModel` (`LAST_CLICK` or
+        `FIRST_CLICK`). `fraud.recaptcha.secretKey` is never returned.
 
         Args:
           extra_headers: Send extra headers
@@ -162,7 +163,8 @@ class AsyncOptionsResource(AsyncAPIResource):
         Editor's **Options** tab. Includes reward/fraud approval, anti-fraud lists +
         toggles, referral cookie/credit windows, reCAPTCHA, affiliate enrollment +
         application review, payout threshold + tax settings (affiliate only), and
-        notification-email settings. `fraud.recaptcha.secretKey` is never returned.
+        notification-email settings, and `attributionModel` (`LAST_CLICK` or
+        `FIRST_CLICK`). `fraud.recaptcha.secretKey` is never returned.
 
         Args:
           extra_headers: Send extra headers

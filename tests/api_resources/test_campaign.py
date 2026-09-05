@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import os
+import json
 from typing import Any, cast
 
+import httpx
 import pytest
 
 from growsurf import Growsurf, AsyncGrowsurf
@@ -26,9 +28,63 @@ from growsurf.types.campaign import Campaign
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
+CAMPAIGN_RESPONSE = {
+    "id": "campaign-id",
+    "impressionCount": 0,
+    "inviteCount": 0,
+    "name": "Pied Piper",
+    "participantCount": 0,
+    "referralCount": 0,
+    "rewards": [],
+    "status": "DRAFT",
+    "type": "REFERRAL",
+    "winnerCount": 0,
+}
+
+MOBILE_PARTICIPANT_TOKEN_RESPONSE = {
+    "expiresIn": 31536000,
+    "isNew": True,
+    "participantToken": "participant-token",
+    "participant": {
+        "id": "participant-id",
+        "email": "gavin@hooli.com",
+        "monthlyRank": 0,
+        "monthlyReferralCount": 0,
+        "rank": 0,
+        "referralCount": 0,
+        "rewards": [],
+    },
+}
+
 
 class TestCampaign:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
+
+    def test_create_sends_goal(self, client: Growsurf, respx_mock: Any) -> None:
+        route = respx_mock.post(f"{base_url}/campaigns").mock(return_value=httpx.Response(200, json=CAMPAIGN_RESPONSE))
+
+        client.campaign.create(type="REFERRAL", goal="B2B_SAAS_SELF_SERVICE")
+
+        assert json.loads(route.calls.last.request.content) == {
+            "type": "REFERRAL",
+            "goal": "B2B_SAAS_SELF_SERVICE",
+        }
+
+    def test_mobile_participant_token_sends_affiliate_choice(self, client: Growsurf, respx_mock: Any) -> None:
+        route = respx_mock.post(f"{base_url}/campaign/campaign-id/mobile-participant-token").mock(
+            return_value=httpx.Response(200, json=MOBILE_PARTICIPANT_TOKEN_RESPONSE)
+        )
+
+        client.campaign.create_mobile_participant_token(
+            "campaign-id",
+            email="gavin@hooli.com",
+            is_affiliate=False,
+        )
+
+        assert json.loads(route.calls.last.request.content) == {
+            "email": "gavin@hooli.com",
+            "isAffiliate": False,
+        }
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -1022,6 +1078,34 @@ class TestAsyncCampaign:
     parametrize = pytest.mark.parametrize(
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
+
+    async def test_create_sends_goal(self, async_client: AsyncGrowsurf, respx_mock: Any) -> None:
+        route = respx_mock.post(f"{base_url}/campaigns").mock(return_value=httpx.Response(200, json=CAMPAIGN_RESPONSE))
+
+        await async_client.campaign.create(type="REFERRAL", goal="B2B_SAAS_SELF_SERVICE")
+
+        assert json.loads(route.calls.last.request.content) == {
+            "type": "REFERRAL",
+            "goal": "B2B_SAAS_SELF_SERVICE",
+        }
+
+    async def test_mobile_participant_token_sends_affiliate_choice(
+        self, async_client: AsyncGrowsurf, respx_mock: Any
+    ) -> None:
+        route = respx_mock.post(f"{base_url}/campaign/campaign-id/mobile-participant-token").mock(
+            return_value=httpx.Response(200, json=MOBILE_PARTICIPANT_TOKEN_RESPONSE)
+        )
+
+        await async_client.campaign.create_mobile_participant_token(
+            "campaign-id",
+            email="gavin@hooli.com",
+            is_affiliate=False,
+        )
+
+        assert json.loads(route.calls.last.request.content) == {
+            "email": "gavin@hooli.com",
+            "isAffiliate": False,
+        }
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize

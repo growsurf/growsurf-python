@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, cast
+from typing import Any, Annotated, cast, get_args, get_origin, get_type_hints
 
 import pytest
 
@@ -14,8 +14,32 @@ from growsurf.types.campaign import (
     DeleteRewardResponse,
     CampaignRewardListResponse,
 )
+from growsurf.resources.campaign.rewards import RewardsResource, AsyncRewardsResource
+from growsurf.types.campaign.reward_create_params import RewardCreateParams
+from growsurf.types.campaign.reward_update_params import RewardUpdateParams
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
+
+
+def _allows_none(annotation: object) -> bool:
+    if get_origin(annotation) is Annotated:
+        annotation = get_args(annotation)[0]
+    return type(None) in get_args(annotation)
+
+
+def test_tax_valuation_overrides_accept_null_for_create_and_update() -> None:
+    annotations = [
+        get_type_hints(RewardsResource.create, include_extras=True),
+        get_type_hints(RewardsResource.update, include_extras=True),
+        get_type_hints(AsyncRewardsResource.create, include_extras=True),
+        get_type_hints(AsyncRewardsResource.update, include_extras=True),
+        get_type_hints(RewardCreateParams, include_extras=True),
+        get_type_hints(RewardUpdateParams, include_extras=True),
+    ]
+
+    for annotation_map in annotations:
+        assert _allows_none(annotation_map["value"])
+        assert _allows_none(annotation_map["referred_value"])
 
 
 class TestRewards:

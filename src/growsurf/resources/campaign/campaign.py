@@ -208,6 +208,19 @@ class CampaignResource(SyncAPIResource):
         company_logo_image_url: str | Omit = omit,
         company_name: str | Omit = omit,
         currency_iso: str | Omit = omit,
+        goal: Literal[
+            "CUSTOMERS",
+            "USERS",
+            "SUBSCRIBERS",
+            "WAITLIST",
+            "B2B_SAAS_SELF_SERVICE",
+            "B2B_SAAS_ENTERPRISE",
+            "B2C_SUBSCRIPTIONS",
+            "FINANCIAL_SERVICES",
+            "ONLINE_EDUCATION",
+            "ONLINE_INSURANCE",
+        ]
+        | Omit = omit,
         name: str | Omit = omit,
         rewards: Iterable[reward_create_params.RewardCreateParams] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -226,6 +239,8 @@ class CampaignResource(SyncAPIResource):
 
           currency_iso: ISO 4217 currency code. Defaults to USD. Chosen when the program is
               created and immutable afterward — it cannot be changed on update.
+
+          goal: What the program is for. Set only when the program is created.
 
           name: The program name. Defaults to a generated friendly label plus the creation date.
 
@@ -247,6 +262,7 @@ class CampaignResource(SyncAPIResource):
                     "company_logo_image_url": company_logo_image_url,
                     "company_name": company_name,
                     "currency_iso": currency_iso,
+                    "goal": goal,
                     "name": name,
                     "rewards": rewards,
                 },
@@ -405,6 +421,7 @@ class CampaignResource(SyncAPIResource):
         fingerprint: str | Omit = omit,
         first_name: str | Omit = omit,
         ip_address: str | Omit = omit,
+        is_affiliate: bool | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
         mobile_instance_id: str | Omit = omit,
@@ -430,6 +447,8 @@ class CampaignResource(SyncAPIResource):
               for mobile participant creation and mobile participant token flows. The official
               mobile SDKs generate this as a lowercase UUID.
 
+          is_affiliate: Affiliate programs only. Controls affiliate enrollment for a new participant.
+
           referred_by: Referrer participant ID or email address.
 
           extra_headers: Send extra headers
@@ -450,6 +469,7 @@ class CampaignResource(SyncAPIResource):
                     "fingerprint": fingerprint,
                     "first_name": first_name,
                     "ip_address": ip_address,
+                    "is_affiliate": is_affiliate,
                     "last_name": last_name,
                     "metadata": metadata,
                     "mobile_instance_id": mobile_instance_id,
@@ -1361,6 +1381,19 @@ class AsyncCampaignResource(AsyncAPIResource):
         company_logo_image_url: str | Omit = omit,
         company_name: str | Omit = omit,
         currency_iso: str | Omit = omit,
+        goal: Literal[
+            "CUSTOMERS",
+            "USERS",
+            "SUBSCRIBERS",
+            "WAITLIST",
+            "B2B_SAAS_SELF_SERVICE",
+            "B2B_SAAS_ENTERPRISE",
+            "B2C_SUBSCRIPTIONS",
+            "FINANCIAL_SERVICES",
+            "ONLINE_EDUCATION",
+            "ONLINE_INSURANCE",
+        ]
+        | Omit = omit,
         name: str | Omit = omit,
         rewards: Iterable[reward_create_params.RewardCreateParams] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1379,6 +1412,8 @@ class AsyncCampaignResource(AsyncAPIResource):
 
           currency_iso: ISO 4217 currency code. Defaults to USD. Chosen when the program is
               created and immutable afterward — it cannot be changed on update.
+
+          goal: What the program is for. Set only when the program is created.
 
           name: The program name. Defaults to a generated friendly label plus the creation date.
 
@@ -1400,6 +1435,7 @@ class AsyncCampaignResource(AsyncAPIResource):
                     "company_logo_image_url": company_logo_image_url,
                     "company_name": company_name,
                     "currency_iso": currency_iso,
+                    "goal": goal,
                     "name": name,
                     "rewards": rewards,
                 },
@@ -1558,6 +1594,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         fingerprint: str | Omit = omit,
         first_name: str | Omit = omit,
         ip_address: str | Omit = omit,
+        is_affiliate: bool | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
         mobile_instance_id: str | Omit = omit,
@@ -1583,6 +1620,8 @@ class AsyncCampaignResource(AsyncAPIResource):
               for mobile participant creation and mobile participant token flows. The official
               mobile SDKs generate this as a lowercase UUID.
 
+          is_affiliate: Affiliate programs only. Controls affiliate enrollment for a new participant.
+
           referred_by: Referrer participant ID or email address.
 
           extra_headers: Send extra headers
@@ -1603,6 +1642,7 @@ class AsyncCampaignResource(AsyncAPIResource):
                     "fingerprint": fingerprint,
                     "first_name": first_name,
                     "ip_address": ip_address,
+                    "is_affiliate": is_affiliate,
                     "last_name": last_name,
                     "metadata": metadata,
                     "mobile_instance_id": mobile_instance_id,

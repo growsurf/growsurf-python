@@ -22,7 +22,11 @@ class ParticipantReward(BaseModel):
 
     approved_at: Optional[int] = FieldInfo(alias="approvedAt", default=None)
 
+    amount: Optional[float] = None
+
     commission_structure: Optional[CommissionStructure] = FieldInfo(alias="commissionStructure", default=None)
+
+    currency_iso: Optional[str] = FieldInfo(alias="currencyISO", default=None)
 
     fulfilled_at: Optional[int] = FieldInfo(alias="fulfilledAt", default=None)
 

@@ -91,6 +91,25 @@ class TestProgramResources:
                 },
             )
 
+    def test_resource_requires_nullable_content_fields(self) -> None:
+        with pytest.raises(ValidationError):
+            parse_obj(
+                ProgramResource,
+                {
+                    "id": "resource_abc123",
+                    "type": "TEXT",
+                    "title": "Launch notes",
+                    "category": None,
+                    "url": None,
+                    "text": "Welcome to Pied Piper.",
+                    "file": None,
+                    "isPublished": False,
+                    "position": 0,
+                    "createdAt": 1767225600000,
+                    "updatedAt": 1767225600001,
+                },
+            )
+
     @pytest.mark.parametrize(
         "params",
         [
@@ -126,6 +145,15 @@ class TestProgramResources:
                 "resource-id",
                 id="program-id",
                 upload_ticket="one-time-ticket",
+            )
+
+    @pytest.mark.parametrize("resource_type", ["FILE", "LINK", "TEXT"])
+    def test_update_type_requires_replacement_content(self, client: Growsurf, resource_type: str) -> None:
+        with pytest.raises(ValueError, match="requires its replacement content"):
+            client.campaign.resources.update(
+                "resource-id",
+                id="program-id",
+                type=resource_type,  # type: ignore[arg-type]
             )
 
     def test_update_and_upload_ticket_enforce_public_bounds(self, client: Growsurf) -> None:
