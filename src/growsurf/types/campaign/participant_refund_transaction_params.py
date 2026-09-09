@@ -12,6 +12,12 @@ __all__ = ["ParticipantRefundTransactionParams"]
 class ParticipantRefundTransactionParams(TypedDict, total=False):
     id: Required[str]
 
+    payment_provider: Annotated[Literal["stripe", "chargebee", "recurly"], PropertyInfo(alias="paymentProvider")]
+    """Connected payment provider. Requires `transactionId` and `testMode`."""
+
+    test_mode: Annotated[bool, PropertyInfo(alias="testMode")]
+    """`true` for test or `false` for live. Requires `paymentProvider`."""
+
     amendment_type: Annotated[Literal["REFUND", "CHARGEBACK"], PropertyInfo(alias="amendmentType")]
 
     amount: int

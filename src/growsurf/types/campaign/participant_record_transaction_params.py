@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Dict, Iterable
-from typing_extensions import Required, Annotated, TypedDict
+from typing_extensions import Literal, Required, Annotated, TypedDict
 
 from ..._utils import PropertyInfo
 
@@ -12,6 +12,12 @@ __all__ = ["ParticipantRecordTransactionParams"]
 
 class ParticipantRecordTransactionParams(TypedDict, total=False):
     id: Required[str]
+
+    payment_provider: Annotated[Literal["stripe", "chargebee", "recurly"], PropertyInfo(alias="paymentProvider")]
+    """Connected payment provider. Requires `transactionId` and `testMode`."""
+
+    test_mode: Annotated[bool, PropertyInfo(alias="testMode")]
+    """`true` for test or `false` for live. Requires `paymentProvider`."""
 
     currency: Required[str]
 
