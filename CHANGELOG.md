@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.5.0](https://github.com/growsurf/growsurf-python/compare/v1.4.0...v1.5.0) (2026-09-10)
+
+
+### Features
+
+* **api:** add campaign integrations list endpoint ([8c03034](https://github.com/growsurf/growsurf-python/commit/8c030344295d243028f6949d033e658dce29d1c9))
+* **api:** add EMBEDDABLE_ELEMENT portal view source ([beb0a4b](https://github.com/growsurf/growsurf-python/commit/beb0a4b371924bb08800796190d963b34baf52d7))
+* **api:** add paymentProvider and testMode to transaction params ([42c3297](https://github.com/growsurf/growsurf-python/commit/42c32971fa5ba3de8e8eb510cf9e1de1799574fc))
+* **api:** add refundHistoryComplete to refund transaction params ([08e67d7](https://github.com/growsurf/growsurf-python/commit/08e67d797bcdf41949f752ef44bc7f3194f5e82f))
+* **api:** sync analytics and program resources ([3fc6106](https://github.com/growsurf/growsurf-python/commit/3fc610630ccc6e1a138ab998f8a0bafcf5e2f7d2))
+* **api:** sync reward, program resource, and analytics types with the REST contract ([45d95ea](https://github.com/growsurf/growsurf-python/commit/45d95ea7504e5e5f74a2a16cd521a8d03800d0e1))
+
+
+### Chores
+
+* apply ruff formatting ([fb8d066](https://github.com/growsurf/growsurf-python/commit/fb8d066a4df35e73eb7b9ea79c31f21bd2bab02b))
+
 ## [1.4.0](https://github.com/growsurf/growsurf-python/compare/v1.3.0...v1.4.0) (2026-08-25)
 
 
