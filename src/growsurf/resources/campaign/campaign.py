@@ -105,6 +105,14 @@ from .installation import (
     InstallationResourceWithStreamingResponse,
     AsyncInstallationResourceWithStreamingResponse,
 )
+from .integrations import (
+    IntegrationsResource,
+    AsyncIntegrationsResource,
+    IntegrationsResourceWithRawResponse,
+    AsyncIntegrationsResourceWithRawResponse,
+    IntegrationsResourceWithStreamingResponse,
+    AsyncIntegrationsResourceWithStreamingResponse,
+)
 from ..._base_client import make_request_options
 from ...types.campaign import ReferralStatus, reward_create_params
 from .program_resources import (
@@ -156,6 +164,11 @@ class CampaignResource(SyncAPIResource):
     @cached_property
     def resources(self) -> ProgramResourcesResource:
         return ProgramResourcesResource(self._client)
+
+    @cached_property
+    def integrations(self) -> IntegrationsResource:
+        """Integration status. Connecting an integration is done in the GrowSurf dashboard, so this resource is read-only."""
+        return IntegrationsResource(self._client)
 
     @cached_property
     def webhooks(self) -> WebhooksResource:
@@ -1329,6 +1342,11 @@ class AsyncCampaignResource(AsyncAPIResource):
     @cached_property
     def resources(self) -> AsyncProgramResourcesResource:
         return AsyncProgramResourcesResource(self._client)
+
+    @cached_property
+    def integrations(self) -> AsyncIntegrationsResource:
+        """Integration status. Connecting an integration is done in the GrowSurf dashboard, so this resource is read-only."""
+        return AsyncIntegrationsResource(self._client)
 
     @cached_property
     def webhooks(self) -> AsyncWebhooksResource:
@@ -2568,6 +2586,11 @@ class CampaignResourceWithRawResponse:
         return ProgramResourcesResourceWithRawResponse(self._campaign.resources)
 
     @cached_property
+    def integrations(self) -> IntegrationsResourceWithRawResponse:
+        """Integration status. Connecting an integration is done in the GrowSurf dashboard, so this resource is read-only."""
+        return IntegrationsResourceWithRawResponse(self._campaign.integrations)
+
+    @cached_property
     def webhooks(self) -> WebhooksResourceWithRawResponse:
         """Campaign webhook (`Webhook`) configuration operations."""
         return WebhooksResourceWithRawResponse(self._campaign.webhooks)
@@ -2680,6 +2703,11 @@ class AsyncCampaignResourceWithRawResponse:
     @cached_property
     def resources(self) -> AsyncProgramResourcesResourceWithRawResponse:
         return AsyncProgramResourcesResourceWithRawResponse(self._campaign.resources)
+
+    @cached_property
+    def integrations(self) -> AsyncIntegrationsResourceWithRawResponse:
+        """Integration status. Connecting an integration is done in the GrowSurf dashboard, so this resource is read-only."""
+        return AsyncIntegrationsResourceWithRawResponse(self._campaign.integrations)
 
     @cached_property
     def webhooks(self) -> AsyncWebhooksResourceWithRawResponse:
@@ -2796,6 +2824,11 @@ class CampaignResourceWithStreamingResponse:
         return ProgramResourcesResourceWithStreamingResponse(self._campaign.resources)
 
     @cached_property
+    def integrations(self) -> IntegrationsResourceWithStreamingResponse:
+        """Integration status. Connecting an integration is done in the GrowSurf dashboard, so this resource is read-only."""
+        return IntegrationsResourceWithStreamingResponse(self._campaign.integrations)
+
+    @cached_property
     def webhooks(self) -> WebhooksResourceWithStreamingResponse:
         """Campaign webhook (`Webhook`) configuration operations."""
         return WebhooksResourceWithStreamingResponse(self._campaign.webhooks)
@@ -2908,6 +2941,11 @@ class AsyncCampaignResourceWithStreamingResponse:
     @cached_property
     def resources(self) -> AsyncProgramResourcesResourceWithStreamingResponse:
         return AsyncProgramResourcesResourceWithStreamingResponse(self._campaign.resources)
+
+    @cached_property
+    def integrations(self) -> AsyncIntegrationsResourceWithStreamingResponse:
+        """Integration status. Connecting an integration is done in the GrowSurf dashboard, so this resource is read-only."""
+        return AsyncIntegrationsResourceWithStreamingResponse(self._campaign.integrations)
 
     @cached_property
     def webhooks(self) -> AsyncWebhooksResourceWithStreamingResponse:

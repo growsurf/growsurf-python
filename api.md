@@ -176,6 +176,18 @@ Methods:
 - <code title="get /campaign/{id}/reward-configs">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">list</a>(id) -> <a href="./src/growsurf/types/campaign/campaign_reward_list_response.py">CampaignRewardListResponse</a></code>
 - <code title="delete /campaign/{id}/reward-configs/{campaignRewardId}">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">delete</a>(campaign_reward_id, \*, id) -> <a href="./src/growsurf/types/campaign/delete_reward_response.py">DeleteRewardResponse</a></code>
 
+## Integrations
+
+Types:
+
+```python
+from growsurf.types.campaign import Integration, IntegrationListResponse
+```
+
+Methods:
+
+- <code title="get /campaign/{id}/integrations">client.campaign.integrations.<a href="./src/growsurf/resources/campaign/integrations.py">list</a>(id) -> <a href="./src/growsurf/types/campaign/integration_list_response.py">IntegrationListResponse</a></code>
+
 ## Webhooks
 
 Types:

@@ -148,11 +148,13 @@ class TeamResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> VerificationEmailResponse:
         """
-        Resends the email-verification message to the bound team's owner. The response
-        never reveals the owner's email address. A `200` with `status: SENT` is returned
-        only when an email was actually dispatched. Returns `400` if the email is
-        already verified, and `429` if a verification email was sent too recently — wait
-        a moment, then retry.
+        Resends the email-verification message to the owner of the account the API key
+        belongs to. This is the recovery path for a `403` with error code
+        `EMAIL_NOT_VERIFIED_ERROR`, so it stays callable with any GrowSurf API key while the
+        rest of the API is locked. The response never reveals the owner's email address. A
+        `200` with `status: SENT` is returned only when an email was actually dispatched.
+        Returns `400` if the email is already verified, and `429` if a verification email was
+        sent too recently — wait a moment, then retry.
         """
         return self._post(
             "/team/owner/verification-email",
@@ -288,11 +290,13 @@ class AsyncTeamResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> VerificationEmailResponse:
         """
-        Resends the email-verification message to the bound team's owner. The response
-        never reveals the owner's email address. A `200` with `status: SENT` is returned
-        only when an email was actually dispatched. Returns `400` if the email is
-        already verified, and `429` if a verification email was sent too recently — wait
-        a moment, then retry.
+        Resends the email-verification message to the owner of the account the API key
+        belongs to. This is the recovery path for a `403` with error code
+        `EMAIL_NOT_VERIFIED_ERROR`, so it stays callable with any GrowSurf API key while the
+        rest of the API is locked. The response never reveals the owner's email address. A
+        `200` with `status: SENT` is returned only when an email was actually dispatched.
+        Returns `400` if the email is already verified, and `429` if a verification email was
+        sent too recently — wait a moment, then retry.
         """
         return await self._post(
             "/team/owner/verification-email",

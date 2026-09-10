@@ -80,6 +80,14 @@ from .installation import (
     InstallationResourceWithStreamingResponse,
     AsyncInstallationResourceWithStreamingResponse,
 )
+from .integrations import (
+    IntegrationsResource,
+    AsyncIntegrationsResource,
+    IntegrationsResourceWithRawResponse,
+    AsyncIntegrationsResourceWithRawResponse,
+    IntegrationsResourceWithStreamingResponse,
+    AsyncIntegrationsResourceWithStreamingResponse,
+)
 from .program_resources import (
     ProgramResourcesResource,
     AsyncProgramResourcesResource,
@@ -114,6 +122,12 @@ __all__ = [
     "AsyncProgramResourcesResourceWithRawResponse",
     "ProgramResourcesResourceWithStreamingResponse",
     "AsyncProgramResourcesResourceWithStreamingResponse",
+    "IntegrationsResource",
+    "AsyncIntegrationsResource",
+    "IntegrationsResourceWithRawResponse",
+    "AsyncIntegrationsResourceWithRawResponse",
+    "IntegrationsResourceWithStreamingResponse",
+    "AsyncIntegrationsResourceWithStreamingResponse",
     "WebhooksResource",
     "AsyncWebhooksResource",
     "WebhooksResourceWithRawResponse",

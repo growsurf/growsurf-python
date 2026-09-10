@@ -5,6 +5,7 @@ from __future__ import annotations
 from .reward import Reward as Reward
 from .webhook import Webhook as Webhook
 from .campaign import Campaign as Campaign
+from .integration import Integration as Integration
 from .participant import Participant as Participant
 from .webhook_event import WebhookEvent as WebhookEvent
 from .campaign_design import (
@@ -36,6 +37,7 @@ from .delete_webhook_response import DeleteWebhookResponse as DeleteWebhookRespo
 from .reward_approve_response import RewardApproveResponse as RewardApproveResponse
 from .reward_fulfill_response import RewardFulfillResponse as RewardFulfillResponse
 from .participant_email_params import ParticipantEmailParams as ParticipantEmailParams
+from .integration_list_response import IntegrationListResponse as IntegrationListResponse
 from .participant_update_params import ParticipantUpdateParams as ParticipantUpdateParams
 from .commission_delete_response import CommissionDeleteResponse as CommissionDeleteResponse
 from .email_participant_response import EmailParticipantResponse as EmailParticipantResponse
