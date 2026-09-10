@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.1](https://github.com/growsurf/growsurf-python/compare/v1.5.0...v1.5.1) (2026-09-10)
+
+
+### Chores
+
+* merge main (release 1.5.0) into dev ([1bc5ac8](https://github.com/growsurf/growsurf-python/commit/1bc5ac8dd57d1f6ab8ab168eb313365ab7e9d785))
+
+
+### Documentation
+
+* **api:** warn that a new account API key cannot be recovered ([f068cb8](https://github.com/growsurf/growsurf-python/commit/f068cb81afffb6b99451a9f416eb743c2eba3a8f))
+
 ## [1.5.0](https://github.com/growsurf/growsurf-python/compare/v1.4.0...v1.5.0) (2026-09-10)
 
 
