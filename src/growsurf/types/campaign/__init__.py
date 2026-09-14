@@ -39,6 +39,7 @@ from .reward_fulfill_response import RewardFulfillResponse as RewardFulfillRespo
 from .participant_email_params import ParticipantEmailParams as ParticipantEmailParams
 from .integration_list_response import IntegrationListResponse as IntegrationListResponse
 from .participant_update_params import ParticipantUpdateParams as ParticipantUpdateParams
+from .pending_analytics_erasure import PendingAnalyticsErasure as PendingAnalyticsErasure
 from .commission_delete_response import CommissionDeleteResponse as CommissionDeleteResponse
 from .email_participant_response import EmailParticipantResponse as EmailParticipantResponse
 from .commission_approve_response import CommissionApproveResponse as CommissionApproveResponse
