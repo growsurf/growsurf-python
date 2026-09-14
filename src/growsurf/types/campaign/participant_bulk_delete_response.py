@@ -6,6 +6,7 @@ from typing_extensions import Literal
 from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
+from .pending_analytics_erasure import PendingAnalyticsErasure
 
 __all__ = ["ParticipantBulkDeleteResponse", "Result", "Summary"]
 
@@ -57,6 +58,9 @@ class Summary(BaseModel):
 
 
 class ParticipantBulkDeleteResponse(BaseModel):
+    analytics_erasure: Optional[PendingAnalyticsErasure] = FieldInfo(alias="analyticsErasure", default=None)
+    """Analytics erasure is pending. Reports can retain removed participants until erasure completes. Do not repeat successful deletions."""
+
     results: List[Result]
     """One entry per submitted identifier, in the same order as the request."""
 
