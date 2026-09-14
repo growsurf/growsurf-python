@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.0](https://github.com/growsurf/growsurf-python/compare/v1.5.1...v1.6.0) (2026-09-14)
+
+
+### Features
+
+* **api:** add pending analyticsErasure to participant delete responses ([5c6b28b](https://github.com/growsurf/growsurf-python/commit/5c6b28b0adcbc0a69629e176d54b3cf3ab83bc33))
+
+
+### Chores
+
+* merge dev into main ([f1092ac](https://github.com/growsurf/growsurf-python/commit/f1092ac6e7fc2c16c79c482bed009ee398c3307c))
+
 ## [1.5.1](https://github.com/growsurf/growsurf-python/compare/v1.5.0...v1.5.1) (2026-09-10)
 
 
