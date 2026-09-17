@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.7.0](https://github.com/growsurf/growsurf-python/compare/v1.6.0...v1.7.0) (2026-09-17)
+
+
+### Features
+
+* **api:** add metadata filter to campaign.listParticipants ([272557c](https://github.com/growsurf/growsurf-python/commit/272557cb7e9e1094caa4490722c027f7d5827198))
+
+
+### Chores
+
+* merge main (release 1.6.0) into dev ([b90d168](https://github.com/growsurf/growsurf-python/commit/b90d16892b9bf93a343e26b0b3c211a260e13064))
+
 ## [1.6.0](https://github.com/growsurf/growsurf-python/compare/v1.5.1...v1.6.0) (2026-09-14)
 
 
