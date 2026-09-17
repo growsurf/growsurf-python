@@ -624,6 +624,7 @@ class CampaignResource(SyncAPIResource):
         id: str,
         *,
         limit: int | Omit = omit,
+        metadata: Dict[str, str] | Omit = omit,
         next_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -637,6 +638,10 @@ class CampaignResource(SyncAPIResource):
 
         Args:
           limit: Number of results to return. Maximum 100.
+
+          metadata: Return only participants whose metadata matches every given key and value
+              exactly. Send each pair as `metadata[key]=value`. Up to 3 keys per request.
+              Values compare as strings, which is how metadata is stored.
 
           next_id: ID to start the next paged result set with.
 
@@ -660,6 +665,7 @@ class CampaignResource(SyncAPIResource):
                 query=maybe_transform(
                     {
                         "limit": limit,
+                        "metadata": metadata,
                         "next_id": next_id,
                     },
                     campaign_list_participants_params.CampaignListParticipantsParams,
@@ -1802,6 +1808,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         id: str,
         *,
         limit: int | Omit = omit,
+        metadata: Dict[str, str] | Omit = omit,
         next_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1815,6 +1822,10 @@ class AsyncCampaignResource(AsyncAPIResource):
 
         Args:
           limit: Number of results to return. Maximum 100.
+
+          metadata: Return only participants whose metadata matches every given key and value
+              exactly. Send each pair as `metadata[key]=value`. Up to 3 keys per request.
+              Values compare as strings, which is how metadata is stored.
 
           next_id: ID to start the next paged result set with.
 
@@ -1838,6 +1849,7 @@ class AsyncCampaignResource(AsyncAPIResource):
                 query=await async_maybe_transform(
                     {
                         "limit": limit,
+                        "metadata": metadata,
                         "next_id": next_id,
                     },
                     campaign_list_participants_params.CampaignListParticipantsParams,

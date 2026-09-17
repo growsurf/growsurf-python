@@ -483,6 +483,7 @@ class TestCampaign:
         campaign = client.campaign.list_participants(
             id="id",
             limit=1,
+            metadata={"foo": "string"},
             next_id="nextId",
         )
         assert_matches_type(ParticipantList, campaign, path=["response"])
@@ -1504,6 +1505,7 @@ class TestAsyncCampaign:
         campaign = await async_client.campaign.list_participants(
             id="id",
             limit=1,
+            metadata={"foo": "string"},
             next_id="nextId",
         )
         assert_matches_type(ParticipantList, campaign, path=["response"])
