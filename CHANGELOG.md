@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.7.1](https://github.com/growsurf/growsurf-python/compare/v1.7.0...v1.7.1) (2026-09-18)
+
+
+### Bug Fixes
+
+* **package:** point package homepage at growsurf.com ([321251a](https://github.com/growsurf/growsurf-python/commit/321251af0efad5384005d05379f07443e9175868))
+
+
+### Chores
+
+* merge dev into main ([d256049](https://github.com/growsurf/growsurf-python/commit/d256049e24e343e8a2eb2b1249e71aaa37437345))
+
 ## [1.7.0](https://github.com/growsurf/growsurf-python/compare/v1.6.0...v1.7.0) (2026-09-17)
 
 
