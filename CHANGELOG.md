@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.8.0](https://github.com/growsurf/growsurf-python/compare/v1.7.1...v1.8.0) (2026-09-19)
+
+
+### Features
+
+* **api:** add campaign design widget section and healthcare goals ([8115287](https://github.com/growsurf/growsurf-python/commit/8115287977ba70fc6407a488daa90a57d7c7be8d))
+
+
+### Chores
+
+* merge dev into main ([b868b86](https://github.com/growsurf/growsurf-python/commit/b868b8627a22aae8cdcc11e5d09b9b4715a7681d))
+* merge dev into main ([af640f1](https://github.com/growsurf/growsurf-python/commit/af640f17a284ca21a87e927fbb397d5c49f9e6d5))
+* merge dev into main ([e55467c](https://github.com/growsurf/growsurf-python/commit/e55467ce3718631d3bef61d91a1c91850766d7b6))
+
+
+### Documentation
+
+* **api:** document the starter rewards each campaign goal seeds ([d696b88](https://github.com/growsurf/growsurf-python/commit/d696b8800fafe648a2414b349a60bb5badabc71a))
+* **api:** document the starter rewards each campaign goal seeds ([15d38b6](https://github.com/growsurf/growsurf-python/commit/15d38b6cb62f8aa11126cd37b808dbd9efec5368))
+
 ## [1.7.1](https://github.com/growsurf/growsurf-python/compare/v1.7.0...v1.7.1) (2026-09-18)
 
 
