@@ -231,7 +231,10 @@ class CampaignResource(SyncAPIResource):
             "B2C_SUBSCRIPTIONS",
             "FINANCIAL_SERVICES",
             "ONLINE_EDUCATION",
+            "INSURANCE",
             "ONLINE_INSURANCE",
+            "TELEHEALTH",
+            "HEALTHCARE_PROVIDERS",
         ]
         | Omit = omit,
         name: str | Omit = omit,
@@ -1415,7 +1418,10 @@ class AsyncCampaignResource(AsyncAPIResource):
             "B2C_SUBSCRIPTIONS",
             "FINANCIAL_SERVICES",
             "ONLINE_EDUCATION",
+            "INSURANCE",
             "ONLINE_INSURANCE",
+            "TELEHEALTH",
+            "HEALTHCARE_PROVIDERS",
         ]
         | Omit = omit,
         name: str | Omit = omit,
