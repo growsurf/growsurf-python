@@ -52,6 +52,10 @@ class CampaignDesignResources(TypedDict, total=False):
 # available to both program types; its manual payout and Wise fields are
 # affiliate-only. `referredExperience` includes the Claim Offer Popup for both
 # program types, with its colors under `theme.referredExperienceOfferPopup`.
+# `widget` is the website widget shown in a corner of your own site — a button or a
+# card, its placement and offsets, when it appears, and which pages it appears on —
+# with its colors under `theme.widget`. Both of its audience switches start off, so a
+# program shows nothing until you turn one on.
 # `GET` returns the fields configured for the program;
 # `payoutDestinationConfirmation` is omitted when no confirmation fields are
 # stored. Stored `null` fields are returned as `null`; omitted and `null` fields
