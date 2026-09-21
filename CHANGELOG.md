@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.9.0](https://github.com/growsurf/growsurf-python/compare/v1.8.0...v1.9.0) (2026-09-21)
+
+
+### Features
+
+* **api:** add referral-flow screenshot capture and participant leadCount ([609e999](https://github.com/growsurf/growsurf-python/commit/609e99910a61e62eb764c3ea52fd880d3b7cdabf))
+
+
+### Chores
+
+* merge origin/main ([7c2e7cc](https://github.com/growsurf/growsurf-python/commit/7c2e7cc12f1bb7ce33db786b7e75450c74ebae37))
+
 ## [1.8.0](https://github.com/growsurf/growsurf-python/compare/v1.7.1...v1.8.0) (2026-09-19)
 
 
