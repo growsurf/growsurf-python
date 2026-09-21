@@ -133,6 +133,7 @@ from ...types.participant_payout_list import ParticipantPayoutList
 from ...types.campaign.referral_status import ReferralStatus
 from ...types.participant_commission_list import ParticipantCommissionList
 from ...types.affiliate_invite_list_response import AffiliateInviteListResponse
+from ...types.referral_flow_screenshots_response import ReferralFlowScreenshotsResponse
 from ...types.affiliate_application_list_response import AffiliateApplicationListResponse
 from ...types.campaign_retrieve_analytics_response import CampaignRetrieveAnalyticsResponse
 from ...types.campaign_activation_analytics_response import CampaignActivationAnalyticsResponse
@@ -498,6 +499,45 @@ class CampaignResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=CampaignCreateMobileParticipantTokenResponse,
+        )
+
+    def capture_referral_flow_screenshots(
+        self,
+        id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ReferralFlowScreenshotsResponse:
+        """
+        Renders the program's current saved configuration into two preview images: the
+        referrer window a participant sees, and the referred-friend experience. Use them
+        to show a person what the draft looks like before anything launches. The images
+        render GrowSurf's own preview, not the program's installed website, so they do
+        not prove an installation. Each `url` is private and expires; capture again when
+        you need a fresh view. Only the account owner's credential can capture
+        screenshots, and the endpoint takes no request body.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._post(
+            path_template("/campaign/{id}/referral-flow-screenshots", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ReferralFlowScreenshotsResponse,
         )
 
     def list_commissions(
@@ -1687,6 +1727,45 @@ class AsyncCampaignResource(AsyncAPIResource):
             cast_to=CampaignCreateMobileParticipantTokenResponse,
         )
 
+    async def capture_referral_flow_screenshots(
+        self,
+        id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ReferralFlowScreenshotsResponse:
+        """
+        Renders the program's current saved configuration into two preview images: the
+        referrer window a participant sees, and the referred-friend experience. Use them
+        to show a person what the draft looks like before anything launches. The images
+        render GrowSurf's own preview, not the program's installed website, so they do
+        not prove an installation. Each `url` is private and expires; capture again when
+        you need a fresh view. Only the account owner's credential can capture
+        screenshots, and the endpoint takes no request body.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._post(
+            path_template("/campaign/{id}/referral-flow-screenshots", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ReferralFlowScreenshotsResponse,
+        )
+
     async def list_commissions(
         self,
         id: str,
@@ -2537,6 +2616,9 @@ class CampaignResourceWithRawResponse:
         self.create_mobile_participant_token = to_raw_response_wrapper(
             campaign.create_mobile_participant_token,
         )
+        self.capture_referral_flow_screenshots = to_raw_response_wrapper(
+            campaign.capture_referral_flow_screenshots,
+        )
         self.list_commissions = to_raw_response_wrapper(
             campaign.list_commissions,
         )
@@ -2655,6 +2737,9 @@ class AsyncCampaignResourceWithRawResponse:
         )
         self.create_mobile_participant_token = async_to_raw_response_wrapper(
             campaign.create_mobile_participant_token,
+        )
+        self.capture_referral_flow_screenshots = async_to_raw_response_wrapper(
+            campaign.capture_referral_flow_screenshots,
         )
         self.list_commissions = async_to_raw_response_wrapper(
             campaign.list_commissions,
@@ -2775,6 +2860,9 @@ class CampaignResourceWithStreamingResponse:
         self.create_mobile_participant_token = to_streamed_response_wrapper(
             campaign.create_mobile_participant_token,
         )
+        self.capture_referral_flow_screenshots = to_streamed_response_wrapper(
+            campaign.capture_referral_flow_screenshots,
+        )
         self.list_commissions = to_streamed_response_wrapper(
             campaign.list_commissions,
         )
@@ -2893,6 +2981,9 @@ class AsyncCampaignResourceWithStreamingResponse:
         )
         self.create_mobile_participant_token = async_to_streamed_response_wrapper(
             campaign.create_mobile_participant_token,
+        )
+        self.capture_referral_flow_screenshots = async_to_streamed_response_wrapper(
+            campaign.capture_referral_flow_screenshots,
         )
         self.list_commissions = async_to_streamed_response_wrapper(
             campaign.list_commissions,

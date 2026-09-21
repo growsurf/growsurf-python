@@ -49,6 +49,12 @@ class Referrer(BaseModel):
 
     last_name: Optional[str] = FieldInfo(alias="lastName", default=None)
 
+    lead_count: Optional[int] = FieldInfo(alias="leadCount", default=None)
+    """
+    The number of pending referrals the participant made that have not converted
+    into successful referrals yet.
+    """
+
     metadata: Optional[Dict[str, object]] = None
     """Shallow custom metadata object."""
 
@@ -144,6 +150,12 @@ class Participant(BaseModel):
     is_winner: Optional[bool] = FieldInfo(alias="isWinner", default=None)
 
     last_name: Optional[str] = FieldInfo(alias="lastName", default=None)
+
+    lead_count: Optional[int] = FieldInfo(alias="leadCount", default=None)
+    """
+    The number of pending referrals the participant made that have not converted
+    into successful referrals yet.
+    """
 
     metadata: Optional[Dict[str, object]] = None
     """Shallow custom metadata object."""

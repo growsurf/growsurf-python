@@ -20,6 +20,7 @@ from growsurf.types import (
     ParticipantPayoutList,
     ParticipantCommissionList,
     AffiliateInviteListResponse,
+    ReferralFlowScreenshotsResponse,
     AffiliateApplicationListResponse,
     CampaignRetrieveAnalyticsResponse,
     CampaignCreateMobileParticipantTokenResponse,
@@ -360,6 +361,48 @@ class TestCampaign:
             client.campaign.with_raw_response.create_mobile_participant_token(
                 id="",
                 email="dev@stainless.com",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_capture_referral_flow_screenshots(self, client: Growsurf) -> None:
+        campaign = client.campaign.capture_referral_flow_screenshots(
+            "id",
+        )
+        assert_matches_type(ReferralFlowScreenshotsResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_capture_referral_flow_screenshots(self, client: Growsurf) -> None:
+        response = client.campaign.with_raw_response.capture_referral_flow_screenshots(
+            "id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = response.parse()
+        assert_matches_type(ReferralFlowScreenshotsResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_capture_referral_flow_screenshots(self, client: Growsurf) -> None:
+        with client.campaign.with_streaming_response.capture_referral_flow_screenshots(
+            "id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = response.parse()
+            assert_matches_type(ReferralFlowScreenshotsResponse, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_capture_referral_flow_screenshots(self, client: Growsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.campaign.with_raw_response.capture_referral_flow_screenshots(
+                "",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -1382,6 +1425,48 @@ class TestAsyncCampaign:
             await async_client.campaign.with_raw_response.create_mobile_participant_token(
                 id="",
                 email="dev@stainless.com",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_capture_referral_flow_screenshots(self, async_client: AsyncGrowsurf) -> None:
+        campaign = await async_client.campaign.capture_referral_flow_screenshots(
+            "id",
+        )
+        assert_matches_type(ReferralFlowScreenshotsResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_capture_referral_flow_screenshots(self, async_client: AsyncGrowsurf) -> None:
+        response = await async_client.campaign.with_raw_response.capture_referral_flow_screenshots(
+            "id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        campaign = await response.parse()
+        assert_matches_type(ReferralFlowScreenshotsResponse, campaign, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_capture_referral_flow_screenshots(self, async_client: AsyncGrowsurf) -> None:
+        async with async_client.campaign.with_streaming_response.capture_referral_flow_screenshots(
+            "id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            campaign = await response.parse()
+            assert_matches_type(ReferralFlowScreenshotsResponse, campaign, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_capture_referral_flow_screenshots(self, async_client: AsyncGrowsurf) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.campaign.with_raw_response.capture_referral_flow_screenshots(
+                "",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
