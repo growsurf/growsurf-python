@@ -218,7 +218,8 @@ def _transform_recursive(
         return data
 
     if isinstance(data, pydantic.BaseModel):
-        return model_dump(data, exclude_unset=True, mode="json")
+        # Request bodies use API field names, so dump aliased fields (e.g. `maxAmount`) by alias.
+        return model_dump(data, exclude_unset=True, mode="json", by_alias=True)
 
     annotated_type = _get_annotated_type(annotation)
     if annotated_type is None:
@@ -384,7 +385,8 @@ async def _async_transform_recursive(
         return data
 
     if isinstance(data, pydantic.BaseModel):
-        return model_dump(data, exclude_unset=True, mode="json")
+        # Request bodies use API field names, so dump aliased fields (e.g. `maxAmount`) by alias.
+        return model_dump(data, exclude_unset=True, mode="json", by_alias=True)
 
     annotated_type = _get_annotated_type(annotation)
     if annotated_type is None:

@@ -327,9 +327,9 @@ class RewardsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignRewardListResponse:
         """
-        Retrieves the list of a program's configured rewards (`CampaignReward`s) — the
-        same set embedded in the `rewards` array of the campaign response. Delete a
-        reward with `DELETE /campaign/{id}/reward-configs/{campaignRewardId}`.
+        Retrieves configured Campaign Rewards, including switched-off rewards and rewards
+        whose group is not selected. Deleted rewards are excluded. The campaign response's
+        embedded rewards array includes only enabled, visible rewards.
 
         Args:
           extra_headers: Send extra headers
@@ -692,9 +692,9 @@ class AsyncRewardsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignRewardListResponse:
         """
-        Retrieves the list of a program's configured rewards (`CampaignReward`s) — the
-        same set embedded in the `rewards` array of the campaign response. Delete a
-        reward with `DELETE /campaign/{id}/reward-configs/{campaignRewardId}`.
+        Retrieves configured Campaign Rewards, including switched-off rewards and rewards
+        whose group is not selected. Deleted rewards are excluded. The campaign response's
+        embedded rewards array includes only enabled, visible rewards.
 
         Args:
           extra_headers: Send extra headers

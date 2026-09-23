@@ -55,7 +55,11 @@ class CampaignDesignResources(TypedDict, total=False):
 # `widget` is the website widget shown in a corner of your own site — a button or a
 # card, its placement and offsets, when it appears, and which pages it appears on —
 # with its colors under `theme.widget`. Both of its audience switches start off, so a
-# program shows nothing until you turn one on.
+# program shows nothing until you turn one on. `trafficInsights` is the participant
+# Traffic report: visits to a participant's share link and where they came from. It
+# starts on for new affiliate programs and hidden for referral programs; `GET` returns
+# every setting with its default copy, and a `PATCH` changes only the settings you
+# send. Its labels cannot be blank.
 # `GET` returns the fields configured for the program;
 # `payoutDestinationConfirmation` is omitted when no confirmation fields are
 # stored. Stored `null` fields are returned as `null`; omitted and `null` fields
