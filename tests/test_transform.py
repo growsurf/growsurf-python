@@ -7,6 +7,7 @@ from datetime import date, datetime
 from typing_extensions import Required, Annotated, TypedDict
 
 import pytest
+from pydantic import Field
 
 from growsurf._types import Base64FileInput, omit, not_given
 from growsurf._utils import (
@@ -315,6 +316,23 @@ async def test_pydantic_mismatched_object_type(use_async: bool) -> None:
         with pytest.warns(UserWarning):
             params = await transform(model, Any, use_async)
     assert cast(Any, params) == {"foo": {"hello": "world"}}
+
+
+class ModelWithAlias(BaseModel):
+    max_amount: Optional[int] = Field(alias="maxAmount", default=None)
+
+
+class TypedDictWithAliasedModel(TypedDict, total=False):
+    commission_structure: Annotated[ModelWithAlias, PropertyInfo(alias="commissionStructure")]
+
+
+@parametrize
+@pytest.mark.asyncio
+async def test_pydantic_model_uses_api_field_names(use_async: bool) -> None:
+    params = {"commission_structure": ModelWithAlias(maxAmount=5000)}
+    assert cast(Any, await transform(params, TypedDictWithAliasedModel, use_async)) == {
+        "commissionStructure": {"maxAmount": 5000}
+    }
 
 
 class ModelNestedObjects(BaseModel):
