@@ -7,7 +7,8 @@ __all__ = ["CampaignInstallation"]
 
 # A program's installation configuration (the dashboard Program Editor's
 # Installation tab, plus Mobile SDK settings): referral trigger, signup
-# tracking, share URL + whitelist, custom-form signup, and mobile SDK settings.
+# tracking, share URL + whitelist, custom-form signup, mobile SDK settings,
+# and saved installation-guide choices (`instructionSelections`).
 # It is intentionally modeled as a loose object. To see the full object with
 # every field and its current value, `GET` the resource, then `PATCH` back only
 # the fields you want to change.
