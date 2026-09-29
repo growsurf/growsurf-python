@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/growsurf/growsurf-python/compare/v1.10.0...v1.11.0) (2026-09-29)
+
+
+### Features
+
+* **api:** update campaign contracts ([0351056](https://github.com/growsurf/growsurf-python/commit/03510565276942c3fe56ed8cd91e2547a88dff54))
+
 ## [1.10.0](https://github.com/growsurf/growsurf-python/compare/v1.9.0...v1.10.0) (2026-09-23)
 
 
