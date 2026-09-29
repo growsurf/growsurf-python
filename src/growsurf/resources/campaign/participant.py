@@ -1278,7 +1278,7 @@ class ParticipantResource(SyncAPIResource):
         participant_id_or_email: str,
         *,
         id: str,
-        provider: Literal["PAYPAL", "WISECOM"],
+        provider: Literal["PAYPAL", "VENMO", "WISECOM"],
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -2544,7 +2544,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         participant_id_or_email: str,
         *,
         id: str,
-        provider: Literal["PAYPAL", "WISECOM"],
+        provider: Literal["PAYPAL", "VENMO", "WISECOM"],
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,

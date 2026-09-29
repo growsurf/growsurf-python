@@ -10,5 +10,5 @@ __all__ = ["ParticipantRequestPayoutDestinationConfirmationParams"]
 class ParticipantRequestPayoutDestinationConfirmationParams(TypedDict, total=False):
     id: Required[str]
 
-    provider: Required[Literal["PAYPAL", "WISECOM"]]
+    provider: Required[Literal["PAYPAL", "VENMO", "WISECOM"]]
     """The payout provider the participant should confirm a destination for."""
