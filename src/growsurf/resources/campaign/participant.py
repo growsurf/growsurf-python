@@ -1032,6 +1032,8 @@ class ParticipantResource(SyncAPIResource):
               `commissionGenerated`, `commissionAdjusted`, `payoutPending`, `payoutSentSuccess`,
               `progressUpdateMonthly`. System/transactional types (login link, PayPal confirmation,
               tax) and the invite email cannot be sent.
+              `welcomeNonReferred` can only be sent to advocates or approved, enrolled affiliates in
+              a program that has not ended.
 
           body: HTML body for a free-form email. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails).
 
@@ -2298,6 +2300,8 @@ class AsyncParticipantResource(AsyncAPIResource):
               `commissionGenerated`, `commissionAdjusted`, `payoutPending`, `payoutSentSuccess`,
               `progressUpdateMonthly`. System/transactional types (login link, PayPal confirmation,
               tax) and the invite email cannot be sent.
+              `welcomeNonReferred` can only be sent to advocates or approved, enrolled affiliates in
+              a program that has not ended.
 
           body: HTML body for a free-form email. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails).
 
