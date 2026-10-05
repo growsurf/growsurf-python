@@ -61,6 +61,10 @@ class EmailsResource(SyncAPIResource):
         (`subject`, `preheader`, `body`, `isEnabled`) plus the `settings` block (sender,
         contact, and design). The set of email templates returned depends on the program
         type (referral vs affiliate).
+        `followUpReminder` is disabled by default. It reminds the referrer about new
+        invitations sent while enabled when the contacts have not signed up.
+        `delayDays` accepts integers from 2 to 30 (default 3); changing it leaves
+        existing reminder dates unchanged.
 
         Args:
           extra_headers: Send extra headers
@@ -163,6 +167,10 @@ class AsyncEmailsResource(AsyncAPIResource):
         (`subject`, `preheader`, `body`, `isEnabled`) plus the `settings` block (sender,
         contact, and design). The set of email templates returned depends on the program
         type (referral vs affiliate).
+        `followUpReminder` is disabled by default. It reminds the referrer about new
+        invitations sent while enabled when the contacts have not signed up.
+        `delayDays` accepts integers from 2 to 30 (default 3); changing it leaves
+        existing reminder dates unchanged.
 
         Args:
           extra_headers: Send extra headers
