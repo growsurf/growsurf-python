@@ -15,5 +15,7 @@ __all__ = ["CampaignEmails"]
 # 3); changing it leaves existing reminder dates unchanged.
 # To see the full object with every field and its
 # current value, `GET` the resource, then `PATCH` back only the fields you want to
-# change.
+# change. New programs return settings.design.layoutMode="INLINE" (read-only).
+# Their bodies require {{emailFooter}}; {{emailHeader}} is optional. Older programs
+# omit layoutMode and keep their existing layout.
 CampaignEmails: TypeAlias = Dict[str, object]
