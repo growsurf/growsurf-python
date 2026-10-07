@@ -52,8 +52,20 @@ from growsurf.types import (
     CampaignListResponse,
     CampaignCreateMobileParticipantTokenResponse,
     CampaignRetrieveAnalyticsResponse,
+    CampaignActivationAnalyticsResponse,
     ReferralFlowScreenshot,
     ReferralFlowScreenshotsResponse,
+)
+```
+
+```python
+from growsurf.types.campaign import (
+    ProgramResource,
+    ProgramResourceFile,
+    ProgramResourceListResponse,
+    ProgramResourceUploadResult,
+    ProgramResourceUploadTicket,
+    DeleteProgramResourceResponse,
 )
 ```
 
@@ -72,6 +84,7 @@ Methods:
 - <code title="get /campaign/{id}/payouts">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">list_payouts</a>(id, \*\*<a href="src/growsurf/types/campaign_list_payouts_params.py">params</a>) -> <a href="./src/growsurf/types/participant_payout_list.py">ParticipantPayoutList</a></code>
 - <code title="get /campaign/{id}/referrals">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">list_referrals</a>(id, \*\*<a href="src/growsurf/types/campaign_list_referrals_params.py">params</a>) -> <a href="./src/growsurf/types/referral_list.py">ReferralList</a></code>
 - <code title="get /campaign/{id}/analytics">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">retrieve_analytics</a>(id, \*\*<a href="src/growsurf/types/campaign_retrieve_analytics_params.py">params</a>) -> <a href="./src/growsurf/types/campaign_retrieve_analytics_response.py">CampaignRetrieveAnalyticsResponse</a></code>
+- <code title="get /campaign/{id}/analytics/activation">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">retrieve_activation_analytics</a>(id, \*\*<a href="src/growsurf/types/campaign_retrieve_activation_analytics_params.py">params</a>) -> <a href="./src/growsurf/types/campaign_activation_analytics_response.py">CampaignActivationAnalyticsResponse</a></code>
 - <code title="get /campaign/{id}/affiliate-applications">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">list_affiliate_applications</a>(id, \*\*<a href="src/growsurf/types/campaign_list_affiliate_applications_params.py">params</a>) -> <a href="./src/growsurf/types/affiliate_application_list_response.py">AffiliateApplicationListResponse</a></code>
 - <code title="get /campaign/{id}/affiliate-applications/{applicationId}">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">retrieve_affiliate_application</a>(application_id, \*, id) -> <a href="./src/growsurf/types/affiliate_application.py">AffiliateApplication</a></code>
 - <code title="patch /campaign/{id}/affiliate-applications/{applicationId}">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">review_affiliate_application</a>(application_id, \*, id, \*\*<a href="src/growsurf/types/campaign_review_affiliate_application_params.py">params</a>) -> <a href="./src/growsurf/types/affiliate_application.py">AffiliateApplication</a></code>
@@ -79,6 +92,11 @@ Methods:
 - <code title="post /campaign/{id}/affiliate-invites">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">create_affiliate_invite</a>(id, \*\*<a href="src/growsurf/types/campaign_create_affiliate_invite_params.py">params</a>) -> <a href="./src/growsurf/types/affiliate_invite.py">AffiliateInvite</a></code>
 - <code title="delete /campaign/{id}/affiliate-invites/{inviteId}">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">revoke_affiliate_invite</a>(invite_id, \*, id) -> <a href="./src/growsurf/types/affiliate_invite.py">AffiliateInvite</a></code>
 - <code title="post /campaign/{id}/affiliate-invites/{inviteId}/resend">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">resend_affiliate_invite</a>(invite_id, \*, id) -> <a href="./src/growsurf/types/affiliate_invite.py">AffiliateInvite</a></code>
+- <code title="get /campaign/{id}/resources">client.campaign.resources.<a href="./src/growsurf/resources/campaign/program_resources.py">list</a>(id) -> <a href="./src/growsurf/types/campaign/program_resource_list_response.py">ProgramResourceListResponse</a></code>
+- <code title="post /campaign/{id}/resources">client.campaign.resources.<a href="./src/growsurf/resources/campaign/program_resources.py">create</a>(id, \*, type, title, description, category, is_published, url, text, upload_ticket, upload_result) -> <a href="./src/growsurf/types/campaign/program_resource.py">ProgramResource</a></code>
+- <code title="patch /campaign/{id}/resources/{resourceId}">client.campaign.resources.<a href="./src/growsurf/resources/campaign/program_resources.py">update</a>(resource_id, \*, id, type, title, description, category, is_published, position, url, text, upload_ticket, upload_result) -> <a href="./src/growsurf/types/campaign/program_resource.py">ProgramResource</a></code>
+- <code title="delete /campaign/{id}/resources/{resourceId}">client.campaign.resources.<a href="./src/growsurf/resources/campaign/program_resources.py">delete</a>(resource_id, \*, id) -> <a href="./src/growsurf/types/campaign/delete_program_resource_response.py">DeleteProgramResourceResponse</a></code>
+- <code title="post /campaign/{id}/resource-upload-tickets">client.campaign.resources.<a href="./src/growsurf/resources/campaign/program_resources.py">create_upload_ticket</a>(id, \*, file_name, mime_type, bytes) -> <a href="./src/growsurf/types/campaign/program_resource_upload_ticket.py">ProgramResourceUploadTicket</a></code>
 
 ## Participant
 

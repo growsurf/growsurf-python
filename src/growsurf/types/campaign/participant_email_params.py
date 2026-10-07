@@ -23,6 +23,8 @@ class ParticipantEmailParams(TypedDict, total=False):
     `commissionGenerated`, `commissionAdjusted`, `payoutPending`, `payoutSentSuccess`,
     `progressUpdateMonthly`. System/transactional types (login link, PayPal confirmation,
     tax) and the invite email cannot be sent.
+    `welcomeNonReferred` can only be sent to advocates or approved, enrolled affiliates in a program
+    that has not ended.
     """
 
     body: str
