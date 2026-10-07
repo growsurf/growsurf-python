@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.12.0](https://github.com/growsurf/growsurf-python/compare/v1.11.0...v1.12.0) (2026-10-07)
+
+
+### Chores
+
+* prepare SDK 1.12.0 ([4d51fd4](https://github.com/growsurf/growsurf-python/commit/4d51fd4048c70ea3a4ac68151f0c6ec455c5a5c8))
+* release 1.12.0 ([2a44995](https://github.com/growsurf/growsurf-python/commit/2a44995b52c7f6bdd360cc400a1b3aa64c0af7a8))
+
+
+### Documentation
+
+* clarify welcome email recipient eligibility ([3050cc3](https://github.com/growsurf/growsurf-python/commit/3050cc38e2f57cbe25d36352f1ddc124f333c4bf))
+* describe follow-up reminder eligibility and delay ([818359b](https://github.com/growsurf/growsurf-python/commit/818359b7806b6029ba06bf788471e17c00ae1363))
+* describe inline email layout and required footer token ([b13749a](https://github.com/growsurf/growsurf-python/commit/b13749a5abd8a8c12e85305ba54ead72055404ff))
+
 ## [1.11.0](https://github.com/growsurf/growsurf-python/compare/v1.10.0...v1.11.0) (2026-09-29)
 
 
