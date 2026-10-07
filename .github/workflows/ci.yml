@@ -91,8 +91,10 @@ jobs:
       - name: Bootstrap
         run: ./scripts/bootstrap
 
-      - name: Run tests
-        run: ./scripts/test
+      # Bootstrap is complete; tests and the dependency audit can run independently.
+      - parallel:
+          - name: Run tests
+            run: ./scripts/test
 
-      - name: Audit runtime dependencies
-        run: uvx pip-audit --no-deps --disable-pip --skip-editable --requirement <(uv export --all-extras --no-dev --format requirements-txt --no-hashes)
+          - name: Audit runtime dependencies
+            run: uvx pip-audit --no-deps --disable-pip --skip-editable --requirement <(uv export --all-extras --no-dev --format requirements-txt --no-hashes)
