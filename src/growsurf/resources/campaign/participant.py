@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, Iterable, cast
+from typing import Any, Dict, Iterable, Optional, cast
 from typing_extensions import Literal
 
 import httpx
@@ -37,6 +37,7 @@ from ...types.campaign import (
     participant_request_payout_destination_confirmation_params,
 )
 from ...types.referral_list import ReferralList
+from ...types.campaign.language import Language
 from ...types.campaign.participant import Participant
 from ...types.participant_payout_list import ParticipantPayoutList
 from ...types.campaign.referral_status import ReferralStatus
@@ -129,6 +130,7 @@ class ParticipantResource(SyncAPIResource):
         affiliate_status: Literal["APPROVED", "SUSPENDED", "BANNED"] | Omit = omit,
         email: str | Omit = omit,
         first_name: str | Omit = omit,
+        language: Optional[Language] | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
         notes: str | Omit = omit,
@@ -154,6 +156,10 @@ class ParticipantResource(SyncAPIResource):
           affiliate_status: Affiliate programs only. Sets the affiliate status. `APPROVED` also enrolls a
               participant who is not yet an affiliate. `SUSPENDED` and `BANNED` are rejected for
               non-affiliates.
+
+          language: The language of the participant's portal and program emails. Must be one of the
+              program's languages (see `languages` in the program options). Send the base
+              language or `null` to use the program's base language.
 
           metadata: Shallow custom metadata object.
 
@@ -185,6 +191,7 @@ class ParticipantResource(SyncAPIResource):
                     "affiliate_status": affiliate_status,
                     "email": email,
                     "first_name": first_name,
+                    "language": language,
                     "last_name": last_name,
                     "metadata": metadata,
                     "notes": notes,
@@ -298,6 +305,7 @@ class ParticipantResource(SyncAPIResource):
         first_name: str | Omit = omit,
         ip_address: str | Omit = omit,
         is_affiliate: bool | Omit = omit,
+        language: Language | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
         mobile_instance_id: str | Omit = omit,
@@ -325,6 +333,9 @@ class ParticipantResource(SyncAPIResource):
               `true` enrolls the participant with `affiliateStatus: APPROVED`; `false` creates a
               non-affiliate without `affiliateStatus`. Existing participants are returned
               unchanged.
+
+          language: The language of the participant's portal and program emails. Must be one of the
+              program's languages. Applied only when this request creates the participant.
 
           metadata: Shallow custom metadata object.
 
@@ -358,6 +369,7 @@ class ParticipantResource(SyncAPIResource):
                     "first_name": first_name,
                     "ip_address": ip_address,
                     "is_affiliate": is_affiliate,
+                    "language": language,
                     "last_name": last_name,
                     "metadata": metadata,
                     "mobile_instance_id": mobile_instance_id,
@@ -1019,7 +1031,7 @@ class ParticipantResource(SyncAPIResource):
         name, postal address, and an unsubscribe link are added automatically, and
         unsubscribed participants are suppressed). Sending requires the team to be
         verified by GrowSurf. Requires a **verified custom email domain** on the program
-        (which can be completed in *Campaign Editor > 3. Emails > Email Settings*).
+        (which can be completed in *Program Editor > 3. Emails > Email Settings*).
         Returns `400` until one is verified. The email is accepted for delivery.
 
         Args:
@@ -1397,6 +1409,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         affiliate_status: Literal["APPROVED", "SUSPENDED", "BANNED"] | Omit = omit,
         email: str | Omit = omit,
         first_name: str | Omit = omit,
+        language: Optional[Language] | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
         notes: str | Omit = omit,
@@ -1422,6 +1435,10 @@ class AsyncParticipantResource(AsyncAPIResource):
           affiliate_status: Affiliate programs only. Sets the affiliate status. `APPROVED` also enrolls a
               participant who is not yet an affiliate. `SUSPENDED` and `BANNED` are rejected for
               non-affiliates.
+
+          language: The language of the participant's portal and program emails. Must be one of the
+              program's languages (see `languages` in the program options). Send the base
+              language or `null` to use the program's base language.
 
           metadata: Shallow custom metadata object.
 
@@ -1453,6 +1470,7 @@ class AsyncParticipantResource(AsyncAPIResource):
                     "affiliate_status": affiliate_status,
                     "email": email,
                     "first_name": first_name,
+                    "language": language,
                     "last_name": last_name,
                     "metadata": metadata,
                     "notes": notes,
@@ -1566,6 +1584,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         first_name: str | Omit = omit,
         ip_address: str | Omit = omit,
         is_affiliate: bool | Omit = omit,
+        language: Language | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
         mobile_instance_id: str | Omit = omit,
@@ -1593,6 +1612,9 @@ class AsyncParticipantResource(AsyncAPIResource):
               `true` enrolls the participant with `affiliateStatus: APPROVED`; `false` creates a
               non-affiliate without `affiliateStatus`. Existing participants are returned
               unchanged.
+
+          language: The language of the participant's portal and program emails. Must be one of the
+              program's languages. Applied only when this request creates the participant.
 
           metadata: Shallow custom metadata object.
 
@@ -1626,6 +1648,7 @@ class AsyncParticipantResource(AsyncAPIResource):
                     "first_name": first_name,
                     "ip_address": ip_address,
                     "is_affiliate": is_affiliate,
+                    "language": language,
                     "last_name": last_name,
                     "metadata": metadata,
                     "mobile_instance_id": mobile_instance_id,
@@ -2287,7 +2310,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         name, postal address, and an unsubscribe link are added automatically, and
         unsubscribed participants are suppressed). Sending requires the team to be
         verified by GrowSurf. Requires a **verified custom email domain** on the program
-        (which can be completed in *Campaign Editor > 3. Emails > Email Settings*).
+        (which can be completed in *Program Editor > 3. Emails > Email Settings*).
         Returns `400` until one is verified. The email is accepted for delivery.
 
         Args:
