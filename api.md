@@ -105,6 +105,7 @@ Types:
 ```python
 from growsurf.types.campaign import (
     FraudRiskLevel,
+    Language,
     Participant,
     ParticipantReward,
     ReferralSource,

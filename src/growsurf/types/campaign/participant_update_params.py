@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, Optional
 from typing_extensions import Literal, Required, Annotated, TypedDict
 
 from ..._types import SequenceNotStr
 from ..._utils import PropertyInfo
+from .language import Language
 
 __all__ = ["ParticipantUpdateParams"]
 
@@ -24,6 +25,13 @@ class ParticipantUpdateParams(TypedDict, total=False):
     email: str
 
     first_name: Annotated[str, PropertyInfo(alias="firstName")]
+
+    language: Optional[Language]
+    """The language of the participant's portal and program emails.
+
+    Must be one of the program's languages (see `languages` in the program options).
+    Send the base language or `null` to use the program's base language.
+    """
 
     last_name: Annotated[str, PropertyInfo(alias="lastName")]
 

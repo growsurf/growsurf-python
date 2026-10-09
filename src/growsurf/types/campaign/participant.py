@@ -5,6 +5,7 @@ from typing_extensions import Literal
 
 from pydantic import Field as FieldInfo
 
+from .language import Language
 from ..._models import BaseModel
 from .referral_source import ReferralSource
 from .referral_status import ReferralStatus
@@ -148,6 +149,13 @@ class Participant(BaseModel):
     is_new: Optional[bool] = FieldInfo(alias="isNew", default=None)
 
     is_winner: Optional[bool] = FieldInfo(alias="isWinner", default=None)
+
+    language: Optional[Language] = None
+    """The language of the participant's portal and program emails.
+
+    The program's base language unless the participant (or you) picked another of the
+    program's languages.
+    """
 
     last_name: Optional[str] = FieldInfo(alias="lastName", default=None)
 

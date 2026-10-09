@@ -5,6 +5,7 @@ from __future__ import annotations
 from .reward import Reward as Reward
 from .webhook import Webhook as Webhook
 from .campaign import Campaign as Campaign
+from .language import Language as Language
 from .integration import Integration as Integration
 from .participant import Participant as Participant
 from .webhook_event import WebhookEvent as WebhookEvent

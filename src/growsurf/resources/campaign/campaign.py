@@ -127,6 +127,7 @@ from ...types.referral_list import ReferralList
 from ...types.affiliate_invite import AffiliateInvite
 from ...types.participant_list import ParticipantList
 from ...types.campaign.campaign import Campaign
+from ...types.campaign.language import Language
 from ...types.affiliate_application import AffiliateApplication
 from ...types.campaign_list_response import CampaignListResponse
 from ...types.participant_payout_list import ParticipantPayoutList
@@ -439,6 +440,7 @@ class CampaignResource(SyncAPIResource):
         first_name: str | Omit = omit,
         ip_address: str | Omit = omit,
         is_affiliate: bool | Omit = omit,
+        language: Language | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
         mobile_instance_id: str | Omit = omit,
@@ -466,6 +468,9 @@ class CampaignResource(SyncAPIResource):
 
           is_affiliate: Affiliate programs only. Controls affiliate enrollment for a new participant.
 
+          language: The language of the participant's portal and program emails. Must be one of the
+              program's languages. Applied only when this request creates the participant.
+
           referred_by: Referrer participant ID or email address.
 
           extra_headers: Send extra headers
@@ -487,6 +492,7 @@ class CampaignResource(SyncAPIResource):
                     "first_name": first_name,
                     "ip_address": ip_address,
                     "is_affiliate": is_affiliate,
+                    "language": language,
                     "last_name": last_name,
                     "metadata": metadata,
                     "mobile_instance_id": mobile_instance_id,
@@ -1665,6 +1671,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         first_name: str | Omit = omit,
         ip_address: str | Omit = omit,
         is_affiliate: bool | Omit = omit,
+        language: Language | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
         mobile_instance_id: str | Omit = omit,
@@ -1692,6 +1699,9 @@ class AsyncCampaignResource(AsyncAPIResource):
 
           is_affiliate: Affiliate programs only. Controls affiliate enrollment for a new participant.
 
+          language: The language of the participant's portal and program emails. Must be one of the
+              program's languages. Applied only when this request creates the participant.
+
           referred_by: Referrer participant ID or email address.
 
           extra_headers: Send extra headers
@@ -1713,6 +1723,7 @@ class AsyncCampaignResource(AsyncAPIResource):
                     "first_name": first_name,
                     "ip_address": ip_address,
                     "is_affiliate": is_affiliate,
+                    "language": language,
                     "last_name": last_name,
                     "metadata": metadata,
                     "mobile_instance_id": mobile_instance_id,

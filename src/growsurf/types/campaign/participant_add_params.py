@@ -6,6 +6,7 @@ from typing import Dict
 from typing_extensions import Literal, Required, Annotated, TypedDict
 
 from ..._utils import PropertyInfo
+from .language import Language
 
 __all__ = ["ParticipantAddParams"]
 
@@ -25,6 +26,13 @@ class ParticipantAddParams(TypedDict, total=False):
     `true` enrolls the participant with `affiliateStatus: APPROVED`; `false` creates a
     non-affiliate without `affiliateStatus`. Existing participants are returned
     unchanged.
+    """
+
+    language: Language
+    """The language of the participant's portal and program emails.
+
+    Must be one of the program's languages. Applied only when this request creates
+    the participant.
     """
 
     last_name: Annotated[str, PropertyInfo(alias="lastName")]
