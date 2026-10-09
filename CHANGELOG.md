@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.13.0](https://github.com/growsurf/growsurf-python/compare/v1.12.0...v1.13.0) (2026-10-09)
+
+
+### Features
+
+* add program and participant language support ([57890e4](https://github.com/growsurf/growsurf-python/commit/57890e4ddfd3b2af6ac43d8caafdcf8ab013f3a6))
+* add program languages and update SDK guidance ([1925adb](https://github.com/growsurf/growsurf-python/commit/1925adb305c1ba3743dcbac397c06dfcb2444743))
+
 ## [1.12.0](https://github.com/growsurf/growsurf-python/compare/v1.11.0...v1.12.0) (2026-10-07)
 
 
