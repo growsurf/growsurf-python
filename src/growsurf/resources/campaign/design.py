@@ -101,6 +101,9 @@ class DesignResource(SyncAPIResource):
         anything you leave out is untouched (arrays such as `signup.fields` replace wholesale).
         Unknown fields, fields not available for the program type, and invalid values return a
         `400`. Landing-page custom code and JavaScript are not editable via the API.
+        Changes to participant email content are checked before saving. Rejected content returns
+        `400`; if the check is unavailable, `503` asks you to retry. Neither response saves the
+        change. A concurrent edit can return `409`; reload the program before retrying.
 
         Args:
           body: A partial `CampaignDesign` object — only the fields you send are changed.
@@ -206,6 +209,9 @@ class AsyncDesignResource(AsyncAPIResource):
         anything you leave out is untouched (arrays such as `signup.fields` replace wholesale).
         Unknown fields, fields not available for the program type, and invalid values return a
         `400`. Landing-page custom code and JavaScript are not editable via the API.
+        Changes to participant email content are checked before saving. Rejected content returns
+        `400`; if the check is unavailable, `503` asks you to retry. Neither response saves the
+        change. A concurrent edit can return `409`; reload the program before retrying.
 
         Args:
           body: A partial `CampaignDesign` object — only the fields you send are changed.

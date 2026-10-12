@@ -346,6 +346,9 @@ class CampaignResource(SyncAPIResource):
         configuration (design, emails, options, installation) is edited via the
         dedicated config sub-resources, not here. The program cannot be deleted via this
         endpoint.
+        Changes to participant email content are checked before saving. Rejected content returns
+        `400`; if the check is unavailable, `503` asks you to retry. Neither response saves the
+        change. A concurrent edit can return `409`; reload the program before retrying.
 
         Args:
           status: The requested program status. `IN_PROGRESS` publishes or resumes the program;
@@ -411,6 +414,7 @@ class CampaignResource(SyncAPIResource):
         """
         Clones an existing program into a new `DRAFT` program. Integrations and
         credentials are not copied; active rewards are cloned.
+        A concurrent edit to the program can return `409`; retry the clone.
 
         Args:
           extra_headers: Send extra headers
@@ -1577,6 +1581,9 @@ class AsyncCampaignResource(AsyncAPIResource):
         configuration (design, emails, options, installation) is edited via the
         dedicated config sub-resources, not here. The program cannot be deleted via this
         endpoint.
+        Changes to participant email content are checked before saving. Rejected content returns
+        `400`; if the check is unavailable, `503` asks you to retry. Neither response saves the
+        change. A concurrent edit can return `409`; reload the program before retrying.
 
         Args:
           status: The requested program status. `IN_PROGRESS` publishes or resumes the program;
@@ -1642,6 +1649,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         """
         Clones an existing program into a new `DRAFT` program. Integrations and
         credentials are not copied; active rewards are cloned.
+        A concurrent edit to the program can return `409`; retry the clone.
 
         Args:
           extra_headers: Send extra headers
