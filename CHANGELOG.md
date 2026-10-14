@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.13.1](https://github.com/growsurf/growsurf-python/compare/v1.13.0...v1.13.1) (2026-10-14)
+
+
+### Documentation
+
+* align SDK option guidance with the REST API ([f93027e](https://github.com/growsurf/growsurf-python/commit/f93027e3580e7412a7991c817912c19901d32721))
+* document language picker flag option ([304a4b4](https://github.com/growsurf/growsurf-python/commit/304a4b4dc9b452c07c04b694b6374df7e535d0e4))
+* sync SDK comments with the REST API contract ([bf3e679](https://github.com/growsurf/growsurf-python/commit/bf3e679d1dcb9db0380babec0f8030a8c0156454))
+
 ## [1.13.0](https://github.com/growsurf/growsurf-python/compare/v1.12.0...v1.13.0) (2026-10-09)
 
 
