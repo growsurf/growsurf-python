@@ -56,12 +56,11 @@ class OptionsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignOptions:
         """
-        Retrieves a program's options — the same surface as the dashboard Program
-        Editor's **Options** tab. Includes reward/fraud approval, anti-fraud lists +
-        toggles, referral cookie/credit windows, reCAPTCHA, affiliate enrollment +
-        application review, payout threshold + tax settings (affiliate only), and
-        notification-email settings, and `attributionModel` (`LAST_CLICK` or
-        `FIRST_CLICK`). `fraud.recaptcha.secretKey` is never returned.
+        Retrieves a program's options — the same surface as the dashboard Program Editor's
+        **Options** tab. Includes the attribution model, reward/fraud approval, anti-fraud lists
+        + toggles, referral cookie/credit windows, reCAPTCHA, affiliate enrollment + application
+        review, payout threshold + tax settings (affiliate only), notification-email settings,
+        and the program's languages. `fraud.recaptcha.secretKey` is never returned.
 
         Args:
           extra_headers: Send extra headers
@@ -101,6 +100,12 @@ class OptionsResource(SyncAPIResource):
         and `payoutThreshold`/`taxDocumentation` are affiliate-only, and affiliate
         programs require `requireParticipantAuth: true`). `fraud.recaptcha.secretKey`
         is write-only. `referralCreditWindowDays: null` means "never expires".
+        Turning on `languages.additionalLanguages` requires the Business plan or higher. While
+        any are on, every `languages` change, including turning them off, requires it too (`403`
+        otherwise).
+        Changes to participant email content are checked before saving. Rejected content returns
+        `400`; if the check is unavailable, `503` asks you to retry. Neither response saves the
+        change. A concurrent edit can return `409`; reload the program before retrying.
 
         Args:
           body: A partial `CampaignOptions` object — only the fields you send are changed.
@@ -159,12 +164,11 @@ class AsyncOptionsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CampaignOptions:
         """
-        Retrieves a program's options — the same surface as the dashboard Program
-        Editor's **Options** tab. Includes reward/fraud approval, anti-fraud lists +
-        toggles, referral cookie/credit windows, reCAPTCHA, affiliate enrollment +
-        application review, payout threshold + tax settings (affiliate only), and
-        notification-email settings, and `attributionModel` (`LAST_CLICK` or
-        `FIRST_CLICK`). `fraud.recaptcha.secretKey` is never returned.
+        Retrieves a program's options — the same surface as the dashboard Program Editor's
+        **Options** tab. Includes the attribution model, reward/fraud approval, anti-fraud lists
+        + toggles, referral cookie/credit windows, reCAPTCHA, affiliate enrollment + application
+        review, payout threshold + tax settings (affiliate only), notification-email settings,
+        and the program's languages. `fraud.recaptcha.secretKey` is never returned.
 
         Args:
           extra_headers: Send extra headers
@@ -204,6 +208,12 @@ class AsyncOptionsResource(AsyncAPIResource):
         and `payoutThreshold`/`taxDocumentation` are affiliate-only, and affiliate
         programs require `requireParticipantAuth: true`). `fraud.recaptcha.secretKey`
         is write-only. `referralCreditWindowDays: null` means "never expires".
+        Turning on `languages.additionalLanguages` requires the Business plan or higher. While
+        any are on, every `languages` change, including turning them off, requires it too (`403`
+        otherwise).
+        Changes to participant email content are checked before saving. Rejected content returns
+        `400`; if the check is unavailable, `503` asks you to retry. Neither response saves the
+        change. A concurrent edit can return `409`; reload the program before retrying.
 
         Args:
           body: A partial `CampaignOptions` object — only the fields you send are changed.

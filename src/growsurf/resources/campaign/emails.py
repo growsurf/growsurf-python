@@ -104,6 +104,9 @@ class EmailsResource(SyncAPIResource):
         available for the program type returns a `400`. Some fields are read-only
         (`settings.sender.fromEmail`, whose custom value requires dashboard domain
         verification).
+        Changes to participant email content are checked before saving. Rejected content returns
+        `400`; if the check is unavailable, `503` asks you to retry. Neither response saves the
+        change. A concurrent edit can return `409`; reload the program before retrying.
 
         Args:
           body: A partial `CampaignEmails` object — only the fields you send are changed.
@@ -210,6 +213,9 @@ class AsyncEmailsResource(AsyncAPIResource):
         available for the program type returns a `400`. Some fields are read-only
         (`settings.sender.fromEmail`, whose custom value requires dashboard domain
         verification).
+        Changes to participant email content are checked before saving. Rejected content returns
+        `400`; if the check is unavailable, `503` asks you to retry. Neither response saves the
+        change. A concurrent edit can return `409`; reload the program before retrying.
 
         Args:
           body: A partial `CampaignEmails` object — only the fields you send are changed.
