@@ -9,8 +9,8 @@ __all__ = ["CampaignOptions"]
 # approval, anti-fraud lists + toggles, the `LAST_CLICK` or `FIRST_CLICK`
 # attribution model, referral windows, reCAPTCHA, affiliate enrollment +
 # application review, payout + tax settings (affiliate only), notification-email
-# settings, and the program's `languages` (`baseLanguage` and
-# `additionalLanguages`). It is intentionally modeled as a loose object. To see the full
+# settings, and the program's `languages` (`baseLanguage`, `additionalLanguages`,
+# and `showFlags`). It is intentionally modeled as a loose object. To see the full
 # object with every field and its current value, `GET` the resource, then `PATCH`
 # back only the fields you want to change.
 CampaignOptions: TypeAlias = Dict[str, object]
