@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.14.0](https://github.com/growsurf/growsurf-python/compare/v1.13.1...v1.14.0) (2026-10-15)
+
+
+### Features
+
+* support 25 additional program languages ([cb89a0c](https://github.com/growsurf/growsurf-python/commit/cb89a0c16aa9a5d9a4bcaeb40a385d137136e56f))
+* support 25 additional program languages ([3f8c2ac](https://github.com/growsurf/growsurf-python/commit/3f8c2ac78b276ed29e52dfc81815dd8012c0d5d9))
+
 ## [1.13.1](https://github.com/growsurf/growsurf-python/compare/v1.13.0...v1.13.1) (2026-10-14)
 
 
