@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.14.1](https://github.com/growsurf/growsurf-python/compare/v1.14.0...v1.14.1) (2026-10-18)
+
+
+### Bug Fixes
+
+* clarify participant deletion access and cleanup docs ([1abfb93](https://github.com/growsurf/growsurf-python/commit/1abfb937f5ca7c782d5238f47a1e37e543d0d473))
+* clarify participant deletion access and cleanup docs ([d6820d4](https://github.com/growsurf/growsurf-python/commit/d6820d4998dd88544ef571b09d883578cd19fcbf))
+
 ## [1.14.0](https://github.com/growsurf/growsurf-python/compare/v1.13.1...v1.14.0) (2026-10-15)
 
 
