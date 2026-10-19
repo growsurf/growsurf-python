@@ -51,6 +51,34 @@ class Reward(BaseModel):
     image_url: Optional[str] = FieldInfo(alias="imageUrl", default=None)
     """The reward image URL."""
 
+    image_icon_key: Optional[
+        Literal[
+            "GIFT_1",
+            "GIFT_2",
+            "GIFT_3",
+            "GIFT_4",
+            "GIFT_5",
+            "GIFT_6",
+            "GIFT_CARD",
+            "CASH",
+            "COIN",
+            "CARD",
+            "STAR_1",
+            "STAR_2",
+            "STAR_3",
+            "TROPHY",
+            "CROWN",
+            "SEAL",
+            "HEART_1",
+            "HEART_2",
+            "TAG",
+            "DIAMOND",
+            "CONFETTI",
+            "ROCKET",
+        ]
+    ] = FieldInfo(alias="imageIconKey", default=None)
+    """The starter icon shown for the reward, or `null` when `imageUrl` is your own image."""
+
     is_visible: Optional[bool] = FieldInfo(alias="isVisible", default=None)
     """Whether the reward is enabled.
 

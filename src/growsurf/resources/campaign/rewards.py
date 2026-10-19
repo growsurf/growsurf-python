@@ -61,6 +61,33 @@ class RewardsResource(SyncAPIResource):
         description: str | Omit = omit,
         event: Literal["LEAD", "CONVERSION"] | Omit = omit,
         image_url: Optional[str] | Omit = omit,
+        image_icon_key: Optional[
+            Literal[
+                "GIFT_1",
+                "GIFT_2",
+                "GIFT_3",
+                "GIFT_4",
+                "GIFT_5",
+                "GIFT_6",
+                "GIFT_CARD",
+                "CASH",
+                "COIN",
+                "CARD",
+                "STAR_1",
+                "STAR_2",
+                "STAR_3",
+                "TROPHY",
+                "CROWN",
+                "SEAL",
+                "HEART_1",
+                "HEART_2",
+                "TAG",
+                "DIAMOND",
+                "CONFETTI",
+                "ROCKET",
+            ]
+        ]
+        | Omit = omit,
         is_unlimited: bool | Omit = omit,
         is_visible: bool | Omit = omit,
         limit: int | Omit = omit,
@@ -106,6 +133,11 @@ class RewardsResource(SyncAPIResource):
               `event` defaults to `CONVERSION`.
 
           image_url: An image URL for the reward.
+
+          image_icon_key: The starter icon shown for the reward, or `null` when `imageUrl` is your own
+              image. Participant pages draw this icon in your program's accent color. Also set
+              `imageUrl` to the icon's image so the iOS and Android SDKs can show it. Sending
+              `imageUrl` without `imageIconKey` clears it.
 
           is_unlimited: Whether the reward can be earned an unlimited number of times. Defaults to
               `true`, except `MILESTONE` rewards, which can only be earned once.
@@ -159,6 +191,7 @@ class RewardsResource(SyncAPIResource):
                     "description": description,
                     "event": event,
                     "image_url": image_url,
+                    "image_icon_key": image_icon_key,
                     "is_unlimited": is_unlimited,
                     "is_visible": is_visible,
                     "limit": limit,
@@ -194,6 +227,33 @@ class RewardsResource(SyncAPIResource):
         description: str | Omit = omit,
         event: Literal["LEAD", "CONVERSION"] | Omit = omit,
         image_url: Optional[str] | Omit = omit,
+        image_icon_key: Optional[
+            Literal[
+                "GIFT_1",
+                "GIFT_2",
+                "GIFT_3",
+                "GIFT_4",
+                "GIFT_5",
+                "GIFT_6",
+                "GIFT_CARD",
+                "CASH",
+                "COIN",
+                "CARD",
+                "STAR_1",
+                "STAR_2",
+                "STAR_3",
+                "TROPHY",
+                "CROWN",
+                "SEAL",
+                "HEART_1",
+                "HEART_2",
+                "TAG",
+                "DIAMOND",
+                "CONFETTI",
+                "ROCKET",
+            ]
+        ]
+        | Omit = omit,
         is_unlimited: bool | Omit = omit,
         is_visible: bool | Omit = omit,
         limit: int | Omit = omit,
@@ -239,6 +299,11 @@ class RewardsResource(SyncAPIResource):
           description: The reward description shown to the referrer.
 
           image_url: An image URL for the reward.
+
+          image_icon_key: The starter icon shown for the reward, or `null` when `imageUrl` is your own
+              image. Participant pages draw this icon in your program's accent color. Also set
+              `imageUrl` to the icon's image so the iOS and Android SDKs can show it. Sending
+              `imageUrl` without `imageIconKey` clears it.
 
           is_unlimited: Whether the reward can be earned an unlimited number of times. Defaults to
               `true`, except `MILESTONE` rewards, which can only be earned once.
@@ -295,6 +360,7 @@ class RewardsResource(SyncAPIResource):
                     "description": description,
                     "event": event,
                     "image_url": image_url,
+                    "image_icon_key": image_icon_key,
                     "is_unlimited": is_unlimited,
                     "is_visible": is_visible,
                     "limit": limit,
@@ -431,6 +497,33 @@ class AsyncRewardsResource(AsyncAPIResource):
         description: str | Omit = omit,
         event: Literal["LEAD", "CONVERSION"] | Omit = omit,
         image_url: Optional[str] | Omit = omit,
+        image_icon_key: Optional[
+            Literal[
+                "GIFT_1",
+                "GIFT_2",
+                "GIFT_3",
+                "GIFT_4",
+                "GIFT_5",
+                "GIFT_6",
+                "GIFT_CARD",
+                "CASH",
+                "COIN",
+                "CARD",
+                "STAR_1",
+                "STAR_2",
+                "STAR_3",
+                "TROPHY",
+                "CROWN",
+                "SEAL",
+                "HEART_1",
+                "HEART_2",
+                "TAG",
+                "DIAMOND",
+                "CONFETTI",
+                "ROCKET",
+            ]
+        ]
+        | Omit = omit,
         is_unlimited: bool | Omit = omit,
         is_visible: bool | Omit = omit,
         limit: int | Omit = omit,
@@ -476,6 +569,11 @@ class AsyncRewardsResource(AsyncAPIResource):
               `event` defaults to `CONVERSION`.
 
           image_url: An image URL for the reward.
+
+          image_icon_key: The starter icon shown for the reward, or `null` when `imageUrl` is your own
+              image. Participant pages draw this icon in your program's accent color. Also set
+              `imageUrl` to the icon's image so the iOS and Android SDKs can show it. Sending
+              `imageUrl` without `imageIconKey` clears it.
 
           is_unlimited: Whether the reward can be earned an unlimited number of times. Defaults to
               `true`, except `MILESTONE` rewards, which can only be earned once.
@@ -529,6 +627,7 @@ class AsyncRewardsResource(AsyncAPIResource):
                     "description": description,
                     "event": event,
                     "image_url": image_url,
+                    "image_icon_key": image_icon_key,
                     "is_unlimited": is_unlimited,
                     "is_visible": is_visible,
                     "limit": limit,
@@ -564,6 +663,33 @@ class AsyncRewardsResource(AsyncAPIResource):
         description: str | Omit = omit,
         event: Literal["LEAD", "CONVERSION"] | Omit = omit,
         image_url: Optional[str] | Omit = omit,
+        image_icon_key: Optional[
+            Literal[
+                "GIFT_1",
+                "GIFT_2",
+                "GIFT_3",
+                "GIFT_4",
+                "GIFT_5",
+                "GIFT_6",
+                "GIFT_CARD",
+                "CASH",
+                "COIN",
+                "CARD",
+                "STAR_1",
+                "STAR_2",
+                "STAR_3",
+                "TROPHY",
+                "CROWN",
+                "SEAL",
+                "HEART_1",
+                "HEART_2",
+                "TAG",
+                "DIAMOND",
+                "CONFETTI",
+                "ROCKET",
+            ]
+        ]
+        | Omit = omit,
         is_unlimited: bool | Omit = omit,
         is_visible: bool | Omit = omit,
         limit: int | Omit = omit,
@@ -609,6 +735,11 @@ class AsyncRewardsResource(AsyncAPIResource):
           description: The reward description shown to the referrer.
 
           image_url: An image URL for the reward.
+
+          image_icon_key: The starter icon shown for the reward, or `null` when `imageUrl` is your own
+              image. Participant pages draw this icon in your program's accent color. Also set
+              `imageUrl` to the icon's image so the iOS and Android SDKs can show it. Sending
+              `imageUrl` without `imageIconKey` clears it.
 
           is_unlimited: Whether the reward can be earned an unlimited number of times. Defaults to
               `true`, except `MILESTONE` rewards, which can only be earned once.
@@ -665,6 +796,7 @@ class AsyncRewardsResource(AsyncAPIResource):
                     "description": description,
                     "event": event,
                     "image_url": image_url,
+                    "image_icon_key": image_icon_key,
                     "is_unlimited": is_unlimited,
                     "is_visible": is_visible,
                     "limit": limit,
