@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.15.1](https://github.com/growsurf/growsurf-python/compare/v1.15.0...v1.15.1) (2026-10-19)
+
+
+### Bug Fixes
+
+* synchronize uv lockfile with SDK releases ([2a4acbf](https://github.com/growsurf/growsurf-python/commit/2a4acbfe2be6fd2a2055988687042896f1edba66))
+* synchronize uv lockfile with SDK releases ([0bbbc26](https://github.com/growsurf/growsurf-python/commit/0bbbc261a6c14963144f8de419d55ea120c2582d))
+
 ## [1.15.0](https://github.com/growsurf/growsurf-python/compare/v1.14.1...v1.15.0) (2026-10-19)
 
 
