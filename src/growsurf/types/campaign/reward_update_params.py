@@ -42,6 +42,42 @@ class RewardUpdateParams(TypedDict, total=False):
     image_url: Annotated[Optional[str], PropertyInfo(alias="imageUrl")]
     """An image URL for the reward."""
 
+    image_icon_key: Annotated[
+        Optional[
+            Literal[
+                "GIFT_1",
+                "GIFT_2",
+                "GIFT_3",
+                "GIFT_4",
+                "GIFT_5",
+                "GIFT_6",
+                "GIFT_CARD",
+                "CASH",
+                "COIN",
+                "CARD",
+                "STAR_1",
+                "STAR_2",
+                "STAR_3",
+                "TROPHY",
+                "CROWN",
+                "SEAL",
+                "HEART_1",
+                "HEART_2",
+                "TAG",
+                "DIAMOND",
+                "CONFETTI",
+                "ROCKET",
+            ]
+        ],
+        PropertyInfo(alias="imageIconKey"),
+    ]
+    """The starter icon shown for the reward, or `null` when `imageUrl` is your own image.
+
+    Participant pages draw this icon in your program's accent color. Also set
+    `imageUrl` to the icon's image so the iOS and Android SDKs can show it. Sending
+    `imageUrl` without `imageIconKey` clears it.
+    """
+
     is_unlimited: Annotated[bool, PropertyInfo(alias="isUnlimited")]
     """Whether the reward can be earned an unlimited number of times.
 
