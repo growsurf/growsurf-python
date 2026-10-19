@@ -43,6 +43,9 @@ class CampaignDesignResources(TypedDict, total=False):
     icon: CampaignDesignResourcesIcon
     """Icon configuration for the destination."""
 
+    emptyStateGraphic: Dict[str, object]
+    """Empty-section graphic: `type` (`DEFAULT`, `IMAGE`, `NONE`), starter `key`, and `imageUrl`."""
+
 
 # A program's design configuration. It includes the dashboard Program Editor's
 # Design tab and the payout-destination confirmation page copy configured from
