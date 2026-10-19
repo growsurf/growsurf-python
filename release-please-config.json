@@ -59,6 +59,11 @@
   ],
   "release-type": "python",
   "extra-files": [
-    "src/growsurf/_version.py"
+    "src/growsurf/_version.py",
+    {
+      "type": "toml",
+      "path": "uv.lock",
+      "jsonpath": "$.package[?(@.name.value=='growsurf-python')].version"
+    }
   ]
 }
