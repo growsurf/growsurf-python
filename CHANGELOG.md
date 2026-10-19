@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.15.0](https://github.com/growsurf/growsurf-python/compare/v1.14.1...v1.15.0) (2026-10-19)
+
+
+### Features
+
+* support reward image icon keys ([2fa2b67](https://github.com/growsurf/growsurf-python/commit/2fa2b6723ddb7e2e225a85f4d8471e2e5b8fc2b3))
+* support reward image icon keys ([252a3db](https://github.com/growsurf/growsurf-python/commit/252a3dbe115bcfdc44000a7c3b8996309b965116))
+
 ## [1.14.1](https://github.com/growsurf/growsurf-python/compare/v1.14.0...v1.14.1) (2026-10-18)
 
 
