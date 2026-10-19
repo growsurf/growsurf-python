@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.16.0](https://github.com/growsurf/growsurf-python/compare/v1.15.1...v1.16.0) (2026-10-19)
+
+
+### Features
+
+* support resource empty-state graphics ([afba1c2](https://github.com/growsurf/growsurf-python/commit/afba1c2730e504d8b1410c110ddb76e4fe5551d0))
+* support resource empty-state graphics ([5898cd4](https://github.com/growsurf/growsurf-python/commit/5898cd4f8df39e538b31ee0c28363b82b0149aa4))
+
 ## [1.15.1](https://github.com/growsurf/growsurf-python/compare/v1.15.0...v1.15.1) (2026-10-19)
 
 
