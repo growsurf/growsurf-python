@@ -323,6 +323,7 @@ class TestCampaign:
             metadata={"foo": "bar"},
             mobile_instance_id="mobileInstanceId",
             referral_status="CREDIT_PENDING",
+            referred_at=0,
             referred_by="referredBy",
         )
         assert_matches_type(CampaignCreateMobileParticipantTokenResponse, campaign, path=["response"])
@@ -1388,6 +1389,7 @@ class TestAsyncCampaign:
             metadata={"foo": "bar"},
             mobile_instance_id="mobileInstanceId",
             referral_status="CREDIT_PENDING",
+            referred_at=0,
             referred_by="referredBy",
         )
         assert_matches_type(CampaignCreateMobileParticipantTokenResponse, campaign, path=["response"])

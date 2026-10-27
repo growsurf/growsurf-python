@@ -65,7 +65,11 @@ class WebhooksResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Webhook:
         """
-        Adds a webhook to the program.
+        Adds a webhook to the program. A program can have only one saved Bask Health
+        webhook across all `bask.ninja` hosts and paths, including disabled webhooks. A
+        second Bask Health webhook returns `400`.
+        A concurrent change to webhook settings can return `409`; reload the webhooks
+        before retrying.
 
         Args:
           payload_url: The URL that receives webhook deliveries.
@@ -120,7 +124,11 @@ class WebhooksResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Webhook:
         """
-        Updates a webhook by id.
+        Updates a webhook by id. A program can have only one saved Bask Health webhook
+        across all `bask.ninja` hosts and paths, including disabled webhooks. An update
+        that leaves more than one Bask Health webhook returns `400`.
+        A concurrent change to webhook settings can return `409`; reload the webhooks
+        before retrying.
 
         Args:
           secret: Write-only.
@@ -303,7 +311,11 @@ class AsyncWebhooksResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Webhook:
         """
-        Adds a webhook to the program.
+        Adds a webhook to the program. A program can have only one saved Bask Health
+        webhook across all `bask.ninja` hosts and paths, including disabled webhooks. A
+        second Bask Health webhook returns `400`.
+        A concurrent change to webhook settings can return `409`; reload the webhooks
+        before retrying.
 
         Args:
           payload_url: The URL that receives webhook deliveries.
@@ -358,7 +370,11 @@ class AsyncWebhooksResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Webhook:
         """
-        Updates a webhook by id.
+        Updates a webhook by id. A program can have only one saved Bask Health webhook
+        across all `bask.ninja` hosts and paths, including disabled webhooks. An update
+        that leaves more than one Bask Health webhook returns `400`.
+        A concurrent change to webhook settings can return `409`; reload the webhooks
+        before retrying.
 
         Args:
           secret: Write-only.

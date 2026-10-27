@@ -283,8 +283,8 @@ class RewardsResource(SyncAPIResource):
         copy; removing a key that campaign copy still references returns a `409` listing
         the referencing fields.
         Changes to participant email content are checked before saving. Rejected content returns
-        `400`; if the check is unavailable, `503` asks you to retry. Neither response saves the
-        change. A concurrent edit can return `409`; reload the program before retrying.
+        `400` and is not saved. A concurrent edit can return `409`; reload the program before
+        retrying.
 
         Args:
           commission_structure: The affiliate commission structure (AFFILIATE rewards only).
@@ -719,8 +719,8 @@ class AsyncRewardsResource(AsyncAPIResource):
         copy; removing a key that campaign copy still references returns a `409` listing
         the referencing fields.
         Changes to participant email content are checked before saving. Rejected content returns
-        `400`; if the check is unavailable, `503` asks you to retry. Neither response saves the
-        change. A concurrent edit can return `409`; reload the program before retrying.
+        `400` and is not saved. A concurrent edit can return `409`; reload the program before
+        retrying.
 
         Args:
           commission_structure: The affiliate commission structure (AFFILIATE rewards only).

@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, Literal
+from typing import Dict, Literal, Optional
 from typing_extensions import TypeAlias, TypedDict
 
 __all__ = ["CampaignDesign", "CampaignDesignResources", "CampaignDesignResourcesIcon"]
@@ -12,7 +12,7 @@ class CampaignDesignResourcesIcon(TypedDict, total=False):
     type: Literal["DEFAULT", "IMAGE", "NONE"]
     """Use the default icon, a configured image, or no icon."""
 
-    imageUrl: str
+    imageUrl: Optional[str]
     """LIST-mode icon image URL when `type` is `IMAGE`. Maximum 500 characters."""
 
 
@@ -22,22 +22,22 @@ class CampaignDesignResources(TypedDict, total=False):
     isPublicDisplayed: bool
     """Enables the destination. It stays hidden until at least one valid resource is published."""
 
-    title: str
+    title: Optional[str]
     """Participant-visible section title. Maximum 100 characters."""
 
-    viewResourcesLinkText: str
+    viewResourcesLinkText: Optional[str]
     """LIST-mode row text. Maximum 100 characters."""
 
-    backLinkText: str
+    backLinkText: Optional[str]
     """LIST-mode detail Back text. Maximum 100 characters."""
 
-    copyButtonText: str
+    copyButtonText: Optional[str]
     """TEXT resource copy action. Maximum 100 characters."""
 
-    copiedText: str
+    copiedText: Optional[str]
     """TEXT resource copy confirmation. Maximum 100 characters."""
 
-    emptyState: str
+    emptyState: Optional[str]
     """Shown in place of the list when no resources are published. Maximum 500 characters."""
 
     icon: CampaignDesignResourcesIcon
@@ -69,7 +69,7 @@ class CampaignDesignResources(TypedDict, total=False):
 # use localized defaults. `PATCH` back only the sections or fields you want to
 # change (arrays such as `signup.fields` replace wholesale).
 # `participantAvatarStyle` accepts `CHARACTERS`, `INITIALS`, `ANIMALS`, or
-# `GRADIENT`; new programs use `CHARACTERS`, while missing or unknown stored
+# `GRADIENT`; new programs use `INITIALS`, while missing or unknown stored
 # values return `INITIALS`. `resources` uses `CampaignDesignResources` and controls
 # participant presentation; resource items use the Program Resources operations. The
 # top-level Design object remains intentionally loose so other current and future sections

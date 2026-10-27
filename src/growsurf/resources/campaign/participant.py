@@ -308,6 +308,7 @@ class ParticipantResource(SyncAPIResource):
         metadata: Dict[str, object] | Omit = omit,
         mobile_instance_id: str | Omit = omit,
         referral_status: Literal["CREDIT_PENDING", "CREDIT_AWARDED"] | Omit = omit,
+        referred_at: Optional[int] | Omit = omit,
         referred_by: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -318,7 +319,10 @@ class ParticipantResource(SyncAPIResource):
     ) -> Participant:
         """
         Adds a new participant to the program. If the email already exists, the existing
-        participant is returned unchanged. For affiliate programs, set `isAffiliate` to
+        participant is returned unchanged. One exception: if that participant claimed an
+        offer in the Claim Offer Popup and the signup is not complete yet, Add completes
+        the signup with the original referrer and saves any non-blank `firstName`,
+        `lastName`, and `metadata` you send. For affiliate programs, set `isAffiliate` to
         `true` to enroll a new participant as an approved affiliate or `false` to create
         a non-affiliate. If you omit `isAffiliate`, a valid `referredBy` creates a
         referred non-affiliate; without a valid referrer, the new participant is enrolled
@@ -332,8 +336,10 @@ class ParticipantResource(SyncAPIResource):
               non-affiliate without `affiliateStatus`. Existing participants are returned
               unchanged.
 
-          language: The language of the participant's portal and program emails. Must be one of the
-              program's languages. Applied only when this request creates the participant.
+          language: The language of the participant's portal and program emails. Stored when it is one of
+              the program's languages. A regional tag maps to its language (for example, `es-MX` is
+              stored as `es`). Any other value is ignored and the program's base language applies.
+              Applied only when this request creates the participant.
 
           metadata: Shallow custom metadata object.
 
@@ -345,6 +351,10 @@ class ParticipantResource(SyncAPIResource):
               referrer. When omitted it is derived from the program's referral trigger
               (`CREDIT_AWARDED`, `CREDIT_PENDING`, or `CREDIT_EXPIRED`); left unset when no referrer
               resolves.
+
+          referred_at: When the participant was referred, in Unix milliseconds. Used only with a valid
+              `referredBy`. If you omit `referralStatus`, GrowSurf compares this time with the
+              program's referral credit window to set it. Defaults to the time of the request.
 
           referred_by: Referrer participant ID or email address.
 
@@ -372,6 +382,7 @@ class ParticipantResource(SyncAPIResource):
                     "metadata": metadata,
                     "mobile_instance_id": mobile_instance_id,
                     "referral_status": referral_status,
+                    "referred_at": referred_at,
                     "referred_by": referred_by,
                 },
                 participant_add_params.ParticipantAddParams,
@@ -1033,15 +1044,17 @@ class ParticipantResource(SyncAPIResource):
         Returns `400` until one is verified. The email is accepted for delivery.
 
         Args:
-          email_type: The program email template to trigger (template mode). The valid values depend on
-              the program type; the template's `isEnabled` setting only controls automatic sends.
-              Referral programs: `welcomeNonReferred`, `referralLinkViewedFirstTime`, `referralLinkUsed`,
-              `referredSignup`, `welcomeReferred`, `goalAchieved`, `campaignEndedWinners`,
-              `campaignEndedNonWinners`, `progressUpdateMonthly`. Affiliate programs:
-              `welcomeNonReferred`, `referralLinkViewedFirstTime`, `referredSignup`,
-              `commissionGenerated`, `commissionAdjusted`, `payoutPending`, `payoutSentSuccess`,
-              `progressUpdateMonthly`. System/transactional types (login link, PayPal confirmation,
-              tax) and the invite email cannot be sent.
+          email_type: The program email template to trigger (template mode). Send the camelCase
+              email-type key. The available types depend on the program type; the template's
+              `isEnabled` setting controls automatic sends only. This endpoint can trigger any
+              sendable template. System and transactional types (login link, payout destination
+              confirmation, tax notifications), the invite email, and the follow-up reminder cannot
+              be sent. Referral programs: `welcomeNonReferred`, `referralLinkViewedFirstTime`,
+              `referralLinkUsed`, `referredSignup`, `welcomeReferred`, `offerClaimed`, `goalAchieved`,
+              `campaignEndedWinners`, `campaignEndedNonWinners`, `progressUpdateMonthly`. Affiliate
+              programs: `welcomeNonReferred`, `referralLinkViewedFirstTime`, `referredSignup`,
+              `offerClaimed`, `commissionGenerated`, `commissionAdjusted`, `payoutPending`,
+              `payoutSentSuccess`, `progressUpdateMonthly`.
               `welcomeNonReferred` can only be sent to advocates or approved, enrolled affiliates in
               a program that has not ended.
 
@@ -1585,6 +1598,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         metadata: Dict[str, object] | Omit = omit,
         mobile_instance_id: str | Omit = omit,
         referral_status: Literal["CREDIT_PENDING", "CREDIT_AWARDED"] | Omit = omit,
+        referred_at: Optional[int] | Omit = omit,
         referred_by: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1595,7 +1609,10 @@ class AsyncParticipantResource(AsyncAPIResource):
     ) -> Participant:
         """
         Adds a new participant to the program. If the email already exists, the existing
-        participant is returned unchanged. For affiliate programs, set `isAffiliate` to
+        participant is returned unchanged. One exception: if that participant claimed an
+        offer in the Claim Offer Popup and the signup is not complete yet, Add completes
+        the signup with the original referrer and saves any non-blank `firstName`,
+        `lastName`, and `metadata` you send. For affiliate programs, set `isAffiliate` to
         `true` to enroll a new participant as an approved affiliate or `false` to create
         a non-affiliate. If you omit `isAffiliate`, a valid `referredBy` creates a
         referred non-affiliate; without a valid referrer, the new participant is enrolled
@@ -1609,8 +1626,10 @@ class AsyncParticipantResource(AsyncAPIResource):
               non-affiliate without `affiliateStatus`. Existing participants are returned
               unchanged.
 
-          language: The language of the participant's portal and program emails. Must be one of the
-              program's languages. Applied only when this request creates the participant.
+          language: The language of the participant's portal and program emails. Stored when it is one of
+              the program's languages. A regional tag maps to its language (for example, `es-MX` is
+              stored as `es`). Any other value is ignored and the program's base language applies.
+              Applied only when this request creates the participant.
 
           metadata: Shallow custom metadata object.
 
@@ -1622,6 +1641,10 @@ class AsyncParticipantResource(AsyncAPIResource):
               referrer. When omitted it is derived from the program's referral trigger
               (`CREDIT_AWARDED`, `CREDIT_PENDING`, or `CREDIT_EXPIRED`); left unset when no referrer
               resolves.
+
+          referred_at: When the participant was referred, in Unix milliseconds. Used only with a valid
+              `referredBy`. If you omit `referralStatus`, GrowSurf compares this time with the
+              program's referral credit window to set it. Defaults to the time of the request.
 
           referred_by: Referrer participant ID or email address.
 
@@ -1649,6 +1672,7 @@ class AsyncParticipantResource(AsyncAPIResource):
                     "metadata": metadata,
                     "mobile_instance_id": mobile_instance_id,
                     "referral_status": referral_status,
+                    "referred_at": referred_at,
                     "referred_by": referred_by,
                 },
                 participant_add_params.ParticipantAddParams,
@@ -2310,15 +2334,17 @@ class AsyncParticipantResource(AsyncAPIResource):
         Returns `400` until one is verified. The email is accepted for delivery.
 
         Args:
-          email_type: The program email template to trigger (template mode). The valid values depend on
-              the program type; the template's `isEnabled` setting only controls automatic sends.
-              Referral programs: `welcomeNonReferred`, `referralLinkViewedFirstTime`, `referralLinkUsed`,
-              `referredSignup`, `welcomeReferred`, `goalAchieved`, `campaignEndedWinners`,
-              `campaignEndedNonWinners`, `progressUpdateMonthly`. Affiliate programs:
-              `welcomeNonReferred`, `referralLinkViewedFirstTime`, `referredSignup`,
-              `commissionGenerated`, `commissionAdjusted`, `payoutPending`, `payoutSentSuccess`,
-              `progressUpdateMonthly`. System/transactional types (login link, PayPal confirmation,
-              tax) and the invite email cannot be sent.
+          email_type: The program email template to trigger (template mode). Send the camelCase
+              email-type key. The available types depend on the program type; the template's
+              `isEnabled` setting controls automatic sends only. This endpoint can trigger any
+              sendable template. System and transactional types (login link, payout destination
+              confirmation, tax notifications), the invite email, and the follow-up reminder cannot
+              be sent. Referral programs: `welcomeNonReferred`, `referralLinkViewedFirstTime`,
+              `referralLinkUsed`, `referredSignup`, `welcomeReferred`, `offerClaimed`, `goalAchieved`,
+              `campaignEndedWinners`, `campaignEndedNonWinners`, `progressUpdateMonthly`. Affiliate
+              programs: `welcomeNonReferred`, `referralLinkViewedFirstTime`, `referredSignup`,
+              `offerClaimed`, `commissionGenerated`, `commissionAdjusted`, `payoutPending`,
+              `payoutSentSuccess`, `progressUpdateMonthly`.
               `welcomeNonReferred` can only be sent to advocates or approved, enrolled affiliates in
               a program that has not ended.
 

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Iterable
+from typing import Iterable, Optional
 from typing_extensions import Literal, Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
@@ -15,9 +15,9 @@ class CampaignCreateParams(TypedDict, total=False):
     type: Required[Literal["REFERRAL", "AFFILIATE"]]
     """The program type. Immutable after creation."""
 
-    company_logo_image_url: Annotated[str, PropertyInfo(alias="companyLogoImageUrl")]
+    company_logo_image_url: Annotated[Optional[str], PropertyInfo(alias="companyLogoImageUrl")]
 
-    company_name: Annotated[str, PropertyInfo(alias="companyName")]
+    company_name: Annotated[Optional[str], PropertyInfo(alias="companyName")]
 
     currency_iso: Annotated[str, PropertyInfo(alias="currencyISO")]
     """ISO 4217 currency code.
@@ -57,8 +57,13 @@ class CampaignCreateParams(TypedDict, total=False):
     `WAITLIST` gets a leaderboard. Every one arrives switched off with a placeholder
     name, so the program awards nothing until you set the amount and turn one on.
     `TELEHEALTH` is for consumer telehealth and wellness subscriptions;
-    `HEALTHCARE_PROVIDERS` is for provider networks and clinician-facing products.
-    `INSURANCE` replaces `ONLINE_INSURANCE`, which is still accepted. Omit it and every
+    `HEALTHCARE_PROVIDERS` is for provider networks and clinician-facing products. A
+    `TELEHEALTH` program also starts with `useGrowSurfHostedLinks` on, so each referral
+    link is a GrowSurf-hosted link; turn it off with `PATCH /campaign/{id}/installation`.
+    It also starts with `offerPageRedirectSeconds` set to `10` and with starter
+    offer-page content (`referredExperience.offerPageDescription` and `offerPageSteps`).
+    Values you send in the create request are kept. `INSURANCE` replaces
+    `ONLINE_INSURANCE`, which is still accepted. Omit it and every
     share button keeps its standard default. Set only when the program is created; it is
     not accepted on update.
     """

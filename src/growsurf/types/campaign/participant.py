@@ -192,6 +192,13 @@ class Participant(BaseModel):
 
     prev_monthly_referral_count: Optional[int] = FieldInfo(alias="prevMonthlyReferralCount", default=None)
 
+    referral_lead_qualified_at: Optional[int] = FieldInfo(alias="referralLeadQualifiedAt", default=None)
+    """When this referred signup counted as a lead for the referrer, in Unix milliseconds.
+
+    Set only when the program's `referralTrigger` is `CUSTOM`. Lead-event Campaign
+    Rewards and commissions use it.
+    """
+
     referrals: Optional[List[str]] = None
 
     referral_source: Optional[ReferralSource] = FieldInfo(alias="referralSource", default=None)

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Optional
 from typing_extensions import Literal, Annotated, TypedDict
 
 from .._utils import PropertyInfo
@@ -10,9 +11,9 @@ __all__ = ["CampaignUpdateParams"]
 
 
 class CampaignUpdateParams(TypedDict, total=False):
-    company_logo_image_url: Annotated[str, PropertyInfo(alias="companyLogoImageUrl")]
+    company_logo_image_url: Annotated[Optional[str], PropertyInfo(alias="companyLogoImageUrl")]
 
-    company_name: Annotated[str, PropertyInfo(alias="companyName")]
+    company_name: Annotated[Optional[str], PropertyInfo(alias="companyName")]
 
     name: str
 
