@@ -9,7 +9,7 @@ anyio==4.15.1
     #   httpx
 backports-asyncio-runner==1.2.0 ; python_full_version < '3.11'
     # via pytest-asyncio
-certifi==2026.1.4
+certifi==2026.10.23
     # via
     #   httpcore
     #   httpx
