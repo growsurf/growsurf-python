@@ -70,8 +70,10 @@ class CampaignDesignResources(TypedDict, total=False):
 # change (arrays such as `signup.fields` replace wholesale).
 # `participantAvatarStyle` accepts `CHARACTERS`, `INITIALS`, `ANIMALS`, or
 # `GRADIENT`; new programs use `INITIALS`, while missing or unknown stored
-# values return `INITIALS`. `resources` uses `CampaignDesignResources` and controls
-# participant presentation; resource items use the Program Resources operations. The
-# top-level Design object remains intentionally loose so other current and future sections
+# values return `INITIALS`. `visualStyle` accepts `GLOW`, `CLEAN`, `FLAT`, or `ROUND`;
+# new referral programs start with `GLOW` and new affiliate programs with `CLEAN`, and
+# it is omitted when the program has no saved Style. `resources` uses
+# `CampaignDesignResources` and controls participant presentation; resource items
+# use the Program Resources operations. The top-level Design object remains intentionally loose so other current and future sections
 # pass through unchanged.
 CampaignDesign: TypeAlias = Dict[str, object]
