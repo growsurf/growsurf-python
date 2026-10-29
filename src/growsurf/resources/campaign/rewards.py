@@ -152,6 +152,14 @@ class RewardsResource(SyncAPIResource):
 
           metadata: Custom key/value metadata (single-level; values are stored as strings).
 
+              For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the
+              referrer’s amount and `referredRewardAmount` is the friend’s amount. If
+              `referredRewardAmount` is absent, both use `rewardAmount`. New or changed positive
+              numeric amounts must use whole units for currencies without decimals, such as JPY, and
+              no more than two decimal places for other currencies, including USD and KWD. Excess
+              precision is rejected rather than rounded, including when you clone a program.
+              Existing unchanged amounts and earned rewards keep their saved values.
+
           number_of_winners: The maximum number of winners. Only applies to LEADERBOARD rewards. With
               `limitDuration` `PER_MONTH` this many win each month; otherwise this many win in total.
               Omitting it defaults to 3.
@@ -317,6 +325,14 @@ class RewardsResource(SyncAPIResource):
           limit_duration: The window over which `limit` applies.
 
           metadata: Custom key/value metadata (single-level; values are stored as strings).
+
+              For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the
+              referrer’s amount and `referredRewardAmount` is the friend’s amount. If
+              `referredRewardAmount` is absent, both use `rewardAmount`. New or changed positive
+              numeric amounts must use whole units for currencies without decimals, such as JPY, and
+              no more than two decimal places for other currencies, including USD and KWD. Excess
+              precision is rejected rather than rounded, including when you clone a program.
+              Existing unchanged amounts and earned rewards keep their saved values.
 
           number_of_winners: The maximum number of winners. Only applies to LEADERBOARD rewards. With
               `limitDuration` `PER_MONTH` this many win each month; otherwise this many win in total.
@@ -588,6 +604,14 @@ class AsyncRewardsResource(AsyncAPIResource):
 
           metadata: Custom key/value metadata (single-level; values are stored as strings).
 
+              For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the
+              referrer’s amount and `referredRewardAmount` is the friend’s amount. If
+              `referredRewardAmount` is absent, both use `rewardAmount`. New or changed positive
+              numeric amounts must use whole units for currencies without decimals, such as JPY, and
+              no more than two decimal places for other currencies, including USD and KWD. Excess
+              precision is rejected rather than rounded, including when you clone a program.
+              Existing unchanged amounts and earned rewards keep their saved values.
+
           number_of_winners: The maximum number of winners. Only applies to LEADERBOARD rewards. With
               `limitDuration` `PER_MONTH` this many win each month; otherwise this many win in total.
               Omitting it defaults to 3.
@@ -753,6 +777,14 @@ class AsyncRewardsResource(AsyncAPIResource):
           limit_duration: The window over which `limit` applies.
 
           metadata: Custom key/value metadata (single-level; values are stored as strings).
+
+              For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the
+              referrer’s amount and `referredRewardAmount` is the friend’s amount. If
+              `referredRewardAmount` is absent, both use `rewardAmount`. New or changed positive
+              numeric amounts must use whole units for currencies without decimals, such as JPY, and
+              no more than two decimal places for other currencies, including USD and KWD. Excess
+              precision is rejected rather than rounded, including when you clone a program.
+              Existing unchanged amounts and earned rewards keep their saved values.
 
           number_of_winners: The maximum number of winners. Only applies to LEADERBOARD rewards. With
               `limitDuration` `PER_MONTH` this many win each month; otherwise this many win in total.
