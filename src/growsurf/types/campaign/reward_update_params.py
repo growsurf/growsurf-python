@@ -26,10 +26,11 @@ class RewardUpdateParams(TypedDict, total=False):
 
     Display text only (GrowSurf does not create or validate it); superseded by a
     connected billing integration's issued coupon when one exists.
+    Up to 100 characters.
     """
 
     description: str
-    """The reward description shown to the referrer."""
+    """The reward description shown to the referrer. Up to 255 characters."""
 
     event: Literal["LEAD", "CONVERSION"]
     """The event that earns this Campaign Reward.
@@ -98,11 +99,17 @@ class RewardUpdateParams(TypedDict, total=False):
     """The window over which `limit` applies."""
 
     metadata: Dict[str, object]
-    """Custom key/value metadata (single-level; values are stored as strings).
+    """Custom key/value metadata (single-level; values keep the type you send).
 
-    For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the referrer’s
-    amount and `referredRewardAmount` is the friend’s amount. If `referredRewardAmount` is absent,
-    both use `rewardAmount`. New or changed positive numeric amounts must use whole units for
+    Each value must be a string, number, or boolean of up to 500 characters. Each key
+    must have 1 to 40 characters once camelCased, and two keys that camelCase to the
+    same key are rejected. Up to 50 keys. An entry that breaks these rules returns
+    `400`.
+
+    For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the referrer’s amount and
+    `referredRewardAmount` is the friend’s amount. If `referredRewardAmount` is absent, the friend
+    also uses `rewardAmount`, unless the friend’s `referralDescription` is a percent or free offer,
+    which stays amount-free. New or changed positive numeric amounts must use whole units for
     currencies without decimals, such as JPY, and no more than two decimal places for other
     currencies, including USD and KWD. Excess precision is rejected rather than rounded, including
     when you clone a program. Existing unchanged amounts and earned rewards keep their saved values.
@@ -111,13 +118,14 @@ class RewardUpdateParams(TypedDict, total=False):
     next_milestone_prefix: Annotated[Optional[str], PropertyInfo(alias="nextMilestonePrefix")]
     """Text shown before a participant's referral count in milestone progress copy.
 
-    Applies to `MILESTONE` rewards (e.g. "You are only").
+    Applies to `MILESTONE` rewards (e.g. "You are only"). Up to 255 characters.
     """
 
     next_milestone_suffix: Annotated[Optional[str], PropertyInfo(alias="nextMilestoneSuffix")]
     """Text shown after a participant's referral count in milestone progress copy.
 
-    Applies to `MILESTONE` rewards (e.g. "referrals away from your next reward!").
+    Applies to `MILESTONE` rewards (e.g. "referrals away from your next reward!"). Up to
+    255 characters.
     """
 
     number_of_winners: Annotated[int, PropertyInfo(alias="numberOfWinners")]
@@ -135,10 +143,14 @@ class RewardUpdateParams(TypedDict, total=False):
 
     Same caveats as `couponCode`: display text only, superseded by a connected billing
     integration's issued coupon when one exists.
+    Up to 100 characters.
     """
 
     referral_description: Annotated[Optional[str], PropertyInfo(alias="referralDescription")]
-    """The reward description shown to the referred friend (double-sided rewards)."""
+    """The reward description shown to the referred friend (double-sided rewards).
+
+    Up to 255 characters.
+    """
 
     referred_reward_upfront: Annotated[bool, PropertyInfo(alias="referredRewardUpfront")]
     """For double-sided rewards, deliver the referred friend's reward upfront as a discount."""
@@ -148,7 +160,7 @@ class RewardUpdateParams(TypedDict, total=False):
     """
 
     title: str
-    """The reward title (internal label)."""
+    """The reward title (internal label). Up to 100 characters."""
 
     value: Optional[RewardTaxValuation]
     """Tax valuation for the reward (the referrer's side of a double-sided reward).

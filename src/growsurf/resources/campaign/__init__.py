@@ -88,6 +88,14 @@ from .integrations import (
     IntegrationsResourceWithStreamingResponse,
     AsyncIntegrationsResourceWithStreamingResponse,
 )
+from .custom_domain import (
+    CustomDomainResource,
+    AsyncCustomDomainResource,
+    CustomDomainResourceWithRawResponse,
+    AsyncCustomDomainResourceWithRawResponse,
+    CustomDomainResourceWithStreamingResponse,
+    AsyncCustomDomainResourceWithStreamingResponse,
+)
 from .program_resources import (
     ProgramResourcesResource,
     AsyncProgramResourcesResource,
@@ -158,6 +166,12 @@ __all__ = [
     "AsyncInstallationResourceWithRawResponse",
     "InstallationResourceWithStreamingResponse",
     "AsyncInstallationResourceWithStreamingResponse",
+    "CustomDomainResource",
+    "AsyncCustomDomainResource",
+    "CustomDomainResourceWithRawResponse",
+    "AsyncCustomDomainResourceWithRawResponse",
+    "CustomDomainResourceWithStreamingResponse",
+    "AsyncCustomDomainResourceWithStreamingResponse",
     "CommissionResource",
     "AsyncCommissionResource",
     "CommissionResourceWithRawResponse",

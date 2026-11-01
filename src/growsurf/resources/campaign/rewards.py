@@ -125,7 +125,7 @@ class RewardsResource(SyncAPIResource):
 
           conversions_required: The number of referrals required to earn the reward.
 
-          description: The reward description shown to the referrer.
+          description: The reward description shown to the referrer. Up to 255 characters.
 
           event: The event that earns this Campaign Reward. `SINGLE_SIDED`,
               `DOUBLE_SIDED`, and `MILESTONE` rewards support `LEAD` or `CONVERSION`.
@@ -150,15 +150,21 @@ class RewardsResource(SyncAPIResource):
 
           limit_duration: The window over which `limit` applies.
 
-          metadata: Custom key/value metadata (single-level; values are stored as strings).
+          metadata: Custom key/value metadata (single-level; values keep the type you send).
 
-              For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the
-              referrer’s amount and `referredRewardAmount` is the friend’s amount. If
-              `referredRewardAmount` is absent, both use `rewardAmount`. New or changed positive
-              numeric amounts must use whole units for currencies without decimals, such as JPY, and
-              no more than two decimal places for other currencies, including USD and KWD. Excess
-              precision is rejected rather than rounded, including when you clone a program.
-              Existing unchanged amounts and earned rewards keep their saved values.
+              Each value must be a string, number, or boolean of up to 500 characters. Each
+              key must have 1 to 40 characters once camelCased, and two keys that camelCase to
+              the same key are rejected. Up to 50 keys. An entry that breaks these rules returns
+              `400`.
+
+              For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the referrer’s
+              amount and `referredRewardAmount` is the friend’s amount. If `referredRewardAmount` is
+              absent, the friend also uses `rewardAmount`, unless the friend’s `referralDescription`
+              is a percent or free offer, which stays amount-free. New or changed positive numeric
+              amounts must use whole units for currencies without decimals, such as JPY, and no more
+              than two decimal places for other currencies, including USD and KWD. Excess precision
+              is rejected rather than rounded, including when you clone a program. Existing
+              unchanged amounts and earned rewards keep their saved values.
 
           number_of_winners: The maximum number of winners. Only applies to LEADERBOARD rewards. With
               `limitDuration` `PER_MONTH` this many win each month; otherwise this many win in total.
@@ -167,13 +173,14 @@ class RewardsResource(SyncAPIResource):
           order: The display order of the reward.
 
           referral_description: The reward description shown to the referred friend (double-sided rewards).
+              Up to 255 characters.
 
           referred_reward_upfront: For double-sided rewards, deliver the referred friend's reward upfront as a
               discount.
 
           referred_value: Tax treatment override for the referred friend's side of a double-sided reward. Null inherits the program's confirmed default.
 
-          title: The reward title (internal label).
+          title: The reward title (internal label). Up to 100 characters.
 
           value: Tax valuation for the reward (the referrer's side of a double-sided reward).
               Used by tax documentation / 1099 reporting.
@@ -304,7 +311,7 @@ class RewardsResource(SyncAPIResource):
               `LEAD` requires `installation.referralTrigger` to be `CUSTOM`. Omitting
               `event` preserves the Campaign Reward's current event.
 
-          description: The reward description shown to the referrer.
+          description: The reward description shown to the referrer. Up to 255 characters.
 
           image_url: An image URL for the reward.
 
@@ -324,15 +331,21 @@ class RewardsResource(SyncAPIResource):
 
           limit_duration: The window over which `limit` applies.
 
-          metadata: Custom key/value metadata (single-level; values are stored as strings).
+          metadata: Custom key/value metadata (single-level; values keep the type you send).
 
-              For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the
-              referrer’s amount and `referredRewardAmount` is the friend’s amount. If
-              `referredRewardAmount` is absent, both use `rewardAmount`. New or changed positive
-              numeric amounts must use whole units for currencies without decimals, such as JPY, and
-              no more than two decimal places for other currencies, including USD and KWD. Excess
-              precision is rejected rather than rounded, including when you clone a program.
-              Existing unchanged amounts and earned rewards keep their saved values.
+              Each value must be a string, number, or boolean of up to 500 characters. Each
+              key must have 1 to 40 characters once camelCased, and two keys that camelCase to
+              the same key are rejected. Up to 50 keys. An entry that breaks these rules returns
+              `400`.
+
+              For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the referrer’s
+              amount and `referredRewardAmount` is the friend’s amount. If `referredRewardAmount` is
+              absent, the friend also uses `rewardAmount`, unless the friend’s `referralDescription`
+              is a percent or free offer, which stays amount-free. New or changed positive numeric
+              amounts must use whole units for currencies without decimals, such as JPY, and no more
+              than two decimal places for other currencies, including USD and KWD. Excess precision
+              is rejected rather than rounded, including when you clone a program. Existing
+              unchanged amounts and earned rewards keep their saved values.
 
           number_of_winners: The maximum number of winners. Only applies to LEADERBOARD rewards. With
               `limitDuration` `PER_MONTH` this many win each month; otherwise this many win in total.
@@ -341,13 +354,14 @@ class RewardsResource(SyncAPIResource):
           order: The display order of the reward.
 
           referral_description: The reward description shown to the referred friend (double-sided rewards).
+              Up to 255 characters.
 
           referred_reward_upfront: For double-sided rewards, deliver the referred friend's reward upfront as a
               discount.
 
           referred_value: Tax treatment override for the referred friend's side of a double-sided reward. Null inherits the program's confirmed default.
 
-          title: The reward title (internal label).
+          title: The reward title (internal label). Up to 100 characters.
 
           value: Tax valuation for the reward (the referrer's side of a double-sided reward).
               Used by tax documentation / 1099 reporting.
@@ -577,7 +591,7 @@ class AsyncRewardsResource(AsyncAPIResource):
 
           conversions_required: The number of referrals required to earn the reward.
 
-          description: The reward description shown to the referrer.
+          description: The reward description shown to the referrer. Up to 255 characters.
 
           event: The event that earns this Campaign Reward. `SINGLE_SIDED`,
               `DOUBLE_SIDED`, and `MILESTONE` rewards support `LEAD` or `CONVERSION`.
@@ -602,15 +616,21 @@ class AsyncRewardsResource(AsyncAPIResource):
 
           limit_duration: The window over which `limit` applies.
 
-          metadata: Custom key/value metadata (single-level; values are stored as strings).
+          metadata: Custom key/value metadata (single-level; values keep the type you send).
 
-              For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the
-              referrer’s amount and `referredRewardAmount` is the friend’s amount. If
-              `referredRewardAmount` is absent, both use `rewardAmount`. New or changed positive
-              numeric amounts must use whole units for currencies without decimals, such as JPY, and
-              no more than two decimal places for other currencies, including USD and KWD. Excess
-              precision is rejected rather than rounded, including when you clone a program.
-              Existing unchanged amounts and earned rewards keep their saved values.
+              Each value must be a string, number, or boolean of up to 500 characters. Each
+              key must have 1 to 40 characters once camelCased, and two keys that camelCase to
+              the same key are rejected. Up to 50 keys. An entry that breaks these rules returns
+              `400`.
+
+              For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the referrer’s
+              amount and `referredRewardAmount` is the friend’s amount. If `referredRewardAmount` is
+              absent, the friend also uses `rewardAmount`, unless the friend’s `referralDescription`
+              is a percent or free offer, which stays amount-free. New or changed positive numeric
+              amounts must use whole units for currencies without decimals, such as JPY, and no more
+              than two decimal places for other currencies, including USD and KWD. Excess precision
+              is rejected rather than rounded, including when you clone a program. Existing
+              unchanged amounts and earned rewards keep their saved values.
 
           number_of_winners: The maximum number of winners. Only applies to LEADERBOARD rewards. With
               `limitDuration` `PER_MONTH` this many win each month; otherwise this many win in total.
@@ -619,13 +639,14 @@ class AsyncRewardsResource(AsyncAPIResource):
           order: The display order of the reward.
 
           referral_description: The reward description shown to the referred friend (double-sided rewards).
+              Up to 255 characters.
 
           referred_reward_upfront: For double-sided rewards, deliver the referred friend's reward upfront as a
               discount.
 
           referred_value: Tax treatment override for the referred friend's side of a double-sided reward. Null inherits the program's confirmed default.
 
-          title: The reward title (internal label).
+          title: The reward title (internal label). Up to 100 characters.
 
           value: Tax valuation for the reward (the referrer's side of a double-sided reward).
               Used by tax documentation / 1099 reporting.
@@ -756,7 +777,7 @@ class AsyncRewardsResource(AsyncAPIResource):
               `LEAD` requires `installation.referralTrigger` to be `CUSTOM`. Omitting
               `event` preserves the Campaign Reward's current event.
 
-          description: The reward description shown to the referrer.
+          description: The reward description shown to the referrer. Up to 255 characters.
 
           image_url: An image URL for the reward.
 
@@ -776,15 +797,21 @@ class AsyncRewardsResource(AsyncAPIResource):
 
           limit_duration: The window over which `limit` applies.
 
-          metadata: Custom key/value metadata (single-level; values are stored as strings).
+          metadata: Custom key/value metadata (single-level; values keep the type you send).
 
-              For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the
-              referrer’s amount and `referredRewardAmount` is the friend’s amount. If
-              `referredRewardAmount` is absent, both use `rewardAmount`. New or changed positive
-              numeric amounts must use whole units for currencies without decimals, such as JPY, and
-              no more than two decimal places for other currencies, including USD and KWD. Excess
-              precision is rejected rather than rounded, including when you clone a program.
-              Existing unchanged amounts and earned rewards keep their saved values.
+              Each value must be a string, number, or boolean of up to 500 characters. Each
+              key must have 1 to 40 characters once camelCased, and two keys that camelCase to
+              the same key are rejected. Up to 50 keys. An entry that breaks these rules returns
+              `400`.
+
+              For `DOUBLE_SIDED` rewards in referral programs, `rewardAmount` is the referrer’s
+              amount and `referredRewardAmount` is the friend’s amount. If `referredRewardAmount` is
+              absent, the friend also uses `rewardAmount`, unless the friend’s `referralDescription`
+              is a percent or free offer, which stays amount-free. New or changed positive numeric
+              amounts must use whole units for currencies without decimals, such as JPY, and no more
+              than two decimal places for other currencies, including USD and KWD. Excess precision
+              is rejected rather than rounded, including when you clone a program. Existing
+              unchanged amounts and earned rewards keep their saved values.
 
           number_of_winners: The maximum number of winners. Only applies to LEADERBOARD rewards. With
               `limitDuration` `PER_MONTH` this many win each month; otherwise this many win in total.
@@ -793,13 +820,14 @@ class AsyncRewardsResource(AsyncAPIResource):
           order: The display order of the reward.
 
           referral_description: The reward description shown to the referred friend (double-sided rewards).
+              Up to 255 characters.
 
           referred_reward_upfront: For double-sided rewards, deliver the referred friend's reward upfront as a
               discount.
 
           referred_value: Tax treatment override for the referred friend's side of a double-sided reward. Null inherits the program's confirmed default.
 
-          title: The reward title (internal label).
+          title: The reward title (internal label). Up to 100 characters.
 
           value: Tax valuation for the reward (the referrer's side of a double-sided reward).
               Used by tax documentation / 1099 reporting.

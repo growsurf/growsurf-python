@@ -98,6 +98,7 @@ class TeamResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        idempotency_key: str | None = None,
     ) -> RotateApiKeyResponse:
         """
         Generates a new API key and makes the key used on this request stop working when
@@ -109,11 +110,26 @@ class TeamResource(SyncAPIResource):
         accepts an API key with `api_key:rotate`. If this scope is unavailable, rotate
         the key in the authenticated dashboard instead. This operation is available only
         through the REST API or a GrowSurf API SDK, not through MCP.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+
+          idempotency_key: Specify a custom idempotency key for this request
         """
         return self._post(
             "/api-key/rotate",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                idempotency_key=idempotency_key,
             ),
             cast_to=RotateApiKeyResponse,
         )
@@ -240,6 +256,7 @@ class AsyncTeamResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
+        idempotency_key: str | None = None,
     ) -> RotateApiKeyResponse:
         """
         Generates a new API key and makes the key used on this request stop working when
@@ -251,11 +268,26 @@ class AsyncTeamResource(AsyncAPIResource):
         accepts an API key with `api_key:rotate`. If this scope is unavailable, rotate
         the key in the authenticated dashboard instead. This operation is available only
         through the REST API or a GrowSurf API SDK, not through MCP.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+
+          idempotency_key: Specify a custom idempotency key for this request
         """
         return await self._post(
             "/api-key/rotate",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                idempotency_key=idempotency_key,
             ),
             cast_to=RotateApiKeyResponse,
         )

@@ -113,6 +113,14 @@ from .integrations import (
     IntegrationsResourceWithStreamingResponse,
     AsyncIntegrationsResourceWithStreamingResponse,
 )
+from .custom_domain import (
+    CustomDomainResource,
+    AsyncCustomDomainResource,
+    CustomDomainResourceWithRawResponse,
+    AsyncCustomDomainResourceWithRawResponse,
+    CustomDomainResourceWithStreamingResponse,
+    AsyncCustomDomainResourceWithStreamingResponse,
+)
 from ..._base_client import make_request_options
 from ...types.campaign import ReferralStatus, reward_create_params
 from .program_resources import (
@@ -196,6 +204,11 @@ class CampaignResource(SyncAPIResource):
     def installation(self) -> InstallationResource:
         """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
         return InstallationResource(self._client)
+
+    @cached_property
+    def custom_domain(self) -> CustomDomainResource:
+        """Campaign custom domain (`CampaignCustomDomain`) — the domain that serves a program's landing pages."""
+        return CustomDomainResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> CampaignResourceWithRawResponse:
@@ -801,10 +814,7 @@ class CampaignResource(SyncAPIResource):
         next_id: str | Omit = omit,
         offset: int | Omit = omit,
         referral_status: ReferralStatus | Omit = omit,
-        sort_by: Literal[
-            "updatedAt", "createdAt", "email", "firstName", "lastName", "referralStatus", "referralTriggeredAt"
-        ]
-        | Omit = omit,
+        sort_by: Literal["updatedAt", "createdAt", "email", "referralTriggeredAt"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1441,6 +1451,11 @@ class AsyncCampaignResource(AsyncAPIResource):
         return AsyncInstallationResource(self._client)
 
     @cached_property
+    def custom_domain(self) -> AsyncCustomDomainResource:
+        """Campaign custom domain (`CampaignCustomDomain`) — the domain that serves a program's landing pages."""
+        return AsyncCustomDomainResource(self._client)
+
+    @cached_property
     def with_raw_response(self) -> AsyncCampaignResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
@@ -2044,10 +2059,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         next_id: str | Omit = omit,
         offset: int | Omit = omit,
         referral_status: ReferralStatus | Omit = omit,
-        sort_by: Literal[
-            "updatedAt", "createdAt", "email", "firstName", "lastName", "referralStatus", "referralTriggeredAt"
-        ]
-        | Omit = omit,
+        sort_by: Literal["updatedAt", "createdAt", "email", "referralTriggeredAt"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -2750,6 +2762,11 @@ class CampaignResourceWithRawResponse:
         """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
         return InstallationResourceWithRawResponse(self._campaign.installation)
 
+    @cached_property
+    def custom_domain(self) -> CustomDomainResourceWithRawResponse:
+        """Campaign custom domain (`CampaignCustomDomain`) — the domain that serves a program's landing pages."""
+        return CustomDomainResourceWithRawResponse(self._campaign.custom_domain)
+
 
 class AsyncCampaignResourceWithRawResponse:
     def __init__(self, campaign: AsyncCampaignResource) -> None:
@@ -2871,6 +2888,11 @@ class AsyncCampaignResourceWithRawResponse:
     def installation(self) -> AsyncInstallationResourceWithRawResponse:
         """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
         return AsyncInstallationResourceWithRawResponse(self._campaign.installation)
+
+    @cached_property
+    def custom_domain(self) -> AsyncCustomDomainResourceWithRawResponse:
+        """Campaign custom domain (`CampaignCustomDomain`) — the domain that serves a program's landing pages."""
+        return AsyncCustomDomainResourceWithRawResponse(self._campaign.custom_domain)
 
 
 class CampaignResourceWithStreamingResponse:
@@ -2994,6 +3016,11 @@ class CampaignResourceWithStreamingResponse:
         """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
         return InstallationResourceWithStreamingResponse(self._campaign.installation)
 
+    @cached_property
+    def custom_domain(self) -> CustomDomainResourceWithStreamingResponse:
+        """Campaign custom domain (`CampaignCustomDomain`) — the domain that serves a program's landing pages."""
+        return CustomDomainResourceWithStreamingResponse(self._campaign.custom_domain)
+
 
 class AsyncCampaignResourceWithStreamingResponse:
     def __init__(self, campaign: AsyncCampaignResource) -> None:
@@ -3115,3 +3142,8 @@ class AsyncCampaignResourceWithStreamingResponse:
     def installation(self) -> AsyncInstallationResourceWithStreamingResponse:
         """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
         return AsyncInstallationResourceWithStreamingResponse(self._campaign.installation)
+
+    @cached_property
+    def custom_domain(self) -> AsyncCustomDomainResourceWithStreamingResponse:
+        """Campaign custom domain (`CampaignCustomDomain`) — the domain that serves a program's landing pages."""
+        return AsyncCustomDomainResourceWithStreamingResponse(self._campaign.custom_domain)
