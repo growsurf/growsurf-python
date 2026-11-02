@@ -72,7 +72,8 @@ class CampaignDesignResources(TypedDict, total=False):
 # `GRADIENT`; new programs use `INITIALS`, while missing or unknown stored
 # values return `INITIALS`. `visualStyle` accepts `GLOW`, `CLEAN`, `FLAT`, `ROUND`,
 # `TINT`, or `GLASS`;
-# new referral and affiliate programs start with `CLEAN`, and
+# new referral programs start with `GLOW`, new affiliate
+# programs start with `CLEAN`, and
 # it is omitted when the program has no saved Style. `resources` uses
 # `CampaignDesignResources` and controls participant presentation; resource items
 # use the Program Resources operations. The top-level Design object remains intentionally loose so other current and future sections
