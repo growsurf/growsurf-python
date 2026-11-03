@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.17.0](https://github.com/growsurf/growsurf-python/compare/v1.16.0...v1.17.0) (2026-11-03)
+
+
+### Features
+
+* add Tint and Glass program styles ([a975c13](https://github.com/growsurf/growsurf-python/commit/a975c13b267bf97ff9d57f26673f92bc29642b35))
+* **api:** add languages.flagCountries to Campaign Options ([d5663f0](https://github.com/growsurf/growsurf-python/commit/d5663f08a9fa3e4ec421a90af9b4491ba4eb6dc4))
+* **api:** sync REST v2 contract changes ([2a0e777](https://github.com/growsurf/growsurf-python/commit/2a0e7778a0bdddadbdfe7b55c225723d2c813d02))
+* expose documented error-body fields and sync campaign and participant models ([65db348](https://github.com/growsurf/growsurf-python/commit/65db34829db847313e17757832f6d8f2324535ba))
+* expose program visual style in campaign design ([0d93f91](https://github.com/growsurf/growsurf-python/commit/0d93f917180557f492016acc623cf449962b7120))
+
+
+### Bug Fixes
+
+* **deps:** bump aiohttp to 3.14.5 and certifi to 2026.10.23 for security advisories ([c9640ee](https://github.com/growsurf/growsurf-python/commit/c9640eeb58f96838f52b3b24f2168a24b5402e74))
+
+
+### Documentation
+
+* clarify Add Participant claim-offer wording and page title defaults ([5fc74e8](https://github.com/growsurf/growsurf-python/commit/5fc74e8666defb009a7870ee20701c0ce8ca0506))
+* clarify referral reward metadata amounts ([1bf9897](https://github.com/growsurf/growsurf-python/commit/1bf9897e437a67f4c912fcec24f234d24ebbf155))
+* correct default program style ([4f6bbd5](https://github.com/growsurf/growsurf-python/commit/4f6bbd5425ceb84889d14ddd70b0e2653ef94f04))
+
 ## [1.16.0](https://github.com/growsurf/growsurf-python/compare/v1.15.1...v1.16.0) (2026-10-19)
 
 
