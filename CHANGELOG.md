@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.18.0](https://github.com/growsurf/growsurf-python/compare/v1.17.0...v1.18.0) (2026-11-03)
+
+
+### Features
+
+* remove account create method (endpoint retired) ([0a464f2](https://github.com/growsurf/growsurf-python/commit/0a464f2e5d7bcb644d333545907b1847117936a2))
+* remove account create method (endpoint retired) ([7a60066](https://github.com/growsurf/growsurf-python/commit/7a60066f82a98eb1715fd457c76a7e1dc63bd386))
+
 ## [1.17.0](https://github.com/growsurf/growsurf-python/compare/v1.16.0...v1.17.0) (2026-11-03)
 
 
