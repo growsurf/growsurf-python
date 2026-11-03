@@ -8,14 +8,6 @@ from .team import (
     TeamResourceWithStreamingResponse,
     AsyncTeamResourceWithStreamingResponse,
 )
-from .account import (
-    AccountResource,
-    AsyncAccountResource,
-    AccountResourceWithRawResponse,
-    AsyncAccountResourceWithRawResponse,
-    AccountResourceWithStreamingResponse,
-    AsyncAccountResourceWithStreamingResponse,
-)
 from .campaign import (
     CampaignResource,
     AsyncCampaignResource,
@@ -26,12 +18,6 @@ from .campaign import (
 )
 
 __all__ = [
-    "AccountResource",
-    "AsyncAccountResource",
-    "AccountResourceWithRawResponse",
-    "AsyncAccountResourceWithRawResponse",
-    "AccountResourceWithStreamingResponse",
-    "AsyncAccountResourceWithStreamingResponse",
     "TeamResource",
     "AsyncTeamResource",
     "TeamResourceWithRawResponse",

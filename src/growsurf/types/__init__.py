@@ -14,13 +14,11 @@ from .affiliate_invite import AffiliateInvite as AffiliateInvite
 from .participant_list import ParticipantList as ParticipantList
 from .team_update_params import TeamUpdateParams as TeamUpdateParams
 from .commission_structure import CommissionStructure as CommissionStructure
-from .account_create_params import AccountCreateParams as AccountCreateParams
 from .affiliate_application import AffiliateApplication as AffiliateApplication
 from .analytics_availability import AnalyticsAvailability as AnalyticsAvailability
 from .campaign_create_params import CampaignCreateParams as CampaignCreateParams
 from .campaign_list_response import CampaignListResponse as CampaignListResponse
 from .campaign_update_params import CampaignUpdateParams as CampaignUpdateParams
-from .create_account_response import CreateAccountResponse as CreateAccountResponse
 from .participant_payout_list import ParticipantPayoutList as ParticipantPayoutList
 from .rotate_api_key_response import RotateApiKeyResponse as RotateApiKeyResponse
 from .referral_flow_screenshot import ReferralFlowScreenshot as ReferralFlowScreenshot
