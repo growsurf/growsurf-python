@@ -1,17 +1,3 @@
-# Account
-
-Types:
-
-```python
-from growsurf.types import (
-    CreateAccountResponse,
-)
-```
-
-Methods:
-
-- <code title="post /accounts">client.account.<a href="./src/growsurf/resources/account.py">create</a>(\*\*<a href="src/growsurf/types/account_create_params.py">params</a>) -> <a href="./src/growsurf/types/create_account_response.py">CreateAccountResponse</a></code>
-
 # Team
 
 Types:

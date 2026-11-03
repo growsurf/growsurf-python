@@ -36,9 +36,8 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import team, account, campaign
+    from .resources import team, campaign
     from .resources.team import TeamResource, AsyncTeamResource
-    from .resources.account import AccountResource, AsyncAccountResource
     from .resources.campaign.campaign import CampaignResource, AsyncCampaignResource
 
 __all__ = [
@@ -115,12 +114,6 @@ class Growsurf(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
         self._idempotency_header = "Idempotency-Key"
-
-    @cached_property
-    def account(self) -> AccountResource:
-        from .resources.account import AccountResource
-
-        return AccountResource(self)
 
     @cached_property
     def team(self) -> TeamResource:
@@ -320,12 +313,6 @@ class AsyncGrowsurf(AsyncAPIClient):
         self._idempotency_header = "Idempotency-Key"
 
     @cached_property
-    def account(self) -> AsyncAccountResource:
-        from .resources.account import AsyncAccountResource
-
-        return AsyncAccountResource(self)
-
-    @cached_property
     def team(self) -> AsyncTeamResource:
         from .resources.team import AsyncTeamResource
 
@@ -466,12 +453,6 @@ class GrowsurfWithRawResponse:
         self._client = client
 
     @cached_property
-    def account(self) -> account.AccountResourceWithRawResponse:
-        from .resources.account import AccountResourceWithRawResponse
-
-        return AccountResourceWithRawResponse(self._client.account)
-
-    @cached_property
     def team(self) -> team.TeamResourceWithRawResponse:
         from .resources.team import TeamResourceWithRawResponse
 
@@ -489,12 +470,6 @@ class AsyncGrowsurfWithRawResponse:
 
     def __init__(self, client: AsyncGrowsurf) -> None:
         self._client = client
-
-    @cached_property
-    def account(self) -> account.AsyncAccountResourceWithRawResponse:
-        from .resources.account import AsyncAccountResourceWithRawResponse
-
-        return AsyncAccountResourceWithRawResponse(self._client.account)
 
     @cached_property
     def team(self) -> team.AsyncTeamResourceWithRawResponse:
@@ -516,12 +491,6 @@ class GrowsurfWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def account(self) -> account.AccountResourceWithStreamingResponse:
-        from .resources.account import AccountResourceWithStreamingResponse
-
-        return AccountResourceWithStreamingResponse(self._client.account)
-
-    @cached_property
     def team(self) -> team.TeamResourceWithStreamingResponse:
         from .resources.team import TeamResourceWithStreamingResponse
 
@@ -539,12 +508,6 @@ class AsyncGrowsurfWithStreamedResponse:
 
     def __init__(self, client: AsyncGrowsurf) -> None:
         self._client = client
-
-    @cached_property
-    def account(self) -> account.AsyncAccountResourceWithStreamingResponse:
-        from .resources.account import AsyncAccountResourceWithStreamingResponse
-
-        return AsyncAccountResourceWithStreamingResponse(self._client.account)
 
     @cached_property
     def team(self) -> team.AsyncTeamResourceWithStreamingResponse:

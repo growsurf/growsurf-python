@@ -7,7 +7,6 @@ import pytest
 from respx import MockRouter
 
 from growsurf import Growsurf
-from growsurf.types import CreateAccountResponse
 from growsurf._compat import get_model_fields
 
 from ..conftest import base_url
@@ -45,16 +44,11 @@ def test_final_team_request_paths(client: Growsurf, respx_mock: MockRouter) -> N
     assert rotate.called
 
 
-def test_safe_team_and_onboarding_models() -> None:
+def test_safe_team_model() -> None:
     team_type = import_module("growsurf.types.team").Team
 
     assert set(get_model_fields(team_type)) == {
         "name",
         "verification_status",
         "verification_requested_at",
-    }
-    assert set(get_model_fields(CreateAccountResponse)) == {
-        "email",
-        "api_key",
-        "verification_status",
     }
