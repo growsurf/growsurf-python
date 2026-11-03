@@ -27,6 +27,18 @@ class Referral(BaseModel):
 
     last_name: Optional[str] = FieldInfo(alias="lastName", default=None)
 
+    referral_credit_expired_at: Optional[int] = FieldInfo(alias="referralCreditExpiredAt", default=None)
+    """
+    When the referrer's credit for this referral expired, as a Unix timestamp in
+    milliseconds. `null` when the credit has not expired.
+    """
+
+    referral_triggered_at: Optional[int] = FieldInfo(alias="referralTriggeredAt", default=None)
+    """
+    When the referral was triggered, as a Unix timestamp in milliseconds. `null`
+    until the referral is triggered, and for invites.
+    """
+
 
 class ReferralList(BaseModel):
     limit: int

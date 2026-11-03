@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import List, Union, Optional
 from typing_extensions import Literal
 
 from pydantic import Field as FieldInfo
@@ -8,6 +8,9 @@ from pydantic import Field as FieldInfo
 from ..._models import BaseModel
 
 __all__ = ["ParticipantGetPayoutDestinationResponse", "Destination"]
+
+# Known providers are listed; `str` keeps responses decodable when a new provider is added.
+PayoutProvider = Union[Literal["PAYPAL", "VENMO", "WISECOM"], str]
 
 
 class Destination(BaseModel):
@@ -23,11 +26,11 @@ class Destination(BaseModel):
     needs_repair_reason: Optional[str] = FieldInfo(alias="needsRepairReason")
     """When status is `NEEDS_REPAIR`, why (e.g. a bounced delivery)."""
 
-    provider: str
+    provider: PayoutProvider
     """The payout provider this entry describes."""
 
     provider_display_name: str = FieldInfo(alias="providerDisplayName")
-    """The customer-facing provider name (e.g. "PayPal", "Wise")."""
+    """The customer-facing provider name (e.g. "PayPal", "Venmo", "Wise")."""
 
     status: str
     """The destination's current status: `NONE` (not set up), `PENDING_CONFIRMATION`,
@@ -38,7 +41,7 @@ class Destination(BaseModel):
 
 
 class ParticipantGetPayoutDestinationResponse(BaseModel):
-    active_provider: Optional[str] = FieldInfo(alias="activeProvider")
+    active_provider: Optional[PayoutProvider] = FieldInfo(alias="activeProvider")
     """The provider that currently gets paid, or null until the participant confirms one."""
 
     destinations: List[Destination]
@@ -46,5 +49,5 @@ class ParticipantGetPayoutDestinationResponse(BaseModel):
     it.
     """
 
-    enabled_providers: List[str] = FieldInfo(alias="enabledProviders")
+    enabled_providers: List[PayoutProvider] = FieldInfo(alias="enabledProviders")
     """The payout providers enabled for this program."""

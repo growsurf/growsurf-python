@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Iterable
+from typing import Dict, Iterable, Optional
 from typing_extensions import Literal
 
 import httpx
@@ -113,6 +113,14 @@ from .integrations import (
     IntegrationsResourceWithStreamingResponse,
     AsyncIntegrationsResourceWithStreamingResponse,
 )
+from .custom_domain import (
+    CustomDomainResource,
+    AsyncCustomDomainResource,
+    CustomDomainResourceWithRawResponse,
+    AsyncCustomDomainResourceWithRawResponse,
+    CustomDomainResourceWithStreamingResponse,
+    AsyncCustomDomainResourceWithStreamingResponse,
+)
 from ..._base_client import make_request_options
 from ...types.campaign import ReferralStatus, reward_create_params
 from .program_resources import (
@@ -198,6 +206,11 @@ class CampaignResource(SyncAPIResource):
         return InstallationResource(self._client)
 
     @cached_property
+    def custom_domain(self) -> CustomDomainResource:
+        """Campaign custom domain (`CampaignCustomDomain`) — the domain that serves a program's landing pages."""
+        return CustomDomainResource(self._client)
+
+    @cached_property
     def with_raw_response(self) -> CampaignResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
@@ -220,8 +233,8 @@ class CampaignResource(SyncAPIResource):
         self,
         *,
         type: Literal["REFERRAL", "AFFILIATE"],
-        company_logo_image_url: str | Omit = omit,
-        company_name: str | Omit = omit,
+        company_logo_image_url: Optional[str] | Omit = omit,
+        company_name: Optional[str] | Omit = omit,
         currency_iso: str | Omit = omit,
         goal: Literal[
             "CUSTOMERS",
@@ -329,8 +342,8 @@ class CampaignResource(SyncAPIResource):
         self,
         id: str,
         *,
-        company_logo_image_url: str | Omit = omit,
-        company_name: str | Omit = omit,
+        company_logo_image_url: Optional[str] | Omit = omit,
+        company_name: Optional[str] | Omit = omit,
         name: str | Omit = omit,
         status: Literal["IN_PROGRESS", "COMPLETE"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -347,8 +360,8 @@ class CampaignResource(SyncAPIResource):
         dedicated config sub-resources, not here. The program cannot be deleted via this
         endpoint.
         Changes to participant email content are checked before saving. Rejected content returns
-        `400`; if the check is unavailable, `503` asks you to retry. Neither response saves the
-        change. A concurrent edit can return `409`; reload the program before retrying.
+        `400` and is not saved. A concurrent edit can return `409`; reload the program before
+        retrying.
 
         Args:
           status: The requested program status. `IN_PROGRESS` publishes or resumes the program;
@@ -449,6 +462,7 @@ class CampaignResource(SyncAPIResource):
         metadata: Dict[str, object] | Omit = omit,
         mobile_instance_id: str | Omit = omit,
         referral_status: Literal["CREDIT_PENDING", "CREDIT_AWARDED"] | Omit = omit,
+        referred_at: Optional[int] | Omit = omit,
         referred_by: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -472,8 +486,14 @@ class CampaignResource(SyncAPIResource):
 
           is_affiliate: Affiliate programs only. Controls affiliate enrollment for a new participant.
 
-          language: The language of the participant's portal and program emails. Must be one of the
-              program's languages. Applied only when this request creates the participant.
+          language: The language of the participant's portal and program emails. Stored when it is one of
+              the program's languages. A regional tag maps to its language (for example, `es-MX` is
+              stored as `es`). Any other value is ignored and the program's base language applies.
+              Applied only when this request creates the participant.
+
+          referred_at: When the participant was referred, in Unix milliseconds. Used only with a valid
+              `referredBy`. If you omit `referralStatus`, GrowSurf compares this time with the
+              program's referral credit window to set it. Defaults to the time of the request.
 
           referred_by: Referrer participant ID or email address.
 
@@ -501,6 +521,7 @@ class CampaignResource(SyncAPIResource):
                     "metadata": metadata,
                     "mobile_instance_id": mobile_instance_id,
                     "referral_status": referral_status,
+                    "referred_at": referred_at,
                     "referred_by": referred_by,
                 },
                 campaign_create_mobile_participant_token_params.CampaignCreateMobileParticipantTokenParams,
@@ -793,10 +814,7 @@ class CampaignResource(SyncAPIResource):
         next_id: str | Omit = omit,
         offset: int | Omit = omit,
         referral_status: ReferralStatus | Omit = omit,
-        sort_by: Literal[
-            "updatedAt", "createdAt", "email", "firstName", "lastName", "referralStatus", "referralTriggeredAt"
-        ]
-        | Omit = omit,
+        sort_by: Literal["updatedAt", "createdAt", "email", "referralTriggeredAt"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1433,6 +1451,11 @@ class AsyncCampaignResource(AsyncAPIResource):
         return AsyncInstallationResource(self._client)
 
     @cached_property
+    def custom_domain(self) -> AsyncCustomDomainResource:
+        """Campaign custom domain (`CampaignCustomDomain`) — the domain that serves a program's landing pages."""
+        return AsyncCustomDomainResource(self._client)
+
+    @cached_property
     def with_raw_response(self) -> AsyncCampaignResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
@@ -1455,8 +1478,8 @@ class AsyncCampaignResource(AsyncAPIResource):
         self,
         *,
         type: Literal["REFERRAL", "AFFILIATE"],
-        company_logo_image_url: str | Omit = omit,
-        company_name: str | Omit = omit,
+        company_logo_image_url: Optional[str] | Omit = omit,
+        company_name: Optional[str] | Omit = omit,
         currency_iso: str | Omit = omit,
         goal: Literal[
             "CUSTOMERS",
@@ -1564,8 +1587,8 @@ class AsyncCampaignResource(AsyncAPIResource):
         self,
         id: str,
         *,
-        company_logo_image_url: str | Omit = omit,
-        company_name: str | Omit = omit,
+        company_logo_image_url: Optional[str] | Omit = omit,
+        company_name: Optional[str] | Omit = omit,
         name: str | Omit = omit,
         status: Literal["IN_PROGRESS", "COMPLETE"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1582,8 +1605,8 @@ class AsyncCampaignResource(AsyncAPIResource):
         dedicated config sub-resources, not here. The program cannot be deleted via this
         endpoint.
         Changes to participant email content are checked before saving. Rejected content returns
-        `400`; if the check is unavailable, `503` asks you to retry. Neither response saves the
-        change. A concurrent edit can return `409`; reload the program before retrying.
+        `400` and is not saved. A concurrent edit can return `409`; reload the program before
+        retrying.
 
         Args:
           status: The requested program status. `IN_PROGRESS` publishes or resumes the program;
@@ -1684,6 +1707,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         metadata: Dict[str, object] | Omit = omit,
         mobile_instance_id: str | Omit = omit,
         referral_status: Literal["CREDIT_PENDING", "CREDIT_AWARDED"] | Omit = omit,
+        referred_at: Optional[int] | Omit = omit,
         referred_by: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1707,8 +1731,14 @@ class AsyncCampaignResource(AsyncAPIResource):
 
           is_affiliate: Affiliate programs only. Controls affiliate enrollment for a new participant.
 
-          language: The language of the participant's portal and program emails. Must be one of the
-              program's languages. Applied only when this request creates the participant.
+          language: The language of the participant's portal and program emails. Stored when it is one of
+              the program's languages. A regional tag maps to its language (for example, `es-MX` is
+              stored as `es`). Any other value is ignored and the program's base language applies.
+              Applied only when this request creates the participant.
+
+          referred_at: When the participant was referred, in Unix milliseconds. Used only with a valid
+              `referredBy`. If you omit `referralStatus`, GrowSurf compares this time with the
+              program's referral credit window to set it. Defaults to the time of the request.
 
           referred_by: Referrer participant ID or email address.
 
@@ -1736,6 +1766,7 @@ class AsyncCampaignResource(AsyncAPIResource):
                     "metadata": metadata,
                     "mobile_instance_id": mobile_instance_id,
                     "referral_status": referral_status,
+                    "referred_at": referred_at,
                     "referred_by": referred_by,
                 },
                 campaign_create_mobile_participant_token_params.CampaignCreateMobileParticipantTokenParams,
@@ -2028,10 +2059,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         next_id: str | Omit = omit,
         offset: int | Omit = omit,
         referral_status: ReferralStatus | Omit = omit,
-        sort_by: Literal[
-            "updatedAt", "createdAt", "email", "firstName", "lastName", "referralStatus", "referralTriggeredAt"
-        ]
-        | Omit = omit,
+        sort_by: Literal["updatedAt", "createdAt", "email", "referralTriggeredAt"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -2734,6 +2762,11 @@ class CampaignResourceWithRawResponse:
         """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
         return InstallationResourceWithRawResponse(self._campaign.installation)
 
+    @cached_property
+    def custom_domain(self) -> CustomDomainResourceWithRawResponse:
+        """Campaign custom domain (`CampaignCustomDomain`) — the domain that serves a program's landing pages."""
+        return CustomDomainResourceWithRawResponse(self._campaign.custom_domain)
+
 
 class AsyncCampaignResourceWithRawResponse:
     def __init__(self, campaign: AsyncCampaignResource) -> None:
@@ -2855,6 +2888,11 @@ class AsyncCampaignResourceWithRawResponse:
     def installation(self) -> AsyncInstallationResourceWithRawResponse:
         """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
         return AsyncInstallationResourceWithRawResponse(self._campaign.installation)
+
+    @cached_property
+    def custom_domain(self) -> AsyncCustomDomainResourceWithRawResponse:
+        """Campaign custom domain (`CampaignCustomDomain`) — the domain that serves a program's landing pages."""
+        return AsyncCustomDomainResourceWithRawResponse(self._campaign.custom_domain)
 
 
 class CampaignResourceWithStreamingResponse:
@@ -2978,6 +3016,11 @@ class CampaignResourceWithStreamingResponse:
         """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
         return InstallationResourceWithStreamingResponse(self._campaign.installation)
 
+    @cached_property
+    def custom_domain(self) -> CustomDomainResourceWithStreamingResponse:
+        """Campaign custom domain (`CampaignCustomDomain`) — the domain that serves a program's landing pages."""
+        return CustomDomainResourceWithStreamingResponse(self._campaign.custom_domain)
+
 
 class AsyncCampaignResourceWithStreamingResponse:
     def __init__(self, campaign: AsyncCampaignResource) -> None:
@@ -3099,3 +3142,8 @@ class AsyncCampaignResourceWithStreamingResponse:
     def installation(self) -> AsyncInstallationResourceWithStreamingResponse:
         """Campaign installation (`CampaignInstallation`) — the Program Editor's Installation tab."""
         return AsyncInstallationResourceWithStreamingResponse(self._campaign.installation)
+
+    @cached_property
+    def custom_domain(self) -> AsyncCustomDomainResourceWithStreamingResponse:
+        """Campaign custom domain (`CampaignCustomDomain`) — the domain that serves a program's landing pages."""
+        return AsyncCustomDomainResourceWithStreamingResponse(self._campaign.custom_domain)

@@ -18,7 +18,7 @@ class ParticipantRequestPayoutDestinationConfirmationResponse(BaseModel):
     """The provider the participant was asked to confirm."""
 
     provider_display_name: str = FieldInfo(alias="providerDisplayName")
-    """The customer-facing provider name (e.g. "PayPal", "Wise")."""
+    """The customer-facing provider name (e.g. "PayPal", "Venmo", "Wise")."""
 
     status: Literal["CONFIRMATION_REQUESTED"]
     """Confirms the message was requested."""

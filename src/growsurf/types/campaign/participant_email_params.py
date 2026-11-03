@@ -15,14 +15,17 @@ class ParticipantEmailParams(TypedDict, total=False):
     email_type: Annotated[str, PropertyInfo(alias="emailType")]
     """The program email template to trigger (template mode).
 
-    The valid values depend on the program type; the template's `isEnabled` setting only
-    controls automatic sends. Referral programs: `welcomeNonReferred`, `referralLinkViewedFirstTime`,
-    `referralLinkUsed`, `referredSignup`, `welcomeReferred`, `goalAchieved`,
-    `campaignEndedWinners`, `campaignEndedNonWinners`, `progressUpdateMonthly`. Affiliate
-    programs: `welcomeNonReferred`, `referralLinkViewedFirstTime`, `referredSignup`,
-    `commissionGenerated`, `commissionAdjusted`, `payoutPending`, `payoutSentSuccess`,
-    `progressUpdateMonthly`. System/transactional types (login link, PayPal confirmation,
-    tax) and the invite email cannot be sent.
+    Send the camelCase email-type key. The available types depend on the program type;
+    the template's `isEnabled` setting controls automatic sends only. This endpoint can
+    trigger any sendable template. System and transactional types (login link, payout
+    destination confirmation, tax notifications), the invite email, and the follow-up
+    reminder cannot be sent. Referral programs: `welcomeNonReferred`,
+    `referralLinkViewedFirstTime`, `referralLinkUsed`, `referredSignup`,
+    `welcomeReferred`, `offerClaimed`, `goalAchieved`, `campaignEndedWinners`,
+    `campaignEndedNonWinners`, `progressUpdateMonthly`. Affiliate programs:
+    `welcomeNonReferred`, `referralLinkViewedFirstTime`, `referredSignup`,
+    `offerClaimed`, `commissionGenerated`, `commissionAdjusted`, `payoutPending`,
+    `payoutSentSuccess`, `progressUpdateMonthly`.
     `welcomeNonReferred` can only be sent to advocates or approved, enrolled affiliates in a program
     that has not ended.
     """

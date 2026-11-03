@@ -31,12 +31,17 @@ from .webhook_create_params import WebhookCreateParams as WebhookCreateParams
 from .webhook_list_response import WebhookListResponse as WebhookListResponse
 from .webhook_test_response import WebhookTestResponse as WebhookTestResponse
 from .webhook_update_params import WebhookUpdateParams as WebhookUpdateParams
+from .campaign_custom_domain import (
+    CampaignCustomDomain as CampaignCustomDomain,
+    CampaignCustomDomainDNSRecord as CampaignCustomDomainDNSRecord,
+)
 from .delete_reward_response import DeleteRewardResponse as DeleteRewardResponse
 from .participant_add_params import ParticipantAddParams as ParticipantAddParams
 from .reward_delete_response import RewardDeleteResponse as RewardDeleteResponse
 from .delete_webhook_response import DeleteWebhookResponse as DeleteWebhookResponse
 from .reward_approve_response import RewardApproveResponse as RewardApproveResponse
 from .reward_fulfill_response import RewardFulfillResponse as RewardFulfillResponse
+from .custom_domain_set_params import CustomDomainSetParams as CustomDomainSetParams
 from .participant_email_params import ParticipantEmailParams as ParticipantEmailParams
 from .integration_list_response import IntegrationListResponse as IntegrationListResponse
 from .participant_update_params import ParticipantUpdateParams as ParticipantUpdateParams
@@ -79,6 +84,9 @@ from .participant_refund_transaction_params import (
 )
 from .participant_trigger_referral_response import (
     ParticipantTriggerReferralResponse as ParticipantTriggerReferralResponse,
+)
+from .delete_campaign_custom_domain_response import (
+    DeleteCampaignCustomDomainResponse as DeleteCampaignCustomDomainResponse,
 )
 from .participant_record_transaction_response import (
     ParticipantRecordTransactionResponse as ParticipantRecordTransactionResponse,

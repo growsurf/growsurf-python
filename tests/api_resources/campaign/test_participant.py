@@ -284,6 +284,7 @@ class TestParticipant:
             metadata={"foo": "bar"},
             mobile_instance_id="mobileInstanceId",
             referral_status="CREDIT_PENDING",
+            referred_at=0,
             referred_by="referredBy",
         )
         assert_matches_type(Participant, participant, path=["response"])
@@ -1526,6 +1527,7 @@ class TestAsyncParticipant:
             metadata={"foo": "bar"},
             mobile_instance_id="mobileInstanceId",
             referral_status="CREDIT_PENDING",
+            referred_at=0,
             referred_by="referredBy",
         )
         assert_matches_type(Participant, participant, path=["response"])

@@ -287,3 +287,22 @@ Methods:
 
 - <code title="get /campaign/{id}/installation">client.campaign.installation.<a href="./src/growsurf/resources/campaign/installation.py">retrieve</a>(id) -> <a href="./src/growsurf/types/campaign/campaign_installation.py">CampaignInstallation</a></code>
 - <code title="patch /campaign/{id}/installation">client.campaign.installation.<a href="./src/growsurf/resources/campaign/installation.py">update</a>(id, \*, body) -> <a href="./src/growsurf/types/campaign/campaign_installation.py">CampaignInstallation</a></code>
+
+## CustomDomain
+
+Types:
+
+```python
+from growsurf.types.campaign import (
+    CampaignCustomDomain,
+    CampaignCustomDomainDNSRecord,
+    DeleteCampaignCustomDomainResponse,
+)
+```
+
+Methods:
+
+- <code title="get /campaign/{id}/custom-domain">client.campaign.custom_domain.<a href="./src/growsurf/resources/campaign/custom_domain.py">retrieve</a>(id) -> <a href="./src/growsurf/types/campaign/campaign_custom_domain.py">CampaignCustomDomain</a></code>
+- <code title="put /campaign/{id}/custom-domain">client.campaign.custom_domain.<a href="./src/growsurf/resources/campaign/custom_domain.py">set</a>(id, \*\*<a href="src/growsurf/types/campaign/custom_domain_set_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/campaign_custom_domain.py">CampaignCustomDomain</a></code>
+- <code title="post /campaign/{id}/custom-domain/verify">client.campaign.custom_domain.<a href="./src/growsurf/resources/campaign/custom_domain.py">verify</a>(id) -> <a href="./src/growsurf/types/campaign/campaign_custom_domain.py">CampaignCustomDomain</a></code>
+- <code title="delete /campaign/{id}/custom-domain">client.campaign.custom_domain.<a href="./src/growsurf/resources/campaign/custom_domain.py">delete</a>(id) -> <a href="./src/growsurf/types/campaign/delete_campaign_custom_domain_response.py">DeleteCampaignCustomDomainResponse</a></code>

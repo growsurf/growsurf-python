@@ -37,7 +37,7 @@ class ParticipantListReferralsParams(TypedDict, total=False):
     referral_status: Annotated[ReferralStatus, PropertyInfo(alias="referralStatus")]
 
     sort_by: Annotated[
-        Literal["updatedAt", "createdAt", "email", "firstName", "lastName", "referralStatus", "referralTriggeredAt"],
+        Literal["updatedAt", "createdAt", "email", "referralTriggeredAt"],
         PropertyInfo(alias="sortBy"),
     ]
     """Field used to sort referral results."""

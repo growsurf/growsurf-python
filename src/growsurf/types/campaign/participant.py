@@ -1,11 +1,14 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from __future__ import annotations
+
 from typing import Dict, List, Optional
 from typing_extensions import Literal
 
 from pydantic import Field as FieldInfo
 
 from .language import Language
+from ..._compat import PYDANTIC_V1
 from ..._models import BaseModel
 from .referral_source import ReferralSource
 from .referral_status import ReferralStatus
@@ -23,69 +26,6 @@ class PayoutSettings(BaseModel):
     required_actions: Optional[List[Literal["PAYOUT_DESTINATION", "TAX_INFO"]]] = FieldInfo(
         alias="requiredActions", default=None
     )
-
-
-class Referrer(BaseModel):
-    id: Optional[str] = None
-
-    created_at: Optional[int] = FieldInfo(alias="createdAt", default=None)
-
-    email: Optional[str] = None
-
-    fingerprint: Optional[str] = None
-
-    first_name: Optional[str] = FieldInfo(alias="firstName", default=None)
-
-    fraud_reason_code: Optional[str] = FieldInfo(alias="fraudReasonCode", default=None)
-
-    fraud_risk_level: Optional[FraudRiskLevel] = FieldInfo(alias="fraudRiskLevel", default=None)
-
-    impression_count: Optional[int] = FieldInfo(alias="impressionCount", default=None)
-
-    invite_count: Optional[int] = FieldInfo(alias="inviteCount", default=None)
-
-    ip_address: Optional[str] = FieldInfo(alias="ipAddress", default=None)
-
-    is_winner: Optional[bool] = FieldInfo(alias="isWinner", default=None)
-
-    last_name: Optional[str] = FieldInfo(alias="lastName", default=None)
-
-    lead_count: Optional[int] = FieldInfo(alias="leadCount", default=None)
-    """
-    The number of pending referrals the participant made that have not converted
-    into successful referrals yet.
-    """
-
-    metadata: Optional[Dict[str, object]] = None
-    """Shallow custom metadata object."""
-
-    monthly_rank: Optional[int] = FieldInfo(alias="monthlyRank", default=None)
-
-    monthly_referral_count: Optional[int] = FieldInfo(alias="monthlyReferralCount", default=None)
-
-    monthly_referrals: Optional[List[str]] = FieldInfo(alias="monthlyReferrals", default=None)
-
-    prev_monthly_rank: Optional[int] = FieldInfo(alias="prevMonthlyRank", default=None)
-
-    prev_monthly_referral_count: Optional[int] = FieldInfo(alias="prevMonthlyReferralCount", default=None)
-
-    rank: Optional[int] = None
-
-    referral_count: Optional[int] = FieldInfo(alias="referralCount", default=None)
-
-    referrals: Optional[List[str]] = None
-
-    referral_source: Optional[ReferralSource] = FieldInfo(alias="referralSource", default=None)
-
-    referral_status: Optional[ReferralStatus] = FieldInfo(alias="referralStatus", default=None)
-
-    share_count: Optional[Dict[str, int]] = FieldInfo(alias="shareCount", default=None)
-
-    share_url: Optional[str] = FieldInfo(alias="shareUrl", default=None)
-
-    unique_impression_count: Optional[int] = FieldInfo(alias="uniqueImpressionCount", default=None)
-
-    unsubscribed: Optional[bool] = None
 
 
 class Participant(BaseModel):
@@ -192,6 +132,13 @@ class Participant(BaseModel):
 
     prev_monthly_referral_count: Optional[int] = FieldInfo(alias="prevMonthlyReferralCount", default=None)
 
+    referral_lead_qualified_at: Optional[int] = FieldInfo(alias="referralLeadQualifiedAt", default=None)
+    """When this referred signup counted as a lead for the referrer, in Unix milliseconds.
+
+    Set only when the program's `referralTrigger` is `CUSTOM`. Lead-event Campaign
+    Rewards and commissions use it.
+    """
+
     referrals: Optional[List[str]] = None
 
     referral_source: Optional[ReferralSource] = FieldInfo(alias="referralSource", default=None)
@@ -200,7 +147,7 @@ class Participant(BaseModel):
 
     referred_by: Optional[str] = FieldInfo(alias="referredBy", default=None)
 
-    referrer: Optional[Referrer] = None
+    referrer: Optional["Referrer"] = None
 
     share_count: Optional[Dict[str, int]] = FieldInfo(alias="shareCount", default=None)
 
@@ -213,3 +160,17 @@ class Participant(BaseModel):
     unsubscribed: Optional[bool] = None
 
     vanity_keys: Optional[List[str]] = FieldInfo(alias="vanityKeys", default=None)
+
+
+class Referrer(Participant):
+    """
+    The participant's referrer, returned within the `referrer` field of a `Participant`. It has the same fields as a `Participant`. Its own `referrer` is always `null`.
+    """
+
+    referrer: None = None  # type: ignore[assignment]
+
+
+if PYDANTIC_V1:
+    Participant.update_forward_refs()  # type: ignore
+else:
+    Participant.model_rebuild()
