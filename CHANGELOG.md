@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.19.0](https://github.com/growsurf/growsurf-python/compare/v1.18.0...v1.19.0) (2026-11-04)
+
+
+### Features
+
+* add reward amountSource and percentOff, and zh-TW and es-419 languages ([b0011f8](https://github.com/growsurf/growsurf-python/commit/b0011f8dbbb97057fc98977412e0dbabc37f283a))
+* add reward amountSource and percentOff, and zh-TW and es-419 languages ([a3a8427](https://github.com/growsurf/growsurf-python/commit/a3a8427f3722d23146f31ee994974d96bb028c0a))
+
 ## [1.18.0](https://github.com/growsurf/growsurf-python/compare/v1.17.0...v1.18.0) (2026-11-03)
 
 
