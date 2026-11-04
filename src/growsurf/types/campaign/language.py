@@ -46,4 +46,6 @@ Language: TypeAlias = Literal[
     "fil",
     "af",
     "sw",
+    "zh-TW",
+    "es-419",
 ]

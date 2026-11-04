@@ -23,6 +23,29 @@ class ParticipantReward(BaseModel):
     approved_at: Optional[int] = FieldInfo(alias="approvedAt", default=None)
 
     amount: Optional[float] = None
+    """What the reward is worth in major units of `currency_iso`.
+
+    `None` for a percent-off coupon or when no amount is available.
+    """
+
+    amount_source: Optional[
+        Literal[
+            "STRIPE",
+            "CHARGEBEE",
+            "RECURLY",
+            "CHARGIFY",
+            "PAYPAL",
+            "VENMO",
+            "TANGO_CARD",
+            "TREMENDOUS",
+            "XTRM",
+            "METADATA",
+        ]
+    ] = FieldInfo(alias="amountSource", default=None)
+    """Where `amount` or `percent_off` comes from.
+
+    `METADATA` means the amount saved when the reward was earned.
+    """
 
     commission_structure: Optional[CommissionStructure] = FieldInfo(alias="commissionStructure", default=None)
 
@@ -35,6 +58,9 @@ class ParticipantReward(BaseModel):
     is_fulfilled: Optional[bool] = FieldInfo(alias="isFulfilled", default=None)
 
     is_referrer: Optional[bool] = FieldInfo(alias="isReferrer", default=None)
+
+    percent_off: Optional[float] = FieldInfo(alias="percentOff", default=None)
+    """Discount of a percent-off coupon (`20` = 20% off); `None` for every other reward."""
 
     referred_id: Optional[str] = FieldInfo(alias="referredId", default=None)
 
