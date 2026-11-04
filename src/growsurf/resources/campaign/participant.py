@@ -337,8 +337,8 @@ class ParticipantResource(SyncAPIResource):
               unchanged.
 
           language: The language of the participant's portal and program emails. Stored when it is one of
-              the program's languages. A regional tag maps to its language (for example, `es-MX` is
-              stored as `es`). Any other value is ignored and the program's base language applies.
+              the program's languages. A regional tag maps to its language (for example, `fr-BE` is
+              stored as `fr`). Any other value is ignored and the program's base language applies.
               Applied only when this request creates the participant.
 
           metadata: Shallow custom metadata object.
@@ -1624,8 +1624,8 @@ class AsyncParticipantResource(AsyncAPIResource):
               unchanged.
 
           language: The language of the participant's portal and program emails. Stored when it is one of
-              the program's languages. A regional tag maps to its language (for example, `es-MX` is
-              stored as `es`). Any other value is ignored and the program's base language applies.
+              the program's languages. A regional tag maps to its language (for example, `fr-BE` is
+              stored as `fr`). Any other value is ignored and the program's base language applies.
               Applied only when this request creates the participant.
 
           metadata: Shallow custom metadata object.
