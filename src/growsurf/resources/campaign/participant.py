@@ -230,7 +230,7 @@ class ParticipantResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantDeleteResponse:
         """
-        Removes participant access immediately by GrowSurf participant ID or email address. Related record cleanup completes automatically. Do not repeat a successful deletion to finish cleanup.
+        Removes participant access immediately by GrowSurf participant ID or email address. Related record cleanup completes automatically. Do not repeat a successful deletion to finish cleanup. A `202` response includes pending analytics erasure details.
 
         Args:
           extra_headers: Send extra headers
@@ -276,7 +276,7 @@ class ParticipantResource(SyncAPIResource):
         `participants` is a GrowSurf participant ID or an email address (mixed lists are
         allowed). Up to `200` entries per request — chunk larger lists across multiple
         calls. The response reports a per-row `status` for every submitted entry, so a
-        `200` can include rows that were `NOT_FOUND` or failed. Deletion is permanent. Successful rows lose participant access immediately; related record cleanup completes automatically, subject to required financial record retention.
+        `200` can include rows that were `NOT_FOUND` or failed. Deletion is permanent. Successful rows lose participant access immediately; related record cleanup completes automatically, subject to required financial record retention. A `202` response also includes `analyticsErasure` when analytics erasure is pending.
 
         Args:
           participants: GrowSurf participant IDs and/or email addresses to delete. Mixed entries are
@@ -936,7 +936,6 @@ class ParticipantResource(SyncAPIResource):
         id: str,
         email_addresses: SequenceNotStr[str],
         message_text: str,
-        subject_text: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -947,7 +946,7 @@ class ParticipantResource(SyncAPIResource):
         """
         Sends email invites on behalf of a participant to a list of email addresses.
         Sending invites via the API requires a **verified custom email domain** on the
-        program; the request fails until one is verified.
+        program. Until one is verified, it returns `success: false`.
 
         Args:
           extra_headers: Send extra headers
@@ -974,7 +973,6 @@ class ParticipantResource(SyncAPIResource):
                 {
                     "email_addresses": email_addresses,
                     "message_text": message_text,
-                    "subject_text": subject_text,
                 },
                 participant_send_invites_params.ParticipantSendInvitesParams,
             ),
@@ -1009,7 +1007,7 @@ class ParticipantResource(SyncAPIResource):
               honoring a refund window before crediting a referrer. Omit this field to award
               credit immediately. The credit is awarded automatically once the delay elapses,
               and can be cancelled before then with the Cancel delayed referral trigger
-              request.
+              request. From `0` to `90`; `0` awards credit immediately.
 
           extra_headers: Send extra headers
 
@@ -1127,7 +1125,7 @@ class ParticipantResource(SyncAPIResource):
               `welcomeNonReferred` can only be sent to advocates or approved, enrolled affiliates in
               a program that has not ended.
 
-          body: HTML body for a free-form email. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails).
+          body: HTML body for a free-form email. When `settings.design.layoutMode` is `INLINE`, include `{{emailFooter}}` in the body; `{{emailHeader}}` is optional. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails).
 
           preheader: Optional preheader text for a free-form email.
 
@@ -1386,7 +1384,7 @@ class ParticipantResource(SyncAPIResource):
         endpoint just triggers the message. The provider must be enabled for the program.
 
         Args:
-          provider: The payout provider the participant should confirm a destination for.
+          provider: The payout provider the participant should confirm a destination for. `VENMO` uses a confirmed email and is available only when connected PayPal Payouts and payout-email confirmation are enabled in a USD program. Venmo recipients must be in the United States.
 
           extra_headers: Send extra headers
 
@@ -1587,7 +1585,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantDeleteResponse:
         """
-        Removes participant access immediately by GrowSurf participant ID or email address. Related record cleanup completes automatically. Do not repeat a successful deletion to finish cleanup.
+        Removes participant access immediately by GrowSurf participant ID or email address. Related record cleanup completes automatically. Do not repeat a successful deletion to finish cleanup. A `202` response includes pending analytics erasure details.
 
         Args:
           extra_headers: Send extra headers
@@ -1633,7 +1631,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         `participants` is a GrowSurf participant ID or an email address (mixed lists are
         allowed). Up to `200` entries per request — chunk larger lists across multiple
         calls. The response reports a per-row `status` for every submitted entry, so a
-        `200` can include rows that were `NOT_FOUND` or failed. Deletion is permanent. Successful rows lose participant access immediately; related record cleanup completes automatically, subject to required financial record retention.
+        `200` can include rows that were `NOT_FOUND` or failed. Deletion is permanent. Successful rows lose participant access immediately; related record cleanup completes automatically, subject to required financial record retention. A `202` response also includes `analyticsErasure` when analytics erasure is pending.
 
         Args:
           participants: GrowSurf participant IDs and/or email addresses to delete. Mixed entries are
@@ -2293,7 +2291,6 @@ class AsyncParticipantResource(AsyncAPIResource):
         id: str,
         email_addresses: SequenceNotStr[str],
         message_text: str,
-        subject_text: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -2304,7 +2301,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         """
         Sends email invites on behalf of a participant to a list of email addresses.
         Sending invites via the API requires a **verified custom email domain** on the
-        program; the request fails until one is verified.
+        program. Until one is verified, it returns `success: false`.
 
         Args:
           extra_headers: Send extra headers
@@ -2331,7 +2328,6 @@ class AsyncParticipantResource(AsyncAPIResource):
                 {
                     "email_addresses": email_addresses,
                     "message_text": message_text,
-                    "subject_text": subject_text,
                 },
                 participant_send_invites_params.ParticipantSendInvitesParams,
             ),
@@ -2366,7 +2362,7 @@ class AsyncParticipantResource(AsyncAPIResource):
               honoring a refund window before crediting a referrer. Omit this field to award
               credit immediately. The credit is awarded automatically once the delay elapses,
               and can be cancelled before then with the Cancel delayed referral trigger
-              request.
+              request. From `0` to `90`; `0` awards credit immediately.
 
           extra_headers: Send extra headers
 
@@ -2484,7 +2480,7 @@ class AsyncParticipantResource(AsyncAPIResource):
               `welcomeNonReferred` can only be sent to advocates or approved, enrolled affiliates in
               a program that has not ended.
 
-          body: HTML body for a free-form email. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails).
+          body: HTML body for a free-form email. When `settings.design.layoutMode` is `INLINE`, include `{{emailFooter}}` in the body; `{{emailHeader}}` is optional. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails).
 
           preheader: Optional preheader text for a free-form email.
 
@@ -2743,7 +2739,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         endpoint just triggers the message. The provider must be enabled for the program.
 
         Args:
-          provider: The payout provider the participant should confirm a destination for.
+          provider: The payout provider the participant should confirm a destination for. `VENMO` uses a confirmed email and is available only when connected PayPal Payouts and payout-email confirmation are enabled in a USD program. Venmo recipients must be in the United States.
 
           extra_headers: Send extra headers
 

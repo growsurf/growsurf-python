@@ -16,5 +16,3 @@ class ParticipantSendInvitesParams(TypedDict, total=False):
     email_addresses: Required[Annotated[SequenceNotStr[str], PropertyInfo(alias="emailAddresses")]]
 
     message_text: Required[Annotated[str, PropertyInfo(alias="messageText")]]
-
-    subject_text: Required[Annotated[str, PropertyInfo(alias="subjectText")]]

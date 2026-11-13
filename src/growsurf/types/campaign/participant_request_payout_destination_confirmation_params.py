@@ -11,4 +11,4 @@ class ParticipantRequestPayoutDestinationConfirmationParams(TypedDict, total=Fal
     id: Required[str]
 
     provider: Required[Literal["PAYPAL", "VENMO", "WISECOM"]]
-    """The payout provider the participant should confirm a destination for."""
+    """The payout provider the participant should confirm a destination for. `VENMO` uses a confirmed email and is available only when connected PayPal Payouts and payout-email confirmation are enabled in a USD program. Venmo recipients must be in the United States."""

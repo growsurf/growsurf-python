@@ -87,7 +87,9 @@ class GroupsResource(SyncAPIResource):
         only. Email and domain rules place new signups and affiliate approvals only; they
         do not move existing participants. When more than one way matches, a move (a
         `PARTICIPANT` rule, Update participant, or bulk move) wins, then the group's
-        signup link, then `EMAIL`, then `DOMAIN`, then Default.
+        signup link, then `EMAIL`, then `DOMAIN`, then Default. Group names must be unique
+        in the program, ignoring case. A name that another group uses returns `409`, and
+        "Default" returns `400`.
 
         Args:
           name: The group name (internal only, never shown to participants). 1 to 100
@@ -148,7 +150,8 @@ class GroupsResource(SyncAPIResource):
         whole list. An added `PARTICIPANT` rule moves that participant in now; a removed
         one moves them back to Default if they are still in this group. Email and domain
         rule changes move no one. To change the group's rewards, update its Campaign
-        Rewards.
+        Rewards. Group names must be unique in the program, ignoring case. A name that
+        another group uses returns `409`, and "Default" returns `400`.
 
         Args:
           name: The group name (internal only, never shown to participants). 1 to 100
@@ -254,7 +257,9 @@ class AsyncGroupsResource(AsyncAPIResource):
         only. Email and domain rules place new signups and affiliate approvals only; they
         do not move existing participants. When more than one way matches, a move (a
         `PARTICIPANT` rule, Update participant, or bulk move) wins, then the group's
-        signup link, then `EMAIL`, then `DOMAIN`, then Default.
+        signup link, then `EMAIL`, then `DOMAIN`, then Default. Group names must be unique
+        in the program, ignoring case. A name that another group uses returns `409`, and
+        "Default" returns `400`.
 
         Args:
           name: The group name (internal only, never shown to participants). 1 to 100
@@ -315,7 +320,8 @@ class AsyncGroupsResource(AsyncAPIResource):
         whole list. An added `PARTICIPANT` rule moves that participant in now; a removed
         one moves them back to Default if they are still in this group. Email and domain
         rule changes move no one. To change the group's rewards, update its Campaign
-        Rewards.
+        Rewards. Group names must be unique in the program, ignoring case. A name that
+        another group uses returns `409`, and "Default" returns `400`.
 
         Args:
           name: The group name (internal only, never shown to participants). 1 to 100
