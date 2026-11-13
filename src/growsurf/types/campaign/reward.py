@@ -48,6 +48,12 @@ class Reward(BaseModel):
     Campaign Rewards return `CONVERSION`.
     """
 
+    group_id: Optional[str] = FieldInfo(alias="groupId", default=None)
+    """The group this reward belongs to (`grp_…`), or `None` for Default.
+
+    A participant earns only their own group's rewards.
+    """
+
     image_url: Optional[str] = FieldInfo(alias="imageUrl", default=None)
     """The reward image URL."""
 

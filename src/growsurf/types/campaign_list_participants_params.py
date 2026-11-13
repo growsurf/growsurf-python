@@ -11,6 +11,13 @@ __all__ = ["CampaignListParticipantsParams"]
 
 
 class CampaignListParticipantsParams(TypedDict, total=False):
+    group_id: Annotated[str, PropertyInfo(alias="groupId")]
+    """Return only this group's members (`grp_…`).
+
+    Works alone or with `metadata`. Default has no ID, so it cannot be named here.
+    An ID that is not a group in this program returns `404`.
+    """
+
     limit: int
     """Number of results to return. Maximum 100."""
 

@@ -41,6 +41,14 @@ class RewardCreateParams(TypedDict, total=False):
     When omitted, the Campaign Reward defaults to `CONVERSION`.
     """
 
+    group_id: Annotated[Optional[str], PropertyInfo(alias="groupId")]
+    """The group this reward belongs to (`grp_…`), or `None` for Default.
+
+    A participant earns only their own group's rewards. `LEADERBOARD` rewards apply
+    to the whole program and cannot be in a group. An ID that is not a group in this
+    program returns `400`.
+    """
+
     image_url: Annotated[Optional[str], PropertyInfo(alias="imageUrl")]
     """An image URL for the reward."""
 

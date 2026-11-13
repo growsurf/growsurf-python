@@ -55,6 +55,16 @@ from growsurf.types.campaign import (
 )
 ```
 
+```python
+from growsurf.types.campaign import (
+    RewardGroup,
+    RewardGroupRuleParam,
+    RewardGroupSource,
+    RewardGroupListResponse,
+    DeleteRewardGroupResponse,
+)
+```
+
 Methods:
 
 - <code title="post /campaigns">client.campaign.<a href="./src/growsurf/resources/campaign/campaign.py">create</a>(\*\*<a href="src/growsurf/types/campaign_create_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/campaign.py">Campaign</a></code>
@@ -83,6 +93,11 @@ Methods:
 - <code title="patch /campaign/{id}/resources/{resourceId}">client.campaign.resources.<a href="./src/growsurf/resources/campaign/program_resources.py">update</a>(resource_id, \*, id, type, title, description, category, is_published, position, url, text, upload_ticket, upload_result) -> <a href="./src/growsurf/types/campaign/program_resource.py">ProgramResource</a></code>
 - <code title="delete /campaign/{id}/resources/{resourceId}">client.campaign.resources.<a href="./src/growsurf/resources/campaign/program_resources.py">delete</a>(resource_id, \*, id) -> <a href="./src/growsurf/types/campaign/delete_program_resource_response.py">DeleteProgramResourceResponse</a></code>
 - <code title="post /campaign/{id}/resource-upload-tickets">client.campaign.resources.<a href="./src/growsurf/resources/campaign/program_resources.py">create_upload_ticket</a>(id, \*, file_name, mime_type, bytes) -> <a href="./src/growsurf/types/campaign/program_resource_upload_ticket.py">ProgramResourceUploadTicket</a></code>
+- <code title="get /campaign/{id}/groups">client.campaign.groups.<a href="./src/growsurf/resources/campaign/groups.py">list</a>(id) -> <a href="./src/growsurf/types/campaign/reward_group_list_response.py">RewardGroupListResponse</a></code>
+- <code title="post /campaign/{id}/groups">client.campaign.groups.<a href="./src/growsurf/resources/campaign/groups.py">create</a>(id, \*, name, rules) -> <a href="./src/growsurf/types/campaign/reward_group.py">RewardGroup</a></code>
+- <code title="get /campaign/{id}/groups/{groupId}">client.campaign.groups.<a href="./src/growsurf/resources/campaign/groups.py">retrieve</a>(group_id, \*, id) -> <a href="./src/growsurf/types/campaign/reward_group.py">RewardGroup</a></code>
+- <code title="patch /campaign/{id}/groups/{groupId}">client.campaign.groups.<a href="./src/growsurf/resources/campaign/groups.py">update</a>(group_id, \*, id, name, order, rules) -> <a href="./src/growsurf/types/campaign/reward_group.py">RewardGroup</a></code>
+- <code title="delete /campaign/{id}/groups/{groupId}">client.campaign.groups.<a href="./src/growsurf/resources/campaign/groups.py">delete</a>(group_id, \*, id) -> <a href="./src/growsurf/types/campaign/delete_reward_group_response.py">DeleteRewardGroupResponse</a></code>
 
 ## Participant
 
@@ -100,6 +115,7 @@ from growsurf.types.campaign import (
     ParticipantDeleteResponse,
     ParticipantAnalyticsResponse,
     ParticipantBulkDeleteResponse,
+    ParticipantBulkMoveResponse,
     ParticipantListRewardsResponse,
     ParticipantActivityLogsResponse,
     ParticipantRecordTransactionResponse,
@@ -117,6 +133,7 @@ Methods:
 - <code title="post /campaign/{id}/participant/{participantIdOrEmail}">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">update</a>(participant_id_or_email, \*, id, \*\*<a href="src/growsurf/types/campaign/participant_update_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/participant.py">Participant</a></code>
 - <code title="delete /campaign/{id}/participant/{participantIdOrEmail}">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">delete</a>(participant_id_or_email, \*, id) -> <a href="./src/growsurf/types/campaign/participant_delete_response.py">ParticipantDeleteResponse</a></code>
 - <code title="post /campaign/{id}/participants/bulk-delete">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">bulk_delete</a>(id, \*\*<a href="src/growsurf/types/campaign/participant_bulk_delete_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/participant_bulk_delete_response.py">ParticipantBulkDeleteResponse</a></code>
+- <code title="post /campaign/{id}/participants/bulk-move">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">bulk_move</a>(id, \*\*<a href="src/growsurf/types/campaign/participant_bulk_move_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/participant_bulk_move_response.py">ParticipantBulkMoveResponse</a></code>
 - <code title="post /campaign/{id}/participant">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">add</a>(id, \*\*<a href="src/growsurf/types/campaign/participant_add_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/participant.py">Participant</a></code>
 - <code title="get /campaign/{id}/participant/{participantIdOrEmail}/commissions">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">list_commissions</a>(participant_id_or_email, \*, id, \*\*<a href="src/growsurf/types/campaign/participant_list_commissions_params.py">params</a>) -> <a href="./src/growsurf/types/participant_commission_list.py">ParticipantCommissionList</a></code>
 - <code title="get /campaign/{id}/participant/{participantIdOrEmail}/payouts">client.campaign.participant.<a href="./src/growsurf/resources/campaign/participant.py">list_payouts</a>(participant_id_or_email, \*, id, \*\*<a href="src/growsurf/types/campaign/participant_list_payouts_params.py">params</a>) -> <a href="./src/growsurf/types/participant_payout_list.py">ParticipantPayoutList</a></code>
@@ -181,7 +198,7 @@ Methods:
 
 - <code title="post /campaign/{id}/reward-configs">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">create</a>(id, \*\*<a href="src/growsurf/types/campaign/reward_create_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/reward.py">Reward</a></code>
 - <code title="patch /campaign/{id}/reward-configs/{campaignRewardId}">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">update</a>(campaign_reward_id, \*, id, \*\*<a href="src/growsurf/types/campaign/reward_update_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/reward.py">Reward</a></code>
-- <code title="get /campaign/{id}/reward-configs">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">list</a>(id) -> <a href="./src/growsurf/types/campaign/campaign_reward_list_response.py">CampaignRewardListResponse</a></code>
+- <code title="get /campaign/{id}/reward-configs">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">list</a>(id, \*\*<a href="src/growsurf/types/campaign/reward_list_params.py">params</a>) -> <a href="./src/growsurf/types/campaign/campaign_reward_list_response.py">CampaignRewardListResponse</a></code>
 - <code title="delete /campaign/{id}/reward-configs/{campaignRewardId}">client.campaign.rewards.<a href="./src/growsurf/resources/campaign/rewards.py">delete</a>(campaign_reward_id, \*, id) -> <a href="./src/growsurf/types/campaign/delete_reward_response.py">DeleteRewardResponse</a></code>
 
 ## Integrations

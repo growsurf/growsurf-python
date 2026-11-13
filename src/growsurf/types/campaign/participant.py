@@ -14,6 +14,7 @@ from .referral_source import ReferralSource
 from .referral_status import ReferralStatus
 from .fraud_risk_level import FraudRiskLevel
 from .participant_reward import ParticipantReward
+from .reward_group_source import RewardGroupSource
 
 __all__ = ["Participant", "PayoutSettings", "Referrer"]
 
@@ -73,6 +74,18 @@ class Participant(BaseModel):
     fraud_reason_code: Optional[str] = FieldInfo(alias="fraudReasonCode", default=None)
 
     fraud_risk_level: Optional[FraudRiskLevel] = FieldInfo(alias="fraudRiskLevel", default=None)
+
+    group_id: Optional[str] = FieldInfo(alias="groupId", default=None)
+    """The participant's group (`grp_…`), or `null` for Default.
+
+    Their new referrals earn this group's rewards.
+    """
+
+    group_source: Optional[RewardGroupSource] = FieldInfo(alias="groupSource", default=None)
+    """How the participant got into their group.
+
+    `null` when no group placement was ever made.
+    """
 
     impression_count: Optional[int] = FieldInfo(alias="impressionCount", default=None)
 
