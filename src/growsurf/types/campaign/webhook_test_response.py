@@ -19,6 +19,6 @@ class WebhookTestResponse(BaseModel):
     success: bool
 
     payload: Optional[Dict[str, object]] = None
-    """The mock event payload that was sent."""
+    """The mock event payload that was sent. `id` is the event ID."""
 
     response: Optional[Response] = None
