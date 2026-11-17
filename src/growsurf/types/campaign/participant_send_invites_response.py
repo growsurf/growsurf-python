@@ -1,5 +1,7 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from typing import Optional
+
 from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
@@ -13,3 +15,6 @@ class ParticipantSendInvitesResponse(BaseModel):
     message_type: str = FieldInfo(alias="messageType")
 
     success: bool
+
+    message: Optional[str] = None
+    """Human-readable detail for the result. Empty when there is nothing to add."""
