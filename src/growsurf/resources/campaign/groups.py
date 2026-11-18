@@ -26,7 +26,13 @@ __all__ = ["GroupsResource", "AsyncGroupsResource"]
 
 
 def _body(**values: object) -> Dict[str, object]:
-    return {key: value for key, value in values.items() if value is not omit}
+    # `rules` is typed as `Iterable`, but the JSON encoder only accepts lists, so
+    # iterators and generators must be materialized before the request is built.
+    return {
+        key: list(value) if key == "rules" and not isinstance(value, list) else value
+        for key, value in values.items()
+        if value is not omit
+    }
 
 
 class GroupsResource(SyncAPIResource):
