@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.20.0](https://github.com/growsurf/growsurf-python/compare/v1.19.0...v1.20.0) (2026-11-18)
+
+
+### Features
+
+* add reward groups and participant bulk move ([b36761f](https://github.com/growsurf/growsurf-python/commit/b36761f7b63af71ed1718e28a40239a0a6b8fbf0))
+* **api:** add payout attention and invite message; align group wording ([8e10fb9](https://github.com/growsurf/growsurf-python/commit/8e10fb985bc868d4d8eb13071ae6e1a68f480610))
+* **api:** sync REST v2 docs and types ([ac5b13d](https://github.com/growsurf/growsurf-python/commit/ac5b13dab1fb4d1f6032ab9b6bf576423ecb6099))
+
+
+### Documentation
+
+* align group creation and webhook event contracts ([fd1c6fe](https://github.com/growsurf/growsurf-python/commit/fd1c6fe5beb36bd75d7f00d7cc77082ef42ae500))
+
 ## [1.19.0](https://github.com/growsurf/growsurf-python/compare/v1.18.0...v1.19.0) (2026-11-04)
 
 
