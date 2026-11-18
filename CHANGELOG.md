@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.20.1](https://github.com/growsurf/growsurf-python/compare/v1.20.0...v1.20.1) (2026-11-18)
+
+
+### Bug Fixes
+
+* **groups:** satisfy strict pyright for iterable rules ([a3faf1c](https://github.com/growsurf/growsurf-python/commit/a3faf1ccafd031402f2211805ad10ccc0bbb31be))
+* **groups:** send iterable rules as lists ([fcadd19](https://github.com/growsurf/growsurf-python/commit/fcadd1926503a70b90f764caf7f9a79e584ab2fa))
+* **groups:** send iterable rules as lists ([fde27db](https://github.com/growsurf/growsurf-python/commit/fde27db54c0d85b7ebaa8ad92c8dfba89db442fc))
+
 ## [1.20.0](https://github.com/growsurf/growsurf-python/compare/v1.19.0...v1.20.0) (2026-11-18)
 
 
