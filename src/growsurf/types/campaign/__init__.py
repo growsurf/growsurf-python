@@ -8,6 +8,7 @@ from .campaign import Campaign as Campaign
 from .language import Language as Language
 from .integration import Integration as Integration
 from .participant import Participant as Participant
+from .reward_group import RewardGroup as RewardGroup, RewardGroupRule as RewardGroupRule
 from .webhook_event import WebhookEvent as WebhookEvent
 from .campaign_design import (
     CampaignDesign as CampaignDesign,
@@ -21,6 +22,8 @@ from .campaign_options import CampaignOptions as CampaignOptions
 from .fraud_risk_level import FraudRiskLevel as FraudRiskLevel
 from .program_resource import ProgramResource as ProgramResource, ProgramResourceFile as ProgramResourceFile
 from .participant_reward import ParticipantReward as ParticipantReward
+from .reward_list_params import RewardListParams as RewardListParams
+from .reward_group_source import RewardGroupSource as RewardGroupSource
 from .webhook_test_params import WebhookTestParams as WebhookTestParams
 from .reward_create_params import RewardCreateParams as RewardCreateParams
 from .reward_tax_valuation import RewardTaxValuation as RewardTaxValuation
@@ -41,6 +44,7 @@ from .reward_delete_response import RewardDeleteResponse as RewardDeleteResponse
 from .delete_webhook_response import DeleteWebhookResponse as DeleteWebhookResponse
 from .reward_approve_response import RewardApproveResponse as RewardApproveResponse
 from .reward_fulfill_response import RewardFulfillResponse as RewardFulfillResponse
+from .reward_group_rule_param import RewardGroupRuleParam as RewardGroupRuleParam
 from .custom_domain_set_params import CustomDomainSetParams as CustomDomainSetParams
 from .participant_email_params import ParticipantEmailParams as ParticipantEmailParams
 from .integration_list_response import IntegrationListResponse as IntegrationListResponse
@@ -48,12 +52,16 @@ from .participant_update_params import ParticipantUpdateParams as ParticipantUpd
 from .pending_analytics_erasure import PendingAnalyticsErasure as PendingAnalyticsErasure
 from .commission_delete_response import CommissionDeleteResponse as CommissionDeleteResponse
 from .email_participant_response import EmailParticipantResponse as EmailParticipantResponse
+from .reward_group_list_response import RewardGroupListResponse as RewardGroupListResponse
 from .commission_approve_response import CommissionApproveResponse as CommissionApproveResponse
 from .participant_delete_response import ParticipantDeleteResponse as ParticipantDeleteResponse
+from .delete_reward_group_response import DeleteRewardGroupResponse as DeleteRewardGroupResponse
 from .participant_analytics_params import ParticipantAnalyticsParams as ParticipantAnalyticsParams
+from .participant_bulk_move_params import ParticipantBulkMoveParams as ParticipantBulkMoveParams
 from .campaign_reward_list_response import CampaignRewardListResponse as CampaignRewardListResponse
 from .participant_analytics_response import ParticipantAnalyticsResponse as ParticipantAnalyticsResponse
 from .participant_bulk_delete_params import ParticipantBulkDeleteParams as ParticipantBulkDeleteParams
+from .participant_bulk_move_response import ParticipantBulkMoveResponse as ParticipantBulkMoveResponse
 from .program_resource_list_response import ProgramResourceListResponse as ProgramResourceListResponse
 from .program_resource_upload_result import ProgramResourceUploadResult as ProgramResourceUploadResult
 from .program_resource_upload_ticket import ProgramResourceUploadTicket as ProgramResourceUploadTicket

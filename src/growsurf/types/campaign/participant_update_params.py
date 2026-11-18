@@ -26,6 +26,14 @@ class ParticipantUpdateParams(TypedDict, total=False):
 
     first_name: Annotated[str, PropertyInfo(alias="firstName")]
 
+    group_id: Annotated[Optional[str], PropertyInfo(alias="groupId")]
+    """Moves the participant to this group (`grp_…`), or to Default with `null`.
+
+    This is a manual placement, so the groups' email and domain rules do not override
+    it later. The move applies to new referrals only; rewards already earned keep their
+    amounts. An ID that is not a group in this program returns `400`.
+    """
+
     language: Optional[Language]
     """The language of the participant's portal and program emails.
 

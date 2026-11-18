@@ -18,5 +18,5 @@ class ParticipantTriggerReferralParams(TypedDict, total=False):
     Useful for honoring a refund window before crediting a referrer. Omit this field
     to award credit immediately. The credit is awarded automatically once the delay
     elapses, and can be cancelled before then with the Cancel delayed referral
-    trigger request.
+    trigger request. From `0` to `90`; `0` awards credit immediately.
     """

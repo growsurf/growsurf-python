@@ -18,7 +18,7 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
-from ...types.campaign import reward_create_params, reward_update_params
+from ...types.campaign import reward_list_params, reward_create_params, reward_update_params
 from ...types.campaign.reward import Reward
 from ...types.commission_structure import CommissionStructure
 from ...types.campaign.reward_tax_valuation import RewardTaxValuation
@@ -60,6 +60,7 @@ class RewardsResource(SyncAPIResource):
         coupon_code: Optional[str] | Omit = omit,
         description: str | Omit = omit,
         event: Literal["LEAD", "CONVERSION"] | Omit = omit,
+        group_id: Optional[str] | Omit = omit,
         image_url: Optional[str] | Omit = omit,
         image_icon_key: Optional[
             Literal[
@@ -131,6 +132,11 @@ class RewardsResource(SyncAPIResource):
               `DOUBLE_SIDED`, and `MILESTONE` rewards support `LEAD` or `CONVERSION`.
               `LEAD` requires `installation.referralTrigger` to be `CUSTOM`. Omitting
               `event` defaults to `CONVERSION`.
+
+          group_id: The group this reward belongs to (`grp_…`), or `None` for Default. A
+              participant earns only their own group's rewards. `LEADERBOARD` rewards apply
+              to the whole program and cannot be in a group. An ID that is not a group in
+              this program returns `400`.
 
           image_url: An image URL for the reward.
 
@@ -205,6 +211,7 @@ class RewardsResource(SyncAPIResource):
                     "coupon_code": coupon_code,
                     "description": description,
                     "event": event,
+                    "group_id": group_id,
                     "image_url": image_url,
                     "image_icon_key": image_icon_key,
                     "is_unlimited": is_unlimited,
@@ -241,6 +248,7 @@ class RewardsResource(SyncAPIResource):
         coupon_code: Optional[str] | Omit = omit,
         description: str | Omit = omit,
         event: Literal["LEAD", "CONVERSION"] | Omit = omit,
+        group_id: Optional[str] | Omit = omit,
         image_url: Optional[str] | Omit = omit,
         image_icon_key: Optional[
             Literal[
@@ -312,6 +320,11 @@ class RewardsResource(SyncAPIResource):
               `event` preserves the Campaign Reward's current event.
 
           description: The reward description shown to the referrer. Up to 255 characters.
+
+          group_id: The group this reward belongs to (`grp_…`), or `None` for Default. A
+              participant earns only their own group's rewards. `LEADERBOARD` rewards apply
+              to the whole program and cannot be in a group. An ID that is not a group in
+              this program returns `400`.
 
           image_url: An image URL for the reward.
 
@@ -389,6 +402,7 @@ class RewardsResource(SyncAPIResource):
                     "coupon_code": coupon_code,
                     "description": description,
                     "event": event,
+                    "group_id": group_id,
                     "image_url": image_url,
                     "image_icon_key": image_icon_key,
                     "is_unlimited": is_unlimited,
@@ -419,6 +433,7 @@ class RewardsResource(SyncAPIResource):
         self,
         id: str,
         *,
+        group_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -428,11 +443,17 @@ class RewardsResource(SyncAPIResource):
     ) -> CampaignRewardListResponse:
         """
         Retrieves configured Campaign Rewards, including switched-off rewards and rewards
-        whose group is not selected. Deleted rewards are excluded. The campaign response's
+        whose reward type is not selected. Deleted rewards are excluded. The campaign response's
         embedded `rewards` array includes only enabled, visible rewards. A reward can be earned only
-        when it also appears in the campaign response's embedded `rewards` array.
+        when it also appears in the campaign response's embedded `rewards` array. The list includes
+        every group's rewards. Each reward's `group_id` names its group (`None` is Default). Pass
+        `group_id` to return one group's rewards.
 
         Args:
+          group_id: Return only this group's rewards (`grp_…`). To get Default's rewards, omit
+              `group_id` and keep the rewards whose `group_id` is `None`. An ID that is not a group in this
+              program returns `404`.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -446,7 +467,11 @@ class RewardsResource(SyncAPIResource):
         return self._get(
             path_template("/campaign/{id}/reward-configs", id=id),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"group_id": group_id}, reward_list_params.RewardListParams),
             ),
             cast_to=CampaignRewardListResponse,
         )
@@ -526,6 +551,7 @@ class AsyncRewardsResource(AsyncAPIResource):
         coupon_code: Optional[str] | Omit = omit,
         description: str | Omit = omit,
         event: Literal["LEAD", "CONVERSION"] | Omit = omit,
+        group_id: Optional[str] | Omit = omit,
         image_url: Optional[str] | Omit = omit,
         image_icon_key: Optional[
             Literal[
@@ -597,6 +623,11 @@ class AsyncRewardsResource(AsyncAPIResource):
               `DOUBLE_SIDED`, and `MILESTONE` rewards support `LEAD` or `CONVERSION`.
               `LEAD` requires `installation.referralTrigger` to be `CUSTOM`. Omitting
               `event` defaults to `CONVERSION`.
+
+          group_id: The group this reward belongs to (`grp_…`), or `None` for Default. A
+              participant earns only their own group's rewards. `LEADERBOARD` rewards apply
+              to the whole program and cannot be in a group. An ID that is not a group in
+              this program returns `400`.
 
           image_url: An image URL for the reward.
 
@@ -671,6 +702,7 @@ class AsyncRewardsResource(AsyncAPIResource):
                     "coupon_code": coupon_code,
                     "description": description,
                     "event": event,
+                    "group_id": group_id,
                     "image_url": image_url,
                     "image_icon_key": image_icon_key,
                     "is_unlimited": is_unlimited,
@@ -707,6 +739,7 @@ class AsyncRewardsResource(AsyncAPIResource):
         coupon_code: Optional[str] | Omit = omit,
         description: str | Omit = omit,
         event: Literal["LEAD", "CONVERSION"] | Omit = omit,
+        group_id: Optional[str] | Omit = omit,
         image_url: Optional[str] | Omit = omit,
         image_icon_key: Optional[
             Literal[
@@ -778,6 +811,11 @@ class AsyncRewardsResource(AsyncAPIResource):
               `event` preserves the Campaign Reward's current event.
 
           description: The reward description shown to the referrer. Up to 255 characters.
+
+          group_id: The group this reward belongs to (`grp_…`), or `None` for Default. A
+              participant earns only their own group's rewards. `LEADERBOARD` rewards apply
+              to the whole program and cannot be in a group. An ID that is not a group in
+              this program returns `400`.
 
           image_url: An image URL for the reward.
 
@@ -855,6 +893,7 @@ class AsyncRewardsResource(AsyncAPIResource):
                     "coupon_code": coupon_code,
                     "description": description,
                     "event": event,
+                    "group_id": group_id,
                     "image_url": image_url,
                     "image_icon_key": image_icon_key,
                     "is_unlimited": is_unlimited,
@@ -885,6 +924,7 @@ class AsyncRewardsResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        group_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -894,11 +934,17 @@ class AsyncRewardsResource(AsyncAPIResource):
     ) -> CampaignRewardListResponse:
         """
         Retrieves configured Campaign Rewards, including switched-off rewards and rewards
-        whose group is not selected. Deleted rewards are excluded. The campaign response's
+        whose reward type is not selected. Deleted rewards are excluded. The campaign response's
         embedded `rewards` array includes only enabled, visible rewards. A reward can be earned only
-        when it also appears in the campaign response's embedded `rewards` array.
+        when it also appears in the campaign response's embedded `rewards` array. The list includes
+        every group's rewards. Each reward's `group_id` names its group (`None` is Default). Pass
+        `group_id` to return one group's rewards.
 
         Args:
+          group_id: Return only this group's rewards (`grp_…`). To get Default's rewards, omit
+              `group_id` and keep the rewards whose `group_id` is `None`. An ID that is not a group in this
+              program returns `404`.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -912,7 +958,11 @@ class AsyncRewardsResource(AsyncAPIResource):
         return await self._get(
             path_template("/campaign/{id}/reward-configs", id=id),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform({"group_id": group_id}, reward_list_params.RewardListParams),
             ),
             cast_to=CampaignRewardListResponse,
         )

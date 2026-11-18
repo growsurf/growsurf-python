@@ -23,6 +23,14 @@ from .emails import (
     EmailsResourceWithStreamingResponse,
     AsyncEmailsResourceWithStreamingResponse,
 )
+from .groups import (
+    GroupsResource,
+    AsyncGroupsResource,
+    GroupsResourceWithRawResponse,
+    AsyncGroupsResourceWithRawResponse,
+    GroupsResourceWithStreamingResponse,
+    AsyncGroupsResourceWithStreamingResponse,
+)
 from .reward import (
     RewardResource,
     AsyncRewardResource,
@@ -174,6 +182,11 @@ class CampaignResource(SyncAPIResource):
     @cached_property
     def resources(self) -> ProgramResourcesResource:
         return ProgramResourcesResource(self._client)
+
+    @cached_property
+    def groups(self) -> GroupsResource:
+        """Group operations. Groups give some participants a different reward list."""
+        return GroupsResource(self._client)
 
     @cached_property
     def integrations(self) -> IntegrationsResource:
@@ -697,6 +710,7 @@ class CampaignResource(SyncAPIResource):
         self,
         id: str,
         *,
+        group_id: str | Omit = omit,
         limit: int | Omit = omit,
         metadata: Dict[str, str] | Omit = omit,
         next_id: str | Omit = omit,
@@ -708,9 +722,14 @@ class CampaignResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantList:
         """
-        Retrieves a paged list of participants in a program.
+        Retrieves a paged list of participants in a program. Pass `group_id` to return only
+        that group's members.
 
         Args:
+          group_id: Return only this group's members (`grp_…`). Works alone or with `metadata`.
+              Default has no ID, so it cannot be named here. An ID that is not a group in
+              this program returns `404`.
+
           limit: Number of results to return. Maximum 100.
 
           metadata: Return only participants whose metadata matches every given key and value
@@ -738,6 +757,7 @@ class CampaignResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "group_id": group_id,
                         "limit": limit,
                         "metadata": metadata,
                         "next_id": next_id,
@@ -1421,6 +1441,11 @@ class AsyncCampaignResource(AsyncAPIResource):
         return AsyncProgramResourcesResource(self._client)
 
     @cached_property
+    def groups(self) -> AsyncGroupsResource:
+        """Group operations. Groups give some participants a different reward list."""
+        return AsyncGroupsResource(self._client)
+
+    @cached_property
     def integrations(self) -> AsyncIntegrationsResource:
         """Integration status. Connecting an integration is done in the GrowSurf dashboard, so this resource is read-only."""
         return AsyncIntegrationsResource(self._client)
@@ -1942,6 +1967,7 @@ class AsyncCampaignResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        group_id: str | Omit = omit,
         limit: int | Omit = omit,
         metadata: Dict[str, str] | Omit = omit,
         next_id: str | Omit = omit,
@@ -1953,9 +1979,14 @@ class AsyncCampaignResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantList:
         """
-        Retrieves a paged list of participants in a program.
+        Retrieves a paged list of participants in a program. Pass `group_id` to return only
+        that group's members.
 
         Args:
+          group_id: Return only this group's members (`grp_…`). Works alone or with `metadata`.
+              Default has no ID, so it cannot be named here. An ID that is not a group in
+              this program returns `404`.
+
           limit: Number of results to return. Maximum 100.
 
           metadata: Return only participants whose metadata matches every given key and value
@@ -1983,6 +2014,7 @@ class AsyncCampaignResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform(
                     {
+                        "group_id": group_id,
                         "limit": limit,
                         "metadata": metadata,
                         "next_id": next_id,
@@ -2733,6 +2765,11 @@ class CampaignResourceWithRawResponse:
         return ProgramResourcesResourceWithRawResponse(self._campaign.resources)
 
     @cached_property
+    def groups(self) -> GroupsResourceWithRawResponse:
+        """Group operations. Groups give some participants a different reward list."""
+        return GroupsResourceWithRawResponse(self._campaign.groups)
+
+    @cached_property
     def integrations(self) -> IntegrationsResourceWithRawResponse:
         """Integration status. Connecting an integration is done in the GrowSurf dashboard, so this resource is read-only."""
         return IntegrationsResourceWithRawResponse(self._campaign.integrations)
@@ -2858,6 +2895,11 @@ class AsyncCampaignResourceWithRawResponse:
     @cached_property
     def resources(self) -> AsyncProgramResourcesResourceWithRawResponse:
         return AsyncProgramResourcesResourceWithRawResponse(self._campaign.resources)
+
+    @cached_property
+    def groups(self) -> AsyncGroupsResourceWithRawResponse:
+        """Group operations. Groups give some participants a different reward list."""
+        return AsyncGroupsResourceWithRawResponse(self._campaign.groups)
 
     @cached_property
     def integrations(self) -> AsyncIntegrationsResourceWithRawResponse:
@@ -2987,6 +3029,11 @@ class CampaignResourceWithStreamingResponse:
         return ProgramResourcesResourceWithStreamingResponse(self._campaign.resources)
 
     @cached_property
+    def groups(self) -> GroupsResourceWithStreamingResponse:
+        """Group operations. Groups give some participants a different reward list."""
+        return GroupsResourceWithStreamingResponse(self._campaign.groups)
+
+    @cached_property
     def integrations(self) -> IntegrationsResourceWithStreamingResponse:
         """Integration status. Connecting an integration is done in the GrowSurf dashboard, so this resource is read-only."""
         return IntegrationsResourceWithStreamingResponse(self._campaign.integrations)
@@ -3112,6 +3159,11 @@ class AsyncCampaignResourceWithStreamingResponse:
     @cached_property
     def resources(self) -> AsyncProgramResourcesResourceWithStreamingResponse:
         return AsyncProgramResourcesResourceWithStreamingResponse(self._campaign.resources)
+
+    @cached_property
+    def groups(self) -> AsyncGroupsResourceWithStreamingResponse:
+        """Group operations. Groups give some participants a different reward list."""
+        return AsyncGroupsResourceWithStreamingResponse(self._campaign.groups)
 
     @cached_property
     def integrations(self) -> AsyncIntegrationsResourceWithStreamingResponse:

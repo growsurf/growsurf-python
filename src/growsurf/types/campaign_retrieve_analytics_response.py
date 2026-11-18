@@ -161,6 +161,9 @@ class StatusCountsPayoutStatusMetric(BaseModel):
 class StatusCountsPayoutStatus(BaseModel):
     """Affiliate only. Payout counts and amounts by status."""
 
+    attention: Optional[StatusCountsPayoutStatusMetric] = None
+    """Queued or issued Wise payouts that are paused until a refund is confirmed."""
+
     failed: Optional[StatusCountsPayoutStatusMetric] = None
 
     issued: Optional[StatusCountsPayoutStatusMetric] = None

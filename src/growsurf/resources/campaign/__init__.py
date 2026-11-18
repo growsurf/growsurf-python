@@ -16,6 +16,14 @@ from .emails import (
     EmailsResourceWithStreamingResponse,
     AsyncEmailsResourceWithStreamingResponse,
 )
+from .groups import (
+    GroupsResource,
+    AsyncGroupsResource,
+    GroupsResourceWithRawResponse,
+    AsyncGroupsResourceWithRawResponse,
+    GroupsResourceWithStreamingResponse,
+    AsyncGroupsResourceWithStreamingResponse,
+)
 from .reward import (
     RewardResource,
     AsyncRewardResource,
@@ -124,6 +132,12 @@ __all__ = [
     "AsyncRewardsResourceWithRawResponse",
     "RewardsResourceWithStreamingResponse",
     "AsyncRewardsResourceWithStreamingResponse",
+    "GroupsResource",
+    "AsyncGroupsResource",
+    "GroupsResourceWithRawResponse",
+    "AsyncGroupsResourceWithRawResponse",
+    "GroupsResourceWithStreamingResponse",
+    "AsyncGroupsResourceWithStreamingResponse",
     "ProgramResourcesResource",
     "AsyncProgramResourcesResource",
     "ProgramResourcesResourceWithRawResponse",

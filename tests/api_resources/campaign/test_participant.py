@@ -777,7 +777,6 @@ class TestParticipant:
             id="id",
             email_addresses=["erlich@aviato.com"],
             message_text="{{referrerFirstName}} invited you with {{referrerShareUrl}}.",
-            subject_text="Join me on Pied Piper",
         )
         assert_matches_type(ParticipantSendInvitesResponse, participant, path=["response"])
 
@@ -789,7 +788,6 @@ class TestParticipant:
             id="id",
             email_addresses=["erlich@aviato.com"],
             message_text="{{referrerFirstName}} invited you with {{referrerShareUrl}}.",
-            subject_text="Join me on Pied Piper",
         )
 
         assert response.is_closed is True
@@ -805,7 +803,6 @@ class TestParticipant:
             id="id",
             email_addresses=["erlich@aviato.com"],
             message_text="{{referrerFirstName}} invited you with {{referrerShareUrl}}.",
-            subject_text="Join me on Pied Piper",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -824,7 +821,6 @@ class TestParticipant:
                 id="",
                 email_addresses=["erlich@aviato.com"],
                 message_text="{{referrerFirstName}} invited you with {{referrerShareUrl}}.",
-                subject_text="Join me on Pied Piper",
             )
 
         with pytest.raises(
@@ -835,7 +831,6 @@ class TestParticipant:
                 id="id",
                 email_addresses=["erlich@aviato.com"],
                 message_text="{{referrerFirstName}} invited you with {{referrerShareUrl}}.",
-                subject_text="Join me on Pied Piper",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -2020,7 +2015,6 @@ class TestAsyncParticipant:
             id="id",
             email_addresses=["erlich@aviato.com"],
             message_text="{{referrerFirstName}} invited you with {{referrerShareUrl}}.",
-            subject_text="Join me on Pied Piper",
         )
         assert_matches_type(ParticipantSendInvitesResponse, participant, path=["response"])
 
@@ -2032,7 +2026,6 @@ class TestAsyncParticipant:
             id="id",
             email_addresses=["erlich@aviato.com"],
             message_text="{{referrerFirstName}} invited you with {{referrerShareUrl}}.",
-            subject_text="Join me on Pied Piper",
         )
 
         assert response.is_closed is True
@@ -2048,7 +2041,6 @@ class TestAsyncParticipant:
             id="id",
             email_addresses=["erlich@aviato.com"],
             message_text="{{referrerFirstName}} invited you with {{referrerShareUrl}}.",
-            subject_text="Join me on Pied Piper",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -2067,7 +2059,6 @@ class TestAsyncParticipant:
                 id="",
                 email_addresses=["erlich@aviato.com"],
                 message_text="{{referrerFirstName}} invited you with {{referrerShareUrl}}.",
-                subject_text="Join me on Pied Piper",
             )
 
         with pytest.raises(
@@ -2078,7 +2069,6 @@ class TestAsyncParticipant:
                 id="id",
                 email_addresses=["erlich@aviato.com"],
                 message_text="{{referrerFirstName}} invited you with {{referrerShareUrl}}.",
-                subject_text="Join me on Pied Piper",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")

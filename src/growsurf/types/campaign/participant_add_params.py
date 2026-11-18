@@ -18,6 +18,15 @@ class ParticipantAddParams(TypedDict, total=False):
 
     first_name: Annotated[str, PropertyInfo(alias="firstName")]
 
+    group_id: Annotated[Optional[str], PropertyInfo(alias="groupId")]
+    """Places the new participant in this group (`grp_…`), or in Default with `null`.
+
+    This is a manual placement, so the groups' email and domain rules do not apply to
+    them. Applied only when this request creates the participant; to move an existing
+    participant, use Update participant. An ID that is not a group in this program
+    returns `400` and adds no one.
+    """
+
     ip_address: Annotated[str, PropertyInfo(alias="ipAddress")]
 
     is_affiliate: Annotated[bool, PropertyInfo(alias="isAffiliate")]

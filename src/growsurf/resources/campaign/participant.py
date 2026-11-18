@@ -24,6 +24,7 @@ from ...types.campaign import (
     participant_email_params,
     participant_update_params,
     participant_analytics_params,
+    participant_bulk_move_params,
     participant_bulk_delete_params,
     participant_list_payouts_params,
     participant_list_rewards_params,
@@ -45,6 +46,7 @@ from ...types.participant_commission_list import ParticipantCommissionList
 from ...types.campaign.email_participant_response import EmailParticipantResponse
 from ...types.campaign.participant_delete_response import ParticipantDeleteResponse
 from ...types.campaign.participant_analytics_response import ParticipantAnalyticsResponse
+from ...types.campaign.participant_bulk_move_response import ParticipantBulkMoveResponse
 from ...types.campaign.participant_bulk_delete_response import ParticipantBulkDeleteResponse
 from ...types.campaign.participant_list_rewards_response import ParticipantListRewardsResponse
 from ...types.campaign.participant_send_invites_response import ParticipantSendInvitesResponse
@@ -130,6 +132,7 @@ class ParticipantResource(SyncAPIResource):
         affiliate_status: Literal["APPROVED", "SUSPENDED", "BANNED"] | Omit = omit,
         email: str | Omit = omit,
         first_name: str | Omit = omit,
+        group_id: Optional[str] | Omit = omit,
         language: Optional[Language] | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
@@ -156,6 +159,11 @@ class ParticipantResource(SyncAPIResource):
           affiliate_status: Affiliate programs only. Sets the affiliate status. `APPROVED` also enrolls a
               participant who is not yet an affiliate. `SUSPENDED` and `BANNED` are rejected for
               non-affiliates.
+
+          group_id: Moves the participant to this group (`grp_…`), or to Default with `null`. This is
+              a manual placement, so the groups' email and domain rules do not override it later.
+              The move applies to new referrals only; rewards already earned keep their amounts. An
+              ID that is not a group in this program returns `400`.
 
           language: The language of the participant's portal and program emails. Must be one of the
               program's languages (see `languages` in the program options). Send the base
@@ -191,6 +199,7 @@ class ParticipantResource(SyncAPIResource):
                     "affiliate_status": affiliate_status,
                     "email": email,
                     "first_name": first_name,
+                    "group_id": group_id,
                     "language": language,
                     "last_name": last_name,
                     "metadata": metadata,
@@ -221,7 +230,7 @@ class ParticipantResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantDeleteResponse:
         """
-        Removes participant access immediately by GrowSurf participant ID or email address. Related record cleanup completes automatically. Do not repeat a successful deletion to finish cleanup.
+        Removes participant access immediately by GrowSurf participant ID or email address. Related record cleanup completes automatically. Do not repeat a successful deletion to finish cleanup. A `202` response includes pending analytics erasure details.
 
         Args:
           extra_headers: Send extra headers
@@ -267,7 +276,7 @@ class ParticipantResource(SyncAPIResource):
         `participants` is a GrowSurf participant ID or an email address (mixed lists are
         allowed). Up to `200` entries per request — chunk larger lists across multiple
         calls. The response reports a per-row `status` for every submitted entry, so a
-        `200` can include rows that were `NOT_FOUND` or failed. Deletion is permanent. Successful rows lose participant access immediately; related record cleanup completes automatically, subject to required financial record retention.
+        `200` can include rows that were `NOT_FOUND` or failed. Deletion is permanent. Successful rows lose participant access immediately; related record cleanup completes automatically, subject to required financial record retention. A `202` response also includes `analyticsErasure` when analytics erasure is pending.
 
         Args:
           participants: GrowSurf participant IDs and/or email addresses to delete. Mixed entries are
@@ -294,6 +303,61 @@ class ParticipantResource(SyncAPIResource):
             cast_to=ParticipantBulkDeleteResponse,
         )
 
+    def bulk_move(
+        self,
+        id: str,
+        *,
+        group_id: Optional[str],
+        participants: SequenceNotStr[str],
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantBulkMoveResponse:
+        """
+        Moves a list of participants to a group, or to Default with `groupId: null`.
+        Each entry in `participants` is a GrowSurf participant ID or an email address
+        (mixed lists are allowed). Up to `200` entries per request. The response reports
+        a per-row `status` for every submitted entry, so a `200` can include rows that
+        were `NOT_FOUND`. All found participants move together: if the move fails, no one
+        moves. A move is a manual placement, so the group's email and domain rules do not
+        override it later, and it removes the participant from any other group's
+        `PARTICIPANT` rules. A move applies to new referrals only. Rewards already earned
+        keep their amounts. An ID that is not a group in this program returns `400`.
+
+        Args:
+          group_id: The group to move them to (`grp_…`), or `None` for Default.
+
+          participants: GrowSurf participant IDs and/or email addresses to move. Mixed entries are
+              allowed. 1 to 200 entries.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._post(
+            path_template("/campaign/{id}/participants/bulk-move", id=id),
+            body=maybe_transform(
+                {
+                    "group_id": group_id,
+                    "participants": participants,
+                },
+                participant_bulk_move_params.ParticipantBulkMoveParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ParticipantBulkMoveResponse,
+        )
+
     def add(
         self,
         id: str,
@@ -301,6 +365,7 @@ class ParticipantResource(SyncAPIResource):
         email: str,
         fingerprint: str | Omit = omit,
         first_name: str | Omit = omit,
+        group_id: Optional[str] | Omit = omit,
         ip_address: str | Omit = omit,
         is_affiliate: bool | Omit = omit,
         language: Language | Omit = omit,
@@ -331,6 +396,12 @@ class ParticipantResource(SyncAPIResource):
         as an affiliate.
 
         Args:
+          group_id: Places the new participant in this group (`grp_…`), or in Default with `null`.
+              This is a manual placement, so the groups' email and domain rules do not apply to
+              them. Applied only when this request creates the participant; to move an existing
+              participant, use Update participant. An ID that is not a group in this program returns
+              `400` and adds no one.
+
           is_affiliate: Affiliate programs only. Controls affiliate enrollment for a new participant.
               `true` enrolls the participant with `affiliateStatus: APPROVED`; `false` creates a
               non-affiliate without `affiliateStatus`. Existing participants are returned
@@ -375,6 +446,7 @@ class ParticipantResource(SyncAPIResource):
                     "email": email,
                     "fingerprint": fingerprint,
                     "first_name": first_name,
+                    "group_id": group_id,
                     "ip_address": ip_address,
                     "is_affiliate": is_affiliate,
                     "language": language,
@@ -864,7 +936,6 @@ class ParticipantResource(SyncAPIResource):
         id: str,
         email_addresses: SequenceNotStr[str],
         message_text: str,
-        subject_text: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -875,7 +946,7 @@ class ParticipantResource(SyncAPIResource):
         """
         Sends email invites on behalf of a participant to a list of email addresses.
         Sending invites via the API requires a **verified custom email domain** on the
-        program; the request fails until one is verified.
+        program. Until one is verified, it returns `success: false`.
 
         Args:
           extra_headers: Send extra headers
@@ -902,7 +973,6 @@ class ParticipantResource(SyncAPIResource):
                 {
                     "email_addresses": email_addresses,
                     "message_text": message_text,
-                    "subject_text": subject_text,
                 },
                 participant_send_invites_params.ParticipantSendInvitesParams,
             ),
@@ -937,7 +1007,7 @@ class ParticipantResource(SyncAPIResource):
               honoring a refund window before crediting a referrer. Omit this field to award
               credit immediately. The credit is awarded automatically once the delay elapses,
               and can be cancelled before then with the Cancel delayed referral trigger
-              request.
+              request. From `0` to `90`; `0` awards credit immediately.
 
           extra_headers: Send extra headers
 
@@ -1055,7 +1125,7 @@ class ParticipantResource(SyncAPIResource):
               `welcomeNonReferred` can only be sent to advocates or approved, enrolled affiliates in
               a program that has not ended.
 
-          body: HTML body for a free-form email. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails).
+          body: HTML body for a free-form email. When `settings.design.layoutMode` is `INLINE`, include `{{emailFooter}}` in the body; `{{emailHeader}}` is optional. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails).
 
           preheader: Optional preheader text for a free-form email.
 
@@ -1314,7 +1384,7 @@ class ParticipantResource(SyncAPIResource):
         endpoint just triggers the message. The provider must be enabled for the program.
 
         Args:
-          provider: The payout provider the participant should confirm a destination for.
+          provider: The payout provider the participant should confirm a destination for. `VENMO` uses a confirmed email and is available only when connected PayPal Payouts and payout-email confirmation are enabled in a USD program. Venmo recipients must be in the United States.
 
           extra_headers: Send extra headers
 
@@ -1417,6 +1487,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         affiliate_status: Literal["APPROVED", "SUSPENDED", "BANNED"] | Omit = omit,
         email: str | Omit = omit,
         first_name: str | Omit = omit,
+        group_id: Optional[str] | Omit = omit,
         language: Optional[Language] | Omit = omit,
         last_name: str | Omit = omit,
         metadata: Dict[str, object] | Omit = omit,
@@ -1443,6 +1514,11 @@ class AsyncParticipantResource(AsyncAPIResource):
           affiliate_status: Affiliate programs only. Sets the affiliate status. `APPROVED` also enrolls a
               participant who is not yet an affiliate. `SUSPENDED` and `BANNED` are rejected for
               non-affiliates.
+
+          group_id: Moves the participant to this group (`grp_…`), or to Default with `null`. This is
+              a manual placement, so the groups' email and domain rules do not override it later.
+              The move applies to new referrals only; rewards already earned keep their amounts. An
+              ID that is not a group in this program returns `400`.
 
           language: The language of the participant's portal and program emails. Must be one of the
               program's languages (see `languages` in the program options). Send the base
@@ -1478,6 +1554,7 @@ class AsyncParticipantResource(AsyncAPIResource):
                     "affiliate_status": affiliate_status,
                     "email": email,
                     "first_name": first_name,
+                    "group_id": group_id,
                     "language": language,
                     "last_name": last_name,
                     "metadata": metadata,
@@ -1508,7 +1585,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ParticipantDeleteResponse:
         """
-        Removes participant access immediately by GrowSurf participant ID or email address. Related record cleanup completes automatically. Do not repeat a successful deletion to finish cleanup.
+        Removes participant access immediately by GrowSurf participant ID or email address. Related record cleanup completes automatically. Do not repeat a successful deletion to finish cleanup. A `202` response includes pending analytics erasure details.
 
         Args:
           extra_headers: Send extra headers
@@ -1554,7 +1631,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         `participants` is a GrowSurf participant ID or an email address (mixed lists are
         allowed). Up to `200` entries per request — chunk larger lists across multiple
         calls. The response reports a per-row `status` for every submitted entry, so a
-        `200` can include rows that were `NOT_FOUND` or failed. Deletion is permanent. Successful rows lose participant access immediately; related record cleanup completes automatically, subject to required financial record retention.
+        `200` can include rows that were `NOT_FOUND` or failed. Deletion is permanent. Successful rows lose participant access immediately; related record cleanup completes automatically, subject to required financial record retention. A `202` response also includes `analyticsErasure` when analytics erasure is pending.
 
         Args:
           participants: GrowSurf participant IDs and/or email addresses to delete. Mixed entries are
@@ -1581,6 +1658,61 @@ class AsyncParticipantResource(AsyncAPIResource):
             cast_to=ParticipantBulkDeleteResponse,
         )
 
+    async def bulk_move(
+        self,
+        id: str,
+        *,
+        group_id: Optional[str],
+        participants: SequenceNotStr[str],
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ParticipantBulkMoveResponse:
+        """
+        Moves a list of participants to a group, or to Default with `groupId: null`.
+        Each entry in `participants` is a GrowSurf participant ID or an email address
+        (mixed lists are allowed). Up to `200` entries per request. The response reports
+        a per-row `status` for every submitted entry, so a `200` can include rows that
+        were `NOT_FOUND`. All found participants move together: if the move fails, no one
+        moves. A move is a manual placement, so the group's email and domain rules do not
+        override it later, and it removes the participant from any other group's
+        `PARTICIPANT` rules. A move applies to new referrals only. Rewards already earned
+        keep their amounts. An ID that is not a group in this program returns `400`.
+
+        Args:
+          group_id: The group to move them to (`grp_…`), or `None` for Default.
+
+          participants: GrowSurf participant IDs and/or email addresses to move. Mixed entries are
+              allowed. 1 to 200 entries.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._post(
+            path_template("/campaign/{id}/participants/bulk-move", id=id),
+            body=await async_maybe_transform(
+                {
+                    "group_id": group_id,
+                    "participants": participants,
+                },
+                participant_bulk_move_params.ParticipantBulkMoveParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ParticipantBulkMoveResponse,
+        )
+
     async def add(
         self,
         id: str,
@@ -1588,6 +1720,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         email: str,
         fingerprint: str | Omit = omit,
         first_name: str | Omit = omit,
+        group_id: Optional[str] | Omit = omit,
         ip_address: str | Omit = omit,
         is_affiliate: bool | Omit = omit,
         language: Language | Omit = omit,
@@ -1618,6 +1751,12 @@ class AsyncParticipantResource(AsyncAPIResource):
         as an affiliate.
 
         Args:
+          group_id: Places the new participant in this group (`grp_…`), or in Default with `null`.
+              This is a manual placement, so the groups' email and domain rules do not apply to
+              them. Applied only when this request creates the participant; to move an existing
+              participant, use Update participant. An ID that is not a group in this program returns
+              `400` and adds no one.
+
           is_affiliate: Affiliate programs only. Controls affiliate enrollment for a new participant.
               `true` enrolls the participant with `affiliateStatus: APPROVED`; `false` creates a
               non-affiliate without `affiliateStatus`. Existing participants are returned
@@ -1662,6 +1801,7 @@ class AsyncParticipantResource(AsyncAPIResource):
                     "email": email,
                     "fingerprint": fingerprint,
                     "first_name": first_name,
+                    "group_id": group_id,
                     "ip_address": ip_address,
                     "is_affiliate": is_affiliate,
                     "language": language,
@@ -2151,7 +2291,6 @@ class AsyncParticipantResource(AsyncAPIResource):
         id: str,
         email_addresses: SequenceNotStr[str],
         message_text: str,
-        subject_text: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -2162,7 +2301,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         """
         Sends email invites on behalf of a participant to a list of email addresses.
         Sending invites via the API requires a **verified custom email domain** on the
-        program; the request fails until one is verified.
+        program. Until one is verified, it returns `success: false`.
 
         Args:
           extra_headers: Send extra headers
@@ -2189,7 +2328,6 @@ class AsyncParticipantResource(AsyncAPIResource):
                 {
                     "email_addresses": email_addresses,
                     "message_text": message_text,
-                    "subject_text": subject_text,
                 },
                 participant_send_invites_params.ParticipantSendInvitesParams,
             ),
@@ -2224,7 +2362,7 @@ class AsyncParticipantResource(AsyncAPIResource):
               honoring a refund window before crediting a referrer. Omit this field to award
               credit immediately. The credit is awarded automatically once the delay elapses,
               and can be cancelled before then with the Cancel delayed referral trigger
-              request.
+              request. From `0` to `90`; `0` awards credit immediately.
 
           extra_headers: Send extra headers
 
@@ -2342,7 +2480,7 @@ class AsyncParticipantResource(AsyncAPIResource):
               `welcomeNonReferred` can only be sent to advocates or approved, enrolled affiliates in
               a program that has not ended.
 
-          body: HTML body for a free-form email. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails).
+          body: HTML body for a free-form email. When `settings.design.layoutMode` is `INLINE`, include `{{emailFooter}}` in the body; `{{emailHeader}}` is optional. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails).
 
           preheader: Optional preheader text for a free-form email.
 
@@ -2601,7 +2739,7 @@ class AsyncParticipantResource(AsyncAPIResource):
         endpoint just triggers the message. The provider must be enabled for the program.
 
         Args:
-          provider: The payout provider the participant should confirm a destination for.
+          provider: The payout provider the participant should confirm a destination for. `VENMO` uses a confirmed email and is available only when connected PayPal Payouts and payout-email confirmation are enabled in a USD program. Venmo recipients must be in the United States.
 
           extra_headers: Send extra headers
 
@@ -2649,6 +2787,9 @@ class ParticipantResourceWithRawResponse:
         )
         self.bulk_delete = to_raw_response_wrapper(
             participant.bulk_delete,
+        )
+        self.bulk_move = to_raw_response_wrapper(
+            participant.bulk_move,
         )
         self.add = to_raw_response_wrapper(
             participant.add,
@@ -2713,6 +2854,9 @@ class AsyncParticipantResourceWithRawResponse:
         self.bulk_delete = async_to_raw_response_wrapper(
             participant.bulk_delete,
         )
+        self.bulk_move = async_to_raw_response_wrapper(
+            participant.bulk_move,
+        )
         self.add = async_to_raw_response_wrapper(
             participant.add,
         )
@@ -2776,6 +2920,9 @@ class ParticipantResourceWithStreamingResponse:
         self.bulk_delete = to_streamed_response_wrapper(
             participant.bulk_delete,
         )
+        self.bulk_move = to_streamed_response_wrapper(
+            participant.bulk_move,
+        )
         self.add = to_streamed_response_wrapper(
             participant.add,
         )
@@ -2838,6 +2985,9 @@ class AsyncParticipantResourceWithStreamingResponse:
         )
         self.bulk_delete = async_to_streamed_response_wrapper(
             participant.bulk_delete,
+        )
+        self.bulk_move = async_to_streamed_response_wrapper(
+            participant.bulk_move,
         )
         self.add = async_to_streamed_response_wrapper(
             participant.add,

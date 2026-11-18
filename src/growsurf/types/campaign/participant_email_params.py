@@ -31,7 +31,7 @@ class ParticipantEmailParams(TypedDict, total=False):
     """
 
     body: str
-    """HTML body for a free-form email. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails)."""
+    """HTML body for a free-form email. When `settings.design.layoutMode` is `INLINE`, include `{{emailFooter}}` in the body; `{{emailHeader}}` is optional. You can personalize it with dynamic text, inserting `{{...}}` tokens like `{{firstName}}` or `{{shareUrl}}`. See [Guide to using dynamic text in GrowSurf emails](https://support.growsurf.com/article/213-guide-to-using-dynamic-text-in-growsurf-emails)."""
 
     preheader: str
     """Optional preheader text for a free-form email."""

@@ -53,6 +53,12 @@ class ParticipantReward(BaseModel):
 
     fulfilled_at: Optional[int] = FieldInfo(alias="fulfilledAt", default=None)
 
+    group_id: Optional[str] = FieldInfo(alias="groupId", default=None)
+    """The group whose reward this is (`grp_…`), saved when it was earned.
+
+    `null` for Default and for rewards earned before groups existed.
+    """
+
     is_available: Optional[bool] = FieldInfo(alias="isAvailable", default=None)
 
     is_fulfilled: Optional[bool] = FieldInfo(alias="isFulfilled", default=None)
