@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Iterable
+from typing import Dict, Iterable, cast
 
 import httpx
 
@@ -29,7 +29,7 @@ def _body(**values: object) -> Dict[str, object]:
     # `rules` is typed as `Iterable`, but the JSON encoder only accepts lists, so
     # iterators and generators must be materialized before the request is built.
     return {
-        key: list(value) if key == "rules" and not isinstance(value, list) else value
+        key: list(cast(Iterable[object], value)) if key == "rules" and not isinstance(value, list) else value
         for key, value in values.items()
         if value is not omit
     }
