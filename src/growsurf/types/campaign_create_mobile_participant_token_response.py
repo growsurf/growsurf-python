@@ -15,7 +15,8 @@ class CampaignCreateMobileParticipantTokenResponse(BaseModel):
     is_new: bool = FieldInfo(alias="isNew")
     """Whether this request created a new participant.
 
-    Returns false when the participant already existed.
+    Returns false when the participant already existed. A repeat call can return
+    true while the first signup is still finishing.
     """
 
     participant: Participant
