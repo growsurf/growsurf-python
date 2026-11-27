@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.20.2](https://github.com/growsurf/growsurf-python/compare/v1.20.1...v1.20.2) (2026-11-27)
+
+
+### Documentation
+
+* describe TELEHEALTH goal privacy defaults and share disclosure ([e6d2028](https://github.com/growsurf/growsurf-python/commit/e6d2028d633520c79347fa2cabaa1cc7eecfad2c))
+* document paused-email 400, welcomeNonReferred limits, and repeat isNew ([dfd0eb3](https://github.com/growsurf/growsurf-python/commit/dfd0eb39bdefeae492433df0a7ffed6268409b66))
+* SDK docstring updates ([6d190c9](https://github.com/growsurf/growsurf-python/commit/6d190c908ae17201772e766ccf05ed98907db375))
+
 ## [1.20.1](https://github.com/growsurf/growsurf-python/compare/v1.20.0...v1.20.1) (2026-11-18)
 
 
